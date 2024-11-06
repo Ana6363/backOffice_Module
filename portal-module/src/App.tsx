@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Application/components/Login';
-import AuthCallback from './Application/components/AuthCallback';
-import Dashboard from './Application/components/Dashboard';
+import Login from './components/Login';
+import AuthCallback from './components/AuthCallback';
+import Dashboard from './components/Dashboard';
 
 
 const App: React.FC = () => {
