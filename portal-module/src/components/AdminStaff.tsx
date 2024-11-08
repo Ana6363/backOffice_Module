@@ -237,7 +237,9 @@ const AdminStaff: React.FC = () => {
                             <td>{staff.phoneNumber}</td>
                             <td>{staff.status ? "Active" : "Inactive"}</td>
                             <td>
-                                <button onClick={() => handleDeactivateStaff(staff.staffId)}>Deactivate</button>
+                                {staff.status && (
+                                    <button onClick={() => handleDeactivateStaff(staff.staffId)}>Deactivate</button>
+                                )}
                             </td>
                         </tr>
                     ))}
