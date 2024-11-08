@@ -5,9 +5,11 @@ const AdminPage: React.FC = () => {
     const [staffList, setStaffList] = useState<any[]>([]);
     const [filter, setFilter] = useState({ 
         staffId: '',
+        specialization: '',
         firstName: '', 
-        lastName: '', 
-        phoneNumber: '' 
+        lastName: '',
+        phoneNumber: '',
+        status: '' ,
     });
     const [staffData, setStaffData] = useState({
         staffId: '',
@@ -21,24 +23,24 @@ const AdminPage: React.FC = () => {
         fullName: '',
     });
 
-    // Fetch staff data based on the filter and set staffList state
     const loadStaff = useCallback(async () => {
         try {
-            const data = await fetchStaff({
+            const filterParams = {
                 ...filter,
                 phoneNumber: filter.phoneNumber ? Number(filter.phoneNumber) : undefined,
-            });
+                status: filter.status ? (filter.status.toLowerCase() === 'active' ? "true" : "false") : undefined,
+            };
+            const data = await fetchStaff(filterParams);
 
-            // Ensure data.staffMembers is an array before setting state
             if (Array.isArray(data)) {
                 setStaffList(data);
             } else {
                 console.error('Expected staffMembers to be an array, received:', data);
-                setStaffList([]); // Reset to empty array if data is not valid
+                setStaffList([]);
             }
         } catch (error) {
             console.error('Error fetching staff:', error);
-            setStaffList([]); // Reset to empty array on error
+            setStaffList([]);
         }
     }, [filter]);
 
@@ -76,16 +78,44 @@ const AdminPage: React.FC = () => {
         }
     };
 
+    const addSlot = () => {
+        setStaffData({
+            ...staffData,
+            availableSlots: [...staffData.availableSlots, { startTime: '', endTime: '' }],
+        });
+    };
+
+    const handleSlotChange = (index: number, field: string, value: string) => {
+        const updatedSlots = staffData.availableSlots.map((slot, i) =>
+            i === index ? { ...slot, [field]: value } : slot
+        );
+        setStaffData({ ...staffData, availableSlots: updatedSlots });
+    };
+
+    const removeSlot = (index: number) => {
+        setStaffData({
+            ...staffData,
+            availableSlots: staffData.availableSlots.filter((_, i) => i !== index),
+        });
+    };
+
     return (
         <div>
             <h1>Admin Page</h1>
             <div>
                 <h2>Filter Staff</h2>
+                {/* Filter inputs */}
                 <input
                     type="text"
                     placeholder="Staff ID"
                     value={filter.staffId}
                     onChange={(e) => setFilter({ ...filter, staffId: e.target.value })}
+                />
+                <input
+                    type="text"
+                    placeholder="Specialization"
+                    value={filter.specialization}
+                    onChange={(e) => setFilter({ ...filter, specialization: e.target.value })}
                 />
                 <input
                     type="text"
@@ -105,11 +135,18 @@ const AdminPage: React.FC = () => {
                     value={filter.phoneNumber}
                     onChange={(e) => setFilter({ ...filter, phoneNumber: e.target.value })}
                 />
+                <input
+                    type="text"
+                    placeholder="Status"
+                    value={filter.status}
+                    onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+                />
                 <button onClick={loadStaff}>Filter</button>
             </div>
 
             <div>
                 <h2>Create or Update Staff</h2>
+                {/* Staff inputs */}
                 <input
                     type="text"
                     placeholder="Staff ID"
@@ -152,6 +189,29 @@ const AdminPage: React.FC = () => {
                     value={staffData.fullName}
                     onChange={(e) => setStaffData({ ...staffData, fullName: e.target.value })}
                 />
+                
+                <div>
+                    <h3>Available Slots</h3>
+                    {staffData.availableSlots.map((slot, index) => (
+                        <div key={index}>
+                            <input
+                                type="datetime-local"
+                                placeholder="Start Time"
+                                value={slot.startTime}
+                                onChange={(e) => handleSlotChange(index, 'startTime', e.target.value)}
+                            />
+                            <input
+                                type="datetime-local"
+                                placeholder="End Time"
+                                value={slot.endTime}
+                                onChange={(e) => handleSlotChange(index, 'endTime', e.target.value)}
+                            />
+                            <button onClick={() => removeSlot(index)}>Remove Slot</button>
+                        </div>
+                    ))}
+                    <button onClick={addSlot}>Add Slot</button>
+                </div>
+                
                 <button onClick={handleCreateStaff}>Create</button>
                 <button onClick={handleUpdateStaff}>Update</button>
             </div>
@@ -175,7 +235,7 @@ const AdminPage: React.FC = () => {
                             <td>{staff.licenseNumber}</td>
                             <td>{staff.specialization}</td>
                             <td>{staff.phoneNumber}</td>
-                            <td>{staff.status ? "Active" : "Inactive"}</td> {/* Display status as Active/Inactive */}
+                            <td>{staff.status ? "Active" : "Inactive"}</td>
                             <td>
                                 <button onClick={() => handleDeactivateStaff(staff.staffId)}>Deactivate</button>
                             </td>
