@@ -10,6 +10,8 @@ const getHeaders = () => ({
 export const fetchStaff = async (filter: {
     staffId?: string;
     phoneNumber?: number;
+    specialization?: string;
+    status?: string;
     firstName?: string;
     lastName?: string;
     fullName?: string;
