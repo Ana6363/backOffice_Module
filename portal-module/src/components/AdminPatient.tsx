@@ -80,7 +80,7 @@ const AdminPatient: React.FC = () => {
     const handleDeletePatient = async (recordNumber: string) => {
         try {
             await deletePatient(recordNumber);
-            alert('Patient deleted successfully');
+            alert('Patient deletion schedule in 24h');
             loadPatient();
         } catch (error) {
             console.error('Error deleting patient:', error);
@@ -209,23 +209,29 @@ const AdminPatient: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {patientList.map((patient) => (
-                            <tr key={patient.recordNumber}>
-                                <td>{patient.recordNumber}</td>
-                                <td>{patient.userId}</td>
-                                <td>{new Date(patient.dateOfBirth).toLocaleDateString('en-CA')}</td>
-                                <td>{patient.phoneNumber}</td>
-                                <td>{patient.emergencyContact}</td>
-                                <td>{patient.isToBeDeleted ? "Yes" : "No"}</td>
-                                <td>
+                    {patientList.map((patient) => (
+                        <tr key={patient.recordNumber}>
+                            <td>{patient.recordNumber}</td>
+                            <td>{patient.userId}</td>
+                            <td>{new Date(patient.dateOfBirth).toLocaleDateString('en-CA')}</td>
+                            <td>{patient.phoneNumber}</td>
+                            <td>{patient.emergencyContact}</td>
+                            <td>{patient.isToBeDeleted ? "Yes" : "No"}</td>
+                            <td>
+                                {!patient.isToBeDeleted && (
                                     <button onClick={() => handleMarkToDeletePatient(patient.recordNumber)}>
-                                        Mark To Delete
+                                        Mark for Deletion
                                     </button>
-                                    <button onClick={() => handleDeletePatient(patient.recordNumber)}>Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                                )}
+                                {patient.isToBeDeleted && (
+                                    <button onClick={() => handleDeletePatient(patient.recordNumber)}>
+                                        Delete
+                                    </button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
                 </table>
             </div>
         </div>
