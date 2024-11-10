@@ -21,6 +21,7 @@ const AdminPatient: React.FC = () => {
         lastName: '',
         fullName: '',
     });
+    const [recordNumber, setRecordNumber] = useState('');
 
     const loadPatient = useCallback(async () => {
         try {
@@ -53,8 +54,12 @@ const AdminPatient: React.FC = () => {
     };
 
     const handleUpdatePatient = async () => {
+        if (!recordNumber) {
+            alert("Record Number is required for updating a patient.");
+            return;
+        }
         try {
-            await updatePatient(patientData);
+            await updatePatient({ ...patientData, recordNumber });
             alert('Patient updated successfully');
             loadPatient();
         } catch (error) {
@@ -127,7 +132,7 @@ const AdminPatient: React.FC = () => {
             </div>
 
             <div>
-                <h2>Create or Update Patient</h2>
+                <h2>Create Patient</h2>
                 <input
                     type="text"
                     placeholder="User ID"
@@ -135,10 +140,12 @@ const AdminPatient: React.FC = () => {
                     onChange={(e) => setPatientData({ ...patientData, userId: e.target.value })}
                 />
                 <input
-                    type="text"
+                    type="date"
                     placeholder="Date of Birth"
-                    value={patientData.dateOfBirth}
-                    onChange={(e) => setPatientData({ ...patientData, dateOfBirth: e.target.value })}
+                    value={patientData.dateOfBirth.split("T")[0]}
+                    onChange={(e) => {
+                        setPatientData({ ...patientData, dateOfBirth: `${e.target.value}T00:00:00` });
+                    }}
                 />
                 <input
                     type="number"
@@ -177,15 +184,23 @@ const AdminPatient: React.FC = () => {
                     onChange={(e) => setPatientData({ ...patientData, fullName: e.target.value })}
                 />
                 <button onClick={handleCreatePatient}>Create</button>
+                <div>
+                <h2>Update Patient</h2>
+                <input
+                    type="text"
+                    placeholder="Record Number"
+                    value={recordNumber}
+                    onChange={(e) => setRecordNumber(e.target.value)}
+                />
                 <button onClick={handleUpdatePatient}>Update</button>
             </div>
 
-            <div>
                 <h2>Patient List</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>Record Number</th>
+                            <th>Email</th>
                             <th>Date of Birth</th>
                             <th>Phone Number</th>
                             <th>Emergency Contact</th>
@@ -197,12 +212,16 @@ const AdminPatient: React.FC = () => {
                         {patientList.map((patient) => (
                             <tr key={patient.recordNumber}>
                                 <td>{patient.recordNumber}</td>
+                                <td>{patient.userId}</td>
                                 <td>{new Date(patient.dateOfBirth).toLocaleDateString('en-CA')}</td>
                                 <td>{patient.phoneNumber}</td>
                                 <td>{patient.emergencyContact}</td>
                                 <td>{patient.isToBeDeleted ? "Yes" : "No"}</td>
                                 <td>
-                                    <button onClick={() => markForDeletePatient(patient.recordNumber)}>Mark To Delete</button>
+                                    <button onClick={() => handleMarkToDeletePatient(patient.recordNumber)}>
+                                        Mark To Delete
+                                    </button>
+                                    <button onClick={() => handleDeletePatient(patient.recordNumber)}>Delete</button>
                                 </td>
                             </tr>
                         ))}

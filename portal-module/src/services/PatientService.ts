@@ -36,17 +36,15 @@ export const fetchPatient = async (filter: {
 
     const data = await response.json();
     
-    // Debug log the raw response data
     console.log("Response data received from API:", data);
 
-    // Flatten data: combine patient fields with phoneNumber and isToBeDeleted
     const formattedData = data.patients?.$values.map((item: any) => ({
         ...item.patient,
         phoneNumber: item.phoneNumber,
+        userId: item.userId,
         isToBeDeleted: item.isToBeDeleted,
     })) || [];
 
-    // Debug log the formatted data that will be returned
     console.log("Formatted patient data for frontend:", formattedData);
 
     return formattedData;
@@ -72,6 +70,7 @@ export const createPatient = async (patientData: {
 };
 
 export const updatePatient = async (patientData: {
+    recordNumber: string;
     dateOfBirth: string;
     phoneNumber: number;
     emergencyContact: number;
