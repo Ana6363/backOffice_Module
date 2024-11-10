@@ -9,7 +9,7 @@ const getHeaders = () => ({
 
 export const fetchPatient = async (filter: {
     userId?: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
     firstName?: string;
     lastName?: string;
     fullName?: string;

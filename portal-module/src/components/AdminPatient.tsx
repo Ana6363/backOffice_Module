@@ -5,7 +5,7 @@ const AdminPatient: React.FC = () => {
     const [patientList, setPatientList] = useState<any[]>([]);
     const [filter, setFilter] = useState({
         userId: '',
-        phoneNumber: undefined as number | undefined,
+        phoneNumber: '',
         firstName: '',
         lastName: '',
         fullName: '',
@@ -102,7 +102,7 @@ const AdminPatient: React.FC = () => {
                     type="number"
                     placeholder="Phone Number"
                     value={filter.phoneNumber}
-                    onChange={(e) => setFilter({ ...filter, phoneNumber: parseInt(e.target.value) })}
+                    onChange={(e) => setFilter({ ...filter, phoneNumber: e.target.value })}
                 />
                 <input
                     type="text"
