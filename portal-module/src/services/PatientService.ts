@@ -7,6 +7,37 @@ const getHeaders = () => ({
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
 });
 
+export const fetchLoggedInPatient = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('No token found');
+    }
+
+    const url = `${API_URL}/filter?userId=${token}`;  // Filter by the logged-in user's ID
+
+    console.log("Fetching logged-in patient's data with token:", token);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(), // Pass the token in the headers
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch logged-in patient data');
+
+    const data = await response.json();
+
+    console.log("Response data for logged-in patient:", data);
+
+    const formattedData = data.patients?.$values.map((item: any) => ({
+        ...item.patient,
+        phoneNumber: item.phoneNumber,
+        userId: item.userId,
+        isToBeDeleted: item.isToBeDeleted,
+    })) || [];
+
+    return formattedData[0];  // Return the specific patient's data
+};
+
 export const fetchPatient = async (filter: {
     userId?: string;
     phoneNumber?: string;
