@@ -1,0 +1,7 @@
+.table .selected {
+    background-color: #e0e7ff;
+  }
+  .table .hover:hover {
+    background-color: #f0f0f0;
+  }
+  
