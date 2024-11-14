@@ -13,6 +13,8 @@ const Patient: React.FC = () => {
         fullName: '',
     });
     const [recordNumber, setRecordNumber] = useState('');
+    const [editingField, setEditingField] = useState<string | null>(null);
+    const [fieldValue, setFieldValue] = useState('');
 
     const loadPatient = useCallback(async () => {
         try {
@@ -53,6 +55,24 @@ const Patient: React.FC = () => {
         loadPatient();
     }, [loadPatient]);
 
+    const handleEditClick = (field: string) => {
+        setEditingField(field);
+        setFieldValue(String(patientData[field as keyof typeof patientData] || ''));
+    };
+    
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFieldValue(e.target.value);
+    };
+
+    const handleSaveField = () => {
+        setPatientData(prevData => ({
+            ...prevData,
+            [editingField as keyof typeof patientData]: fieldValue,
+        }));
+        setEditingField(null);
+    };
+
     const handleUpdatePatient = async () => {
         if (!recordNumber) {
             alert("Record Number is required for updating your profile.");
@@ -67,7 +87,11 @@ const Patient: React.FC = () => {
         }
     };
 
-    const handleDeletePatient = async (recordNumber: string) => {
+    const handleDeletePatient = async () => {
+        if (!recordNumber) {
+            alert("Record Number is required for deleting your profile.");
+            return;
+        }
         try {
             await deletePatient(recordNumber);
             alert('Profile deleted successfully');
@@ -77,17 +101,38 @@ const Patient: React.FC = () => {
         }
     };
 
+    const renderField = (label: string, field: string) => (
+        <div style={{ marginBottom: '10px' }}>
+            <strong>{label}:</strong>
+            {editingField === field ? (
+                <>
+                    <input
+                        type="text"
+                        value={fieldValue}
+                        onChange={handleInputChange}
+                    />
+                    <button onClick={handleSaveField}>Save</button>
+                </>
+            ) : (
+                <>
+                    <span> {patientData[field as keyof typeof patientData]}</span>
+                    <button onClick={() => handleEditClick(field)}>Edit</button>
+                </>
+            )}
+        </div>
+    );
+
     return (
         <div>
             <h1>Patient Information</h1>
-            <p>Full Name: {patientData.fullName}</p>
-            <p>Date of Birth: {patientData.dateOfBirth}</p>
-            <p>Phone Number: {patientData.phoneNumber}</p>
-            <p>Emergency Contact: {patientData.emergencyContact}</p>
-            <p>Gender: {patientData.gender}</p>
-            <p>User ID: {patientData.userId}</p>
-            <p>First Name: {patientData.firstName}</p>
-            <p>Last Name: {patientData.lastName}</p>
+            {renderField('Full Name', 'fullName')}
+            {renderField('Date of Birth', 'dateOfBirth')}
+            {renderField('Phone Number', 'phoneNumber')}
+            {renderField('Emergency Contact', 'emergencyContact')}
+            {renderField('Gender', 'gender')}
+            {renderField('User ID', 'userId')}
+            {renderField('First Name', 'firstName')}
+            {renderField('Last Name', 'lastName')}
 
             <div>
                 <h2>Update Patient</h2>
@@ -95,13 +140,7 @@ const Patient: React.FC = () => {
             </div>
             <div>
                 <h2>Delete Account</h2>
-                <input
-                    type="text"
-                    placeholder="Record Number"
-                    value={recordNumber}
-                    onChange={(e) => setRecordNumber(e.target.value)}
-                />
-                <button onClick={() => handleDeletePatient(recordNumber)}>Delete</button>
+                <button onClick={handleDeletePatient}>Delete Account</button>
             </div>
         </div>
     );

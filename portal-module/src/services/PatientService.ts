@@ -13,7 +13,7 @@ export const fetchLoggedInPatient = async () => {
         throw new Error('No token found');
     }
 
-    const url = `${API_URL}/filter?userId=${token}`;  // Filter by the logged-in user's ID
+    const url = `${API_URL}/loggedPatient`;  // Filter by the logged-in user's ID
 
     console.log("Fetching logged-in patient's data with token:", token);
 
@@ -33,6 +33,9 @@ export const fetchLoggedInPatient = async () => {
         phoneNumber: item.phoneNumber,
         userId: item.userId,
         isToBeDeleted: item.isToBeDeleted,
+        firstName : item.firstName,
+        lastName : item.lastName,
+        fullName : item.fullName
     })) || [];
 
     return formattedData[0];  // Return the specific patient's data
