@@ -1,0 +1,15 @@
+.menu-dropdown {
+    display: none;
+  }
+  
+  /* Show the dropdown when the parent is hovered */
+  .menu-dropdown-toggle:hover + .menu-dropdown,
+  .menu-dropdown:hover {
+    display: block;
+  }
+  
+  /* Style the dropdown items */
+  .menu-dropdown li {
+    padding: 8px 16px;
+  }
+  
