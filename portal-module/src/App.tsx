@@ -6,7 +6,9 @@ import Dashboard from './services/Dashboard';
 import AdminPage from './pages/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/AdminPatient';
-import Patient from './pages/Patient';
+import Patient from './pages/Patient/Patient';
+import PatientUpdate from './pages/Patient/PatientUpdate';
+import PatientDelete from './pages/Patient/PatientDelete';
 
 const AdminDefault: React.FC = () => (
     <div>Welcome to the Admin Dashboard. Please select a tab above.</div>
@@ -27,6 +29,8 @@ const App: React.FC = () => {
                     {/* TODO <Route path="oprequest" element={<OpRequest />} /> */}
               </Route>
               <Route path="/patient" element={<Patient/>} />
+                <Route path="/patient/update" element={<PatientUpdate/>} />
+                <Route path="/patient/delete" element={<PatientDelete/>} />
           </Routes>
       </Router>
   );
