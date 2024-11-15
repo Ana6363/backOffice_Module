@@ -11,6 +11,9 @@ import AdminOpType from './pages/AdminOpType';
 import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
+import StaffPage from './pages/StaffPage';
+import OpRequest from './pages/OperationRequest';
+
 
 
 // A component to check the user's role and grant or deny access to certain routes
@@ -51,6 +54,13 @@ const App: React.FC = () => {
                         <Route path="patient" element={<AdminPatient />} />
                         <Route path="staff" element={<AdminStaff />} />
                         <Route path="opType" element={<AdminOpType />} />
+                    </Route>
+                </Route>
+
+                {/* Admin routes protected for 'Admin' role only */}
+                <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/login" />}>
+                    <Route path="/staff" element={<StaffPage />}>
+                        <Route path="opRequest" element={<OpRequest />} />
                     </Route>
                 </Route>
 

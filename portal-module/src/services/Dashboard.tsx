@@ -35,9 +35,9 @@ const TokenTest: React.FC = () => {
                     navigate('/admin', { replace: true });
                 } else if (role === 'Patient') {
                     navigate('/patient', { replace: true });
-                } else {
+                } else if (role === 'Doctor' || role === 'Nurse') {
                     navigate('/staff', { replace: true });
-                }
+                }  
             } catch (error) {
                 console.error("Error decoding token:", error);
                 navigate('/unauthorized'); // TODO

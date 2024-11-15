@@ -6,18 +6,24 @@ const getHeaders = () => ({
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
 });
 
+const getStaffIdFromEmail = () => {
+    const userEmail = localStorage.getItem('userEmail');
+    return userEmail ? userEmail.split('@')[0] : '';
+};
 
 export const fetchOperationRequest = async (filter: {
     requestId?: string;
     deadline?: string;
-    appointementDate?: string;
     priority?: string;
     recordNumber?: string;
-    staffId?: string;
     status?: string;
-    operationTypeName?: string;
+    operationType?: string;
 }) => {
-    const queryParams = Object.entries(filter)
+    const staffId = getStaffIdFromEmail();
+
+    const filterWithStaffId = { ...filter, staffId };
+
+    const queryParams = Object.entries(filterWithStaffId)
         .filter(([_, value]) => value !== null && value !== undefined)
         .reduce((acc, [key, value]) => {
             acc[key] = value as string;
@@ -29,16 +35,14 @@ export const fetchOperationRequest = async (filter: {
 
     const response = await fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+        headers: getHeaders(),
     });
 
     if (!response.ok) throw new Error('Failed to fetch operationRequest');
 
     const data = await response.json();
     
+    console.log(data);
     const operationRequests = data.operationRequests?.$values || [];
 
     if (!Array.isArray(operationRequests)) {
@@ -46,32 +50,44 @@ export const fetchOperationRequest = async (filter: {
     }
 
     return operationRequests;
-
 };
 
 export const createOperationRequest = async (operationRequestData: {
-    requestId: string;
     deadline: string;
-    appointementDate: string;
     priority: string;
     recordNumber: string;
-    staffId: string;
     status: string;
     operationTypeName: string;
 }) => {
-    const response = await fetch(API_URL, {
+    const staffId = getStaffIdFromEmail();
+
+    const requestDataWithStaffId = {
+        ...operationRequestData,
+        staffId,
+    };
+    console.log(requestDataWithStaffId);
+    const url = `${API_URL}/create`;
+
+    const response = await fetch(url, {
         method: 'POST',
         headers: getHeaders(),
-        body: JSON.stringify(operationRequestData),
+        body: JSON.stringify(requestDataWithStaffId),
     });
 
-    if (!response.ok) throw new Error('Failed to create operationRequest');
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error Response Body:', errorText);
+        throw new Error('Failed to create operationRequest');
+    }
 
     const data = await response.json();
 
     return data;
-
 };
+
+
+
 
 export const updateOperationRequest = async (operationRequestData: {
     requestId: string;
@@ -81,12 +97,15 @@ export const updateOperationRequest = async (operationRequestData: {
     recordNumber: string;
     staffId: string;
     status: string;
-    operationTypeName: string;
+    operationType: string;
 }) => {
-    const response = await fetch(`${API_URL}/${operationRequestData.requestId}`, {
+    const staffId = getStaffIdFromEmail();
+    const requestDataWithStaffId = { ...operationRequestData, staffId };
+
+    const response = await fetch(`${API_URL}/update`, {
         method: 'PUT',
         headers: getHeaders(),
-        body: JSON.stringify(operationRequestData),
+        body: JSON.stringify(requestDataWithStaffId),
     });
 
     if (!response.ok) throw new Error('Failed to update operationRequest');
@@ -97,13 +116,14 @@ export const updateOperationRequest = async (operationRequestData: {
 };
 
 export const deleteOperationRequest = async (requestId: string) => {
-    const response = await fetch(`${API_URL}/${requestId}`, {
+    const response = await fetch(`${API_URL}/delete`, {
         method: 'DELETE',
         headers: getHeaders(),
+        body: JSON.stringify({ requestId: requestId }),
     });
 
-    if (!response.ok) throw new Error('Failed to delete operationRequest');
+    if (!response.ok) throw new Error('Failed to delete operation request');
 
-    return await response.json();
-}
+    return response.status === 204 ? { success: true } : await response.json();
+};
 
