@@ -6,8 +6,12 @@ import Dashboard from './services/Dashboard';
 import AdminPage from './pages/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/AdminPatient';
-import Patient from './pages/Patient';
+
 import AdminOpType from './pages/AdminOpType';
+import Patient from './pages/Patient/Patient';
+import PatientUpdate from './pages/Patient/PatientUpdate';
+import PatientDelete from './pages/Patient/PatientDelete';
+
 
 // A component to check the user's role and grant or deny access to certain routes
 interface ProtectedRouteProps {
@@ -26,6 +30,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, redirectP
 };
 
 const App: React.FC = () => {
+
     const userRole = localStorage.getItem('userRole');
     const userEmail = localStorage.getItem('userEmail');
 
@@ -52,6 +57,8 @@ const App: React.FC = () => {
                 {/* Patient route protected for 'Patient' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Patient']} redirectPath="/login" />}>
                     <Route path="/patient" element={<Patient />} />
+                    <Route path="/patient/update" element={<PatientUpdate/>} />
+                    <Route path="/patient/delete" element={<PatientDelete/>} />
                 </Route>
             </Routes>
         </Router>

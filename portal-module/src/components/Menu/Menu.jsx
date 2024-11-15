@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Menu.css'; 
 
-
 const BasicMenu = ({ onSelect, selectedItem }) => {
   return (
     <ul className="menu bg-base-200 rounded-box w-56">
@@ -85,19 +84,13 @@ const DropdownMenu = ({ onSelect, selectedItem }) => {
   );
 };
 
-const MenuComponent = ({ type }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  const handleSelect = (item) => {
-    setSelectedItem(item); // Update the selected item
-  };
-
+const MenuComponent = ({ type, onSelect, selectedItem }) => {
   return (
     <div>
       {type === 'dropdown' ? (
-        <DropdownMenu onSelect={handleSelect} selectedItem={selectedItem} />
+        <DropdownMenu onSelect={onSelect} selectedItem={selectedItem} />
       ) : (
-        <BasicMenu onSelect={handleSelect} selectedItem={selectedItem} />
+        <BasicMenu onSelect={onSelect} selectedItem={selectedItem} />
       )}
     </div>
   );
