@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
@@ -7,29 +7,55 @@ import AdminPage from './pages/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/AdminPatient';
 import Patient from './pages/Patient';
+import AdminOpType from './pages/AdminOpType';
 
-const AdminDefault: React.FC = () => (
-    <div>Welcome to the Admin Dashboard. Please select a tab above.</div>
-);
+// A component to check the user's role and grant or deny access to certain routes
+interface ProtectedRouteProps {
+    allowedRoles: string[];
+    redirectPath: string;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, redirectPath }) => {
+    const userRole = localStorage.getItem('userRole');
+
+    if (!userRole || !allowedRoles.includes(userRole)) {
+        return <Navigate to={redirectPath} replace />;
+    }
+
+    return <Outlet />;
+};
 
 const App: React.FC = () => {
-  return (
-      <Router>
-          <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin/*" element={<AdminPage />}>
-                    <Route index element={<AdminDefault />} />
-                    {<Route path="patient" element={<AdminPatient />} />}
-                    <Route path="staff" element={<AdminStaff />} />
-                    {/* TODO <Route path="oprequest" element={<OpRequest />} /> */}
-              </Route>
-              <Route path="/patient" element={<Patient/>} />
-          </Routes>
-      </Router>
-  );
+    const userRole = localStorage.getItem('userRole');
+    const userEmail = localStorage.getItem('userEmail');
+
+    console.log("User role:", userRole);
+    console.log("User email:", userEmail);
+
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Admin routes protected for 'Admin' role only */}
+                <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
+                    <Route path="/admin" element={<AdminPage />}>
+                        <Route path="patient" element={<AdminPatient />} />
+                        <Route path="staff" element={<AdminStaff />} />
+                        <Route path="opType" element={<AdminOpType />} />
+                    </Route>
+                </Route>
+
+                {/* Patient route protected for 'Patient' role only */}
+                <Route element={<ProtectedRoute allowedRoles={['Patient']} redirectPath="/login" />}>
+                    <Route path="/patient" element={<Patient />} />
+                </Route>
+            </Routes>
+        </Router>
+    );
 };
 
 export default App;

@@ -9,7 +9,7 @@ const AdminPage: React.FC = () => {
                 <ul>
                     <li><Link to="patient">Patient</Link></li>
                     <li><Link to="staff">Staff</Link></li>
-                    <li><Link to="oprequest">Op Request</Link></li>
+                    <li><Link to="opType">Operation Type</Link></li>
                 </ul>
             </nav>
             <Outlet /> {/* This will render either the index route or a child route */}

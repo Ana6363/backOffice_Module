@@ -28,6 +28,9 @@ const TokenTest: React.FC = () => {
                 console.log("User role:", role);
                 console.log("User email:", email);
 
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('userEmail', email);
+
                 if (role === 'Admin') {
                     navigate('/admin', { replace: true });
                 } else if (role === 'Patient') {
@@ -37,7 +40,7 @@ const TokenTest: React.FC = () => {
                 }
             } catch (error) {
                 console.error("Error decoding token:", error);
-                navigate('/login');
+                navigate('/unauthorized'); // TODO
             }
         } else {
             console.error("No token found in localStorage");
