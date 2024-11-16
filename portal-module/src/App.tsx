@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
+import MainPagePatient from './pages/Patient/MainPagePatient';
 import AdminPage from './pages/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/AdminPatient';
@@ -48,6 +49,7 @@ const App: React.FC = () => {
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/dashboard" element={<Dashboard />} />
 
+
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
                     <Route path="/admin" element={<AdminPage />}>
@@ -65,7 +67,8 @@ const App: React.FC = () => {
                 </Route>
 
                 {/* Patient route protected for 'Patient' role only */}
-                <Route element={<ProtectedRoute allowedRoles={['Patient']} redirectPath="/login" />}>
+                <Route element={<ProtectedRoute allowedRoles={['Patient']} redirectPath="/mainPagePatient" />}>
+                    <Route path="/mainPagePatient" element={<MainPagePatient />} />
                     <Route path="/patient" element={<Patient />} />
                     <Route path="/patient/update" element={<PatientUpdate/>} />
                     <Route path="/patient/delete" element={<PatientDelete/>} />

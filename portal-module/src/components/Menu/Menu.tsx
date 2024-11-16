@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
-import './Menu.css'; 
+import React from 'react';
+import './Menu.css';
 
-const BasicMenu = ({ onSelect, selectedItem }) => {
+interface MenuProps {
+  onSelect: (item: string) => void; // Callback function to handle selection
+  selectedItem: string | null; // Selected item
+}
+
+const BasicMenu: React.FC<MenuProps> = ({ onSelect, selectedItem }) => {
   return (
     <ul className="menu bg-base-200 rounded-box w-56">
       <li>
@@ -32,7 +37,7 @@ const BasicMenu = ({ onSelect, selectedItem }) => {
   );
 };
 
-const DropdownMenu = ({ onSelect, selectedItem }) => {
+const DropdownMenu: React.FC<MenuProps> = ({ onSelect, selectedItem }) => {
   return (
     <ul className="menu bg-base-200 rounded-box w-56">
       <li>
@@ -84,7 +89,11 @@ const DropdownMenu = ({ onSelect, selectedItem }) => {
   );
 };
 
-const MenuComponent = ({ type, onSelect, selectedItem }) => {
+interface MenuComponentProps extends MenuProps {
+  type: 'basic' | 'dropdown'; // Specifies menu type
+}
+
+const MenuComponent: React.FC<MenuComponentProps> = ({ type, onSelect, selectedItem }) => {
   return (
     <div>
       {type === 'dropdown' ? (

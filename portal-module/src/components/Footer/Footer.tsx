@@ -1,6 +1,7 @@
 import React from 'react';
+import './Footer.css';
 
-const Footer = () => {
+const Footer: React.FC = () => {
   return (
     <footer className="footer footer-center bg-base-300 text-base-content p-4">
       <aside>
@@ -11,3 +12,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

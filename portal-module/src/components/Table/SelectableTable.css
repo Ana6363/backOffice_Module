@@ -1,7 +1,29 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.table .hover {
+  cursor: pointer;
+}
+
+.table .hover:hover {
+  background-color: #f1f1f1;
+}
+
 .table .selected {
-    background-color: #e0e7ff;
-  }
-  .table .hover:hover {
-    background-color: #f0f0f0;
-  }
-  
+  background-color: #bde0fe;
+}
+
+.input.input-bordered {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 6px;
+  border-radius: 4px;
+}

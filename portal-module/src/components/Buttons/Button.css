@@ -1,0 +1,74 @@
+/* Default styles for the button */
+.btn {
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+/* Primary button (default state) */
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+/* Danger button (for delete action) */
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+}
+
+.btn-danger:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.5);
+}
+
+/* Small variation for compact buttons */
+.btn-small {
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+/* Specific small button class to reduce padding */
+.w-48 {
+  width: 12rem; /* Adjust width for smaller buttons */
+}
+
+.text-sm {
+  font-size: 14px; /* Smaller text for compact look */
+}
+
+.py-2 {
+  padding-top: 0.5rem; /* Reduced vertical padding */
+  padding-bottom: 0.5rem; /* Reduced vertical padding */
+}
+
+.rounded-xl {
+  border-radius: 0.75rem; /* More rounded corners for buttons */
+}
+
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}

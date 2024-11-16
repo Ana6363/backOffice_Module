@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { updatePatient, fetchLoggedInPatient } from '../../services/PatientService';
-import Button from '../../components/Buttons';
-import Navbar from '../../components/Navbar';
+import Button from '../../components/Buttons/Buttons';
+import Navbar from '../../components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
+import Footer from '../../components/Footer/Footer';
 
 const UpdatePatient: React.FC = () => {
   const [patientData, setPatientData] = useState({
@@ -46,10 +46,16 @@ const UpdatePatient: React.FC = () => {
       console.error('Error updating profile:', error);
     }
   };
+  const menuItems = [
+    { id: 1, name: 'My Account', route: '/patient' },
+    { id: 2, name: 'Update Account', route: '/patient/update' },
+    { id: 3, name: 'Delete Account', route: '/patient/delete' },
+    { id: 4, name: 'Main Page', route: '/' },
+];
 
   return (
     <div>
-      <Navbar />
+      <Navbar menuItemsProp={menuItems}/>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Update Profile</h1>
 
