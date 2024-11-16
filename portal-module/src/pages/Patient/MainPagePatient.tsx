@@ -1,40 +1,16 @@
 import React from 'react';
-import Navbar from '../../components/Navbar/Navbar';
-import Footer from '../../components/Footer/Footer';
-import '../MainPage/MainPage.css';
+import WelcomePage from '../../components/MainPage/MainPage';
 
-interface WelcomePageProps {}
-const WelcomePage: React.FC<WelcomePageProps> = () => {
-  const menuItems = [
-    { id: 1, name: 'My Account', route: '/patient' },
-    { id: 2, name: 'Update Account', route: '/patient/update' },
-    { id: 3, name: 'Delete Account', route: '/patient/delete' },
-    { id: 4, name: 'Main Page', route: '/mainPagePatient' },
+const PatientWelcome = () => {
+  const patientMenuItems = [
+    { id: 1, name: 'Main Page', route: '/mainPagePatient' },
+    { id: 2, name: 'My Account', route: '/patient' },
+    { id: 3, name: 'Update Account', route: '/patient/update' },
+    { id: 4, name: 'Delete Account', route: '/patient/delete' },
   ];
 
-  return (
-    <div>
-      {/* Navbar */}
-      <Navbar menuItemsProp={menuItems} />
-
-      <div className="welcome-container">
-        <div className="welcome-content">
-          {/* Image Container */}
-          <div className="welcome-image">
-            <img src="/images/Logo.jpg" alt="Logo" />
-          </div>
-
-          {/* Welcome Text */}
-          <div className="welcome-text">
-            <h1>Welcome To Your Healthcare Facility!</h1>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+  return <WelcomePage menuItems={patientMenuItems} />;
 };
 
-export default WelcomePage;
+export default PatientWelcome;
+

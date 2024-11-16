@@ -34,7 +34,7 @@ const TokenTest: React.FC = () => {
                 if (role === 'Admin') {
                     navigate('/admin', { replace: true });
                 } else if (role === 'Patient') {
-                    navigate('/patient', { replace: true });
+                    navigate('/mainPagePatient', { replace: true });
                 } else if (role === 'Doctor' || role === 'Nurse') {
                     navigate('/staff', { replace: true });
                 }  

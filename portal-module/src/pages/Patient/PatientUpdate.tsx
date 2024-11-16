@@ -47,10 +47,10 @@ const UpdatePatient: React.FC = () => {
     }
   };
   const menuItems = [
-    { id: 1, name: 'My Account', route: '/patient' },
-    { id: 2, name: 'Update Account', route: '/patient/update' },
-    { id: 3, name: 'Delete Account', route: '/patient/delete' },
-    { id: 4, name: 'Main Page', route: '/' },
+    { id: 1, name: 'Main Page', route: '/mainPagePatient' },
+    { id: 2, name: 'My Account', route: '/patient' },
+    { id: 3, name: 'Update Account', route: '/patient/update' },
+    { id: 4, name: 'Delete Account', route: '/patient/delete' },
 ];
 
   return (
