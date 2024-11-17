@@ -1,35 +1,36 @@
-/* Ensure the page takes the full height */
+/* Ensure the root elements take full height */
 html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Main content area to take up space */
-  .main-content {
-    flex: 1;
-  }
-  
-  /* Footer styles */
-  .footer {
-    width: 100%;
-    background-color: #f1f1f1; /* Or your bg-base-300 */
-    padding: 20px;
-    text-align: center;
-    box-sizing: border-box;
-    border-top: 1px solid #ddd; /* Optional: adds a line at the top of the footer */
-  }
-  
-  /* Center text in the footer */
-  .footer p {
-    margin: 0;
-    color: #333; /* Or your text color */
-  }
-  
-  /* Optional: for additional styling of footer when content is limited */
-  .footer-center {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-  
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The wrapper for the app */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes the full viewport height */
+}
+
+/* Main content fills the available space */
+.main-content {
+  flex: 1; /* Grow to fill available space */
+  padding: 20px; /* Optional: add padding to the content area */
+}
+
+/* Footer always at the bottom */
+.footer {
+  width: 100%;
+  background-color: #f1f1f1; /* Background color */
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  border-top: 1px solid #ddd; /* Optional: border at the top of the footer */
+}
+
+/* Footer text styling */
+.footer p {
+  margin: 0;
+  color: #333;
+}

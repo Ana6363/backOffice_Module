@@ -12,9 +12,9 @@
 
 /* Primary button (default state) */
 .btn-primary {
-  background-color: #3498db;
+  background-color: #92d0fa;
   color: white;
-  border-color: #3498db;
+  border-color: #92d0fa;
 }
 
 .btn-primary:hover {

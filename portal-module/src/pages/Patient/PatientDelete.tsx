@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { deletePatient, fetchLoggedInPatient } from '../../services/PatientService';
-import './PatientPages.css';
+import './PatientPage.css';
 import Button from '../../components/Buttons/Buttons';
 import Navbar from '../../components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -51,32 +51,34 @@ const DeletePatient: React.FC = () => {
     { id: 2, name: 'My Account', route: '/patient' },
     { id: 3, name: 'Update Account', route: '/patient/update' },
     { id: 4, name: 'Delete Account', route: '/patient/delete' },
-];
+  ];
 
   return (
-    <div>
+    <div className="app-wrapper"> {/* Ensure full-page layout */}
       <Navbar menuItemsProp={menuItems} />
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Confirm Delete</h1>
-        <p>Are you sure you want to delete your profile?</p>
+      <main className="main-content"> {/* Main content to push footer down */}
+        <div className="container mx-auto p-4">
+          <h1 className="text-2xl font-bold mb-4">Confirm Delete</h1>
+          <p>Are you sure you want to delete your profile?</p>
 
-        <div className="flex justify-between mt-4">
-          <Button onClick={() => setModalOpen(true)}>Confirm Delete</Button>
-          <Button onClick={() => navigate('/')}>Cancel</Button>
+          <div className="flex justify-between mt-4">
+            <Button onClick={() => setModalOpen(true)}>Confirm Delete</Button>
+            <Button onClick={() => navigate('/')}>Cancel</Button>
+          </div>
         </div>
-      </div>
 
-      {/* Modal for Confirmation */}
-      {isModalOpen && (
-        <Modal
-          title="Confirm Deletion"
-          message="Are you sure you want to delete your profile? This action cannot be undone."
-          onClose={() => setModalOpen(false)}
-          onConfirm={handleDeletePatient}
-        />
-      )}
+        {/* Modal for Confirmation */}
+        {isModalOpen && (
+          <Modal
+            title="Confirm Deletion"
+            message="Are you sure you want to delete your profile? This action cannot be undone."
+            onClose={() => setModalOpen(false)}
+            onConfirm={handleDeletePatient}
+          />
+        )}
+      </main>
 
-      <Footer />
+      <Footer /> {/* Footer at the bottom */}
     </div>
   );
 };
