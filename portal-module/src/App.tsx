@@ -4,6 +4,7 @@ import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
+import MainPageStaff from './pages/Staff/MainPageStaff';
 import AdminPage from './pages/Admin/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
@@ -12,8 +13,7 @@ import AdminOpType from './pages/AdminOpType';
 import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
-import StaffPage from './pages/StaffPage';
-import OpRequest from './pages/OperationRequest';
+import OpRequest from './pages/Staff/OperationRequest';
 
 
 
@@ -61,7 +61,7 @@ const App: React.FC = () => {
 
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/login" />}>
-                    <Route path="/staff" element={<StaffPage />}>
+                    <Route path="/staff" element={<MainPageStaff />}>
                         <Route path="opRequest" element={<OpRequest />} />
                     </Route>
                 </Route>
