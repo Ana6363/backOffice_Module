@@ -4,7 +4,7 @@ import Button from '../../components/Buttons/Buttons';
 import Navbar from '../../components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
-import './PatientPage.css';  // Make sure the styles are consistent with your setup
+import './UpdatePatient.css';  // Make sure the styles are consistent with your setup
 
 const UpdatePatient: React.FC = () => {
   const [patientData, setPatientData] = useState({

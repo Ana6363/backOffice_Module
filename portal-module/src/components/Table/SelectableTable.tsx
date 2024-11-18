@@ -1,86 +1,97 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SelectableTable.css';
 
-interface RowData {
-  id: number;
-  name: string;
-  job: string;
-  favoriteColor: string;
+// Generic Row Data type
+interface SelectableTableProps<T> {
+    data: T[];
+    headers: { key: keyof T; label: string }[];
+    onRowSelect: (selectedRow: T | null) => void;
 }
 
-interface SelectableTableProps {
-  data: RowData[]; // Array of row data passed as a prop
-}
+const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: SelectableTableProps<T>) => {
+    const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+    const [filters, setFilters] = useState<{ [key: string]: string }>({});
 
-const SelectableTable: React.FC<SelectableTableProps> = ({ data }) => {
-  const [rows, setRows] = useState<RowData[]>(data);
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
+    useEffect(() => {
+        // Get first selected row and send it back to the parent component
+        if (selectedRows.size > 0) {
+            const selectedRow = data.find((row, index) => selectedRows.has(index)) || null;
+            onRowSelect(selectedRow);
+        } else {
+            onRowSelect(null); // no row selected
+        }
+    }, [selectedRows, data, onRowSelect]);
 
-  const handleRowClick = (rowIndex: number) => {
-    setSelectedRow(rowIndex);
-  };
+    // Handle checkbox selection
+    const handleCheckboxChange = (index: number, isChecked: boolean) => {
+        const updatedSelectedRows = new Set(selectedRows);
+        if (isChecked) {
+            updatedSelectedRows.add(index);
+        } else {
+            updatedSelectedRows.delete(index);
+        }
+        setSelectedRows(updatedSelectedRows);
+    };
 
-  const handleEdit = (id: number, key: keyof RowData, value: string) => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, [key]: value } : row
-      )
+    // Handle filter change
+    const handleFilterChange = (key: string, value: string) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [key]: value,
+        }));
+    };
+
+    // Filter data based on the filters applied
+    const filteredData = data.filter((row) => {
+        return headers.every((header) => {
+            const filterValue = filters[String(header.key)]?.toLowerCase() || '';
+            const cellValue = String(row[header.key] ?? '').toLowerCase();
+            return cellValue.includes(filterValue);
+        });
+    });
+
+    return (
+        <div className="overflow-x-auto">
+            <table className="table table-compact w-full">
+                <thead>
+                    <tr>
+                        <th className="px-2 py-1">Select</th>
+                        {headers.map((header) => (
+                            <th key={String(header.key)} className="px-2 py-1">
+                                {header.label}
+                                <input
+                                    type="text"
+                                    value={filters[String(header.key)] || ''}
+                                    onChange={(e) => handleFilterChange(String(header.key), e.target.value)}
+                                    placeholder={`Filter by ${header.label}`}
+                                    className="ml-2 px-1 border rounded"
+                                />
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredData.map((row, index) => (
+                        <tr key={index} className="hover cursor-pointer">
+                            <td className="px-2 py-1">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedRows.has(index)}
+                                    onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                                />
+                            </td>
+                            {headers.map((header) => (
+                                <td key={String(header.key)} className="px-2 py-1">
+                                    {/* Dynamically access the key */}
+                                    {String(row[header.key] ?? '--')}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
-  };
-
-  return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* Table Head */}
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
-          </tr>
-        </thead>
-        {/* Table Body */}
-        <tbody>
-          {rows.map((row) => (
-            <tr
-              key={row.id}
-              onClick={() => handleRowClick(row.id)}
-              className={selectedRow === row.id ? 'selected' : 'hover'}
-            >
-              <td>{row.id}</td>
-              <td>
-                <input
-                  type="text"
-                  value={row.name}
-                  onChange={(e) => handleEdit(row.id, 'name', e.target.value)}
-                  className="input input-bordered"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.job}
-                  onChange={(e) => handleEdit(row.id, 'job', e.target.value)}
-                  className="input input-bordered"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.favoriteColor}
-                  onChange={(e) =>
-                    handleEdit(row.id, 'favoriteColor', e.target.value)
-                  }
-                  className="input input-bordered"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
 };
 
 export default SelectableTable;
