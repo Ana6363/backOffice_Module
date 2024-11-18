@@ -52,7 +52,7 @@ const DrawerComponent: React.FC<DrawerComponentProps> = ({ menuItemsProp }) => {
       <div className="navbar bg-base-300 w-full">
         <div className="flex-none">
           {/* Menu button (hamburger) */}
-          <button className="btn btn-ghost drawer-side-trigger" onClick={handleMenuClick}>
+          <button className="btn btn-ghost drawer-side-trigger" onClick={handleMenuClick} title="Toggle Menu">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
