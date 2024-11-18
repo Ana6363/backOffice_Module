@@ -4,9 +4,9 @@ import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
-import AdminPage from './pages/AdminPage';
+import AdminPage from './pages/Admin/AdminPage';
 import AdminStaff from './pages/AdminStaff';
-import AdminPatient from './pages/AdminPatient';
+import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
 
 import AdminOpType from './pages/AdminOpType';
 import Patient from './pages/Patient/Patient';

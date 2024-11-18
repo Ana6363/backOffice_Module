@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { fetchPatient, createPatient, updatePatient, markForDeletePatient, deletePatient } from '../services/PatientService';
+import { fetchPatient, createPatient, updatePatient, markForDeletePatient, deletePatient } from '../../../services/PatientService';
 
 const AdminPatient: React.FC = () => {
     const [patientList, setPatientList] = useState<any[]>([]);
