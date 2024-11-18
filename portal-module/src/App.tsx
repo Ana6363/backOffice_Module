@@ -8,6 +8,8 @@ import MainPageStaff from './pages/Staff/MainPageStaff';
 import AdminPage from './pages/Admin/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
+import CreatePatient from './pages/Admin/AdminPatient/AdminPatientCreate'; 
+import UpdatePatient from './pages/Admin/AdminPatient/AdminPatientUpdate';
 
 import AdminOpType from './pages/AdminOpType';
 import Patient from './pages/Patient/Patient';
@@ -52,11 +54,12 @@ const App: React.FC = () => {
 
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
-                    <Route path="/admin" element={<AdminPage />}>
-                        <Route path="patient" element={<AdminPatient />} />
-                        <Route path="staff" element={<AdminStaff />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                        <Route path="/admin/patient" element={<AdminPatient />} />
+                        <Route path="/admin/patient/create" element={<CreatePatient />} /> 
+                        <Route path="/admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
+                        <Route path="/staff" element={<AdminStaff />} />
                         <Route path="opType" element={<AdminOpType />} />
-                    </Route>
                 </Route>
 
                 {/* Admin routes protected for 'Admin' role only */}

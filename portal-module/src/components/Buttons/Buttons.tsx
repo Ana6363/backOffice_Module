@@ -5,6 +5,7 @@ interface ButtonProps {
   children: ReactNode;       // The button label or content
   onClick: () => void;       // Function for click event
   className?: string;        // Optional custom styles
+  disabled?: boolean;        // Optional disabled state
 }
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, className = 'btn-primary' }) => {
