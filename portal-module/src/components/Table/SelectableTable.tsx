@@ -78,6 +78,7 @@ const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: Selectabl
                                     type="checkbox"
                                     checked={selectedRows.has(index)}
                                     onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                                    title="Select row"
                                 />
                             </td>
                             {headers.map((header) => (

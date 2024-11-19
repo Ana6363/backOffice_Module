@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import './UpdatePatient.css';  // Make sure the styles are consistent with your setup
 
+
 const UpdatePatient: React.FC = () => {
   const [patientData, setPatientData] = useState({
     dateOfBirth: '',
@@ -70,18 +71,20 @@ const UpdatePatient: React.FC = () => {
               value={patientData.phoneNumber}
               onChange={(e) => setPatientData({ ...patientData, phoneNumber: Number(e.target.value) })}
               className="input input-bordered w-full mb-2"
+              placeholder="Enter phone number"
             />
           </div>
 
           <div className="mb-4">
-            <label>Emergency Contact</label>
             <input
               type="text"
               name="emergencyContact"
               value={patientData.emergencyContact}
               onChange={(e) => setPatientData({ ...patientData, emergencyContact: Number(e.target.value) })}
               className="input input-bordered w-full mb-2"
+              placeholder="Enter emergency contact"
             />
+            
           </div>
 
           <div className="mb-4">
