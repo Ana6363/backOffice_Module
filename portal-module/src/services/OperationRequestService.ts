@@ -61,6 +61,7 @@ export const createOperationRequest = async (operationRequestData: {
 }) => {
     const staffId = getStaffIdFromEmail();
 
+    
     const requestDataWithStaffId = {
         ...operationRequestData,
         staffId,

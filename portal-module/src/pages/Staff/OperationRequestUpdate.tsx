@@ -13,12 +13,13 @@ const UpdateOperationRequest: React.FC = () => {
         deadline: '',
         priority: '',
         recordNumber: '',
-        status: 'PENDING',
+        status: '',
         operationTypeName: '',
     });
     const [isModalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
 
+    
     const loadOperationRequests = useCallback(async () => {
         try {
             const data = await fetchOperationRequest({});

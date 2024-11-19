@@ -15,7 +15,7 @@ const OperationRequest: React.FC = () => {
         deadline: '',
         priority: '',
         recordNumber: '',
-        status: 'PENDING',
+        status: '',
         operationTypeName: '',
     });
 
@@ -54,7 +54,7 @@ const OperationRequest: React.FC = () => {
 
     const handleNavigateToUpdate = () => {
         if (!selectedOperationRequest) {
-            alert("No patient selected.");
+            alert("No operation request selected.");
             return;
         }
         navigate('/operationRequest/update'); // Navigate to the update page
@@ -84,7 +84,7 @@ const OperationRequest: React.FC = () => {
           <Navbar menuItemsProp={menuItems} />
           <main className="main-content">
             <div className="container">
-              <h1 className="text-3xl font-bold text-center mb-8">Admin Patient Page</h1>
+              <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>
     
               {/* Table Container */}
               <div className="table-container">
@@ -104,15 +104,16 @@ const OperationRequest: React.FC = () => {
               {/* Action Buttons */}
               <div className="action-buttons">
                 <Button onClick={handleNavigateToCreate} className="button button-primary">
-                  Create Patient
+                  Create Request
                 </Button>
                 <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
-                  Update Patient
+                  Update Request
                 </Button>
                 <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
-                  {selectedOperationRequest?.isToBeDeleted ? 'Delete Patient' : 'Mark for Deletion'}
+                  {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Delete Request'}
                 </Button>
               </div>
+              
     
               {/* Modal for confirmation before delete/mark */}
               {isModalOpen && (

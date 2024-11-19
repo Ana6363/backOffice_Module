@@ -12,6 +12,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ menuItems }) => {
     <div>
       {/* Navbar */}
       <Navbar menuItemsProp={menuItems} />
+      
 
       <div className="welcome-container">
         <div className="welcome-content">

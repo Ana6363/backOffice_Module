@@ -81,7 +81,7 @@ h1 {
 }
 
 /* Add margin to separate the last input field from the button */
-.patient-form .form-group:last-child {
+.request-form .form-group:last-child {
     margin-bottom: 20px;
 }
 

@@ -14,7 +14,7 @@ const CreateOperationRequest: React.FC = () => {
         deadline: '',
         priority: '',
         recordNumber: '',
-        status: 'PENDING',
+        status: '',
         operationTypeName: '',
     });
 
@@ -32,7 +32,7 @@ const CreateOperationRequest: React.FC = () => {
         try {
             await createOperationRequest(newRequestData);
             alert('Operation Request created successfully!');
-            setNewRequestData({ deadline: '', priority: '', recordNumber: '', status: 'PENDING', operationTypeName: '' });
+            setNewRequestData({ deadline: '', priority: '', recordNumber: '', status: '', operationTypeName: '' });
         } catch (error) {
             alert('Failed to create Operation Request.');
         }
@@ -48,8 +48,8 @@ const CreateOperationRequest: React.FC = () => {
             <Navbar menuItemsProp={menuItems} />
             <main className="main-content">
                 <div className="container">
-                    <h1 className="text-3xl font-bold text-center mb-8">Create New Patient</h1>
-                    <form onSubmit={handleCreateOperationRequest} className="patient-form">
+                    <h1 className="text-3xl font-bold text-center mb-8">Create New Operation Request</h1>
+                    <form onSubmit={handleCreateOperationRequest} className="request-form">
                         <div className="form-group">
                             <label htmlFor="deadline">Deadline</label>
                             <input
@@ -80,6 +80,7 @@ const CreateOperationRequest: React.FC = () => {
                             />
                         </div>
 
+
                         <div className="form-group">
                             <label htmlFor="fullName">Full Name</label>
                             <input
@@ -95,7 +96,7 @@ const CreateOperationRequest: React.FC = () => {
                         <div className="form-group">
                             {/* Pass an empty function to match the expected Button signature */}
                             <Button onClick={handleCreateOperationRequest} className="button button-primary">
-                                Create Patient
+                                Create Request
                             </Button>
                         </div>
                     </form>

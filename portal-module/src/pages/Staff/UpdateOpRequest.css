@@ -42,7 +42,7 @@ h1 {
 }
 
 /* Form styling */
-.patient-form {
+.request-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -56,6 +56,7 @@ h1 {
     flex-direction: column;
     gap: 10px;
 }
+
 
 /* Label styling */
 .form-group label {
