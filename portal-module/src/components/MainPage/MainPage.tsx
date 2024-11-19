@@ -4,30 +4,30 @@ import Footer from '../Footer/Footer';
 import './MainPage.css';
 
 interface WelcomePageProps {
-  menuItems: { id: number; name: string; route: string }[]; // Accept menu items as a prop
+  menuItems: { id: number; name: string; route: string }[]; // Menu items for navigation
 }
 
 const WelcomePage: React.FC<WelcomePageProps> = ({ menuItems }) => {
   return (
-    <div>
-      {/* Navbar */}
+    <div className="main-page">
+      {/* Navbar receives the menuItems for navigation */}
       <Navbar menuItemsProp={menuItems} />
 
       <div className="welcome-container">
         <div className="welcome-content">
-          {/* Image Container */}
+          {/* Image Section */}
           <div className="welcome-image">
-            <img src="/images/Logo.jpg" alt="Logo" />
+            <img src="/images/Logo.jpg" alt="Healthcare Facility Logo" />
           </div>
 
-          {/* Welcome Text */}
+          {/* Welcome Message */}
           <div className="welcome-text">
-            <h1>Welcome To Your Healthcare Facility!</h1>
+            <h1>Welcome to Your Healthcare Facility!</h1>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer Section */}
       <Footer />
     </div>
   );
