@@ -17,7 +17,10 @@ import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
 
 import MainPageStaff from './pages/Staff/MainPageStaff';
-import OpRequest from './pages/Staff/OperationRequest';
+import OperationRequest from './pages/Staff/OperationRequest';
+import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
+import OperationRequestUpdate from './pages/Staff/OperationRequestUpdate';
+import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
 
 
 
@@ -57,10 +60,10 @@ const App: React.FC = () => {
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
                     <Route path="/admin" element={<AdminPage />} >
-                        <Route path="/admin/patient" element={<AdminPatient />} />
-                        <Route path="/admin/patient/create" element={<CreatePatient />} /> 
-                        <Route path="/admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
-                        <Route path="/staff" element={<AdminStaff />} />
+                        <Route path="admin/patient" element={<AdminPatient />} />
+                        <Route path="admin/patient/create" element={<CreatePatient />} /> 
+                        <Route path="admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
+                        <Route path="admin/staff" element={<AdminStaff />} />
                         <Route path="opType" element={<AdminOpType />} />
                     </Route>
                 </Route>
@@ -68,7 +71,12 @@ const App: React.FC = () => {
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/mainPageStaff" />}>
                     <Route path="/mainPageStaff" element={<MainPageStaff />} />
-                    <Route path="/operationRequest" element={<OpRequest />} />
+                    <Route path="/staff" element={<OperationRequest />} >
+                        <Route path="operationRequest/create" element={<OperationRequestCreate />} />
+                        <Route path="operationRequest/update" element={<OperationRequestUpdate />} />
+                        <Route path="operationRequest/delete" element={<OperationRequestDelete />} />
+                    
+                    </Route>
                 </Route>
 
                 {/* Patient route protected for 'Patient' role only */}
