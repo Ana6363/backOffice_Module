@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for proper navigation
-import WelcomePage from '../../components/MainPage/MainPage';
+import WelcomePage from '../../components/MainPage/MainPage'; // Ensure this component properly displays menu items with links
 
 const AdminPage = () => {
   // Define the menu items with correct routes
@@ -12,23 +11,8 @@ const AdminPage = () => {
   ];
 
   return (
-    <>
-      <WelcomePage 
-        menuItems={adminMenuItems} // Pass the menu items to the WelcomePage component
-      />
-      <div>
-        {/* Render the menu with links for navigation */}
-        <nav>
-          <ul>
-            {adminMenuItems.map((item) => (
-              <li key={item.id}>
-                <Link to={item.route}>{item.name}</Link> {/* Use Link for proper navigation */}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </>
+    // Pass the menu items to the WelcomePage component for rendering
+    <WelcomePage menuItems={adminMenuItems} />
   );
 };
 

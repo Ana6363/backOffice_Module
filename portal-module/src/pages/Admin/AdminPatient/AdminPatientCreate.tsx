@@ -4,7 +4,6 @@ import { createPatient } from '../../../services/PatientService';
 import Button from '../../../components/Buttons/Buttons';
 import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
-import './CreateAndUpdatePatient.css';
 
 const CreatePatient: React.FC = () => {
     const navigate = useNavigate();

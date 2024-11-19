@@ -2,9 +2,15 @@
 .app-wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; /* Garantir que ocupe a altura total da página */
     font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
+    background-color: white;
+}
+
+/* Make sure the body and html take the full height */
+html, body {
+    height: 100%;
+    margin: 0; /* Remove default margin */
 }
 
 /* Navbar styling (optional for your Navbar component) */
@@ -17,10 +23,11 @@
 
 /* Main content container for alignment */
 .main-content {
-    flex-grow: 1;
+    flex-grow: 1; /* Ensures it takes up available space */
     padding: 20px;
-    background-color: #fff;
-    margin-top: 20px;
+    background-color: white;
+    margin-top: 8rem;
+    margin-bottom: 8rem; /* Optional: To add space between footer and content */
 }
 
 /* Container for form */
@@ -28,7 +35,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0;
 }
 
 /* Heading for the page */
@@ -37,15 +44,16 @@ h1 {
     font-weight: bold;
     text-align: center;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 3rem;
+    margin-top: 0;
 }
 
 /* Form styling */
 .patient-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-width: 800px;
+    gap: 2rem;
+    max-width: 60rem;
     margin: 0 auto;
 }
 
@@ -66,9 +74,8 @@ h1 {
 /* Input fields styling */
 .form-group input,
 .form-group select {
-    padding: 10px;
+    padding: 8rem;
     font-size: 1rem;
-    border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
     box-sizing: border-box;
@@ -81,8 +88,8 @@ h1 {
 }
 
 /* Add margin to separate the last input field from the button */
-.request-form .form-group:last-child {
-    margin-bottom: 20px;
+.patient-form .form-group:last-child {
+    margin-bottom: 8rem;
 }
 
 /* Responsive design */
