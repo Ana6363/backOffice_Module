@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchOperationRequest, createOperationRequest, updateOperationRequest, deleteOperationRequest } from '../../services/OperationRequestService';
 import './StafffPage.css';
 import Button from '../../components/Buttons/Buttons'; 
 import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
+import SelectableTable from '../../components/Table/SelectableTable';
 
 const OperationRequest: React.FC = () => {
+    const navigate = useNavigate();
     const [operationRequests, setOperationRequests] = useState<any[]>([]);
     const [editData, setEditData] = useState<any>(null);
     const [newRequestData, setNewRequestData] = useState({
@@ -16,6 +18,14 @@ const OperationRequest: React.FC = () => {
         status: 'PENDING',
         operationTypeName: '',
     });
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedOperationRequest, setSelectedOperationRequest] = useState<any | null>(null);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        message: '',
+        action: () => {},
+      });
 
     const loadOperationRequests = useCallback(async () => {
         try {
@@ -38,140 +48,92 @@ const OperationRequest: React.FC = () => {
         }
     };
 
-    const handleCreate = async () => {
-        try {
-            await createOperationRequest(newRequestData);
-            alert('Operation Request created successfully!');
-            setNewRequestData({ deadline: '', priority: '', recordNumber: '', status: 'PENDING', operationTypeName: '' });
-            loadOperationRequests();
-        } catch (error) {
-            alert('Failed to create Operation Request.');
-        }
+    const handleNavigateToCreate  = () => {
+        navigate('/operationRequest/create'); // Navigate to the create page
     };
 
-    const handleUpdate = async () => {
-        try {
-            await updateOperationRequest(editData);
-            alert('Operation Request updated successfully!');
-            setEditData(null);
-            loadOperationRequests();
-        } catch (error) {
-            alert('Failed to update Operation Request.');
+    const handleNavigateToUpdate = () => {
+        if (!selectedOperationRequest) {
+            alert("No patient selected.");
+            return;
         }
+        navigate('/operationRequest/update'); // Navigate to the update page
     };
 
-    const handleDelete = async (requestId: string) => {
-        try {
-            await deleteOperationRequest(requestId);
-            alert('Operation Request deleted successfully!');
-            loadOperationRequests();
-        } catch (error) {
-            alert('Failed to delete Operation Request.');
-        }
+    const handleNavigateToDelete = () => {
+        navigate('/operationRequest/delete'); // Navigate to the delete page
     };
+
+    const openModal = (title: string, message: string, action: () => void) => {
+        setModalContent({ title, message, action });
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/staff/update' },
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
         
     ];
 
     return (
-        <div className="app-wrapper"> {/* Ensure full-page layout */}
-            <Navbar menuItemsProp={menuItems} />
-            <div className="form">
-                <h2>Create New Request</h2>
-                <input
-                    type="datetime-local"
-                    value={newRequestData.deadline}
-                    onChange={(e) => handleInputChange('deadline', e.target.value)}
-                    placeholder="Deadline"
+        <div className="app-wrapper">
+          <Navbar menuItemsProp={menuItems} />
+          <main className="main-content">
+            <div className="container">
+              <h1 className="text-3xl font-bold text-center mb-8">Admin Patient Page</h1>
+    
+              {/* Table Container */}
+              <div className="table-container">
+                <SelectableTable
+                  data={operationRequests}
+                  headers={[
+                    { key: 'recordNumber', label: 'Record Number' },
+                    { key: 'priority', label: 'Priority' },
+                    { key: 'deadline', label: 'Deadline' },
+                    { key: 'status', label: 'Status' },
+                    { key: 'operationTypeName', label: 'Operation Type' },
+                  ]}
+                  onRowSelect={setSelectedOperationRequest}
                 />
-                <input
-                    type="text"
-                    value={newRequestData.priority}
-                    onChange={(e) => handleInputChange('priority', e.target.value)}
-                    placeholder="Priority"
-                />
-                <input
-                    type="text"
-                    value={newRequestData.recordNumber}
-                    onChange={(e) => handleInputChange('recordNumber', e.target.value)}
-                    placeholder="Record Number"
-                />
-                <input
-                    type="text"
-                    value={newRequestData.operationTypeName}
-                    onChange={(e) => handleInputChange('operationTypeName', e.target.value)}
-                    placeholder="Operation Type"
-                />
-                <button onClick={handleCreate}>Create</button>
+              </div>
+    
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <Button onClick={handleNavigateToCreate} className="button button-primary">
+                  Create Patient
+                </Button>
+                <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
+                  Update Patient
+                </Button>
+                <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
+                  {selectedOperationRequest?.isToBeDeleted ? 'Delete Patient' : 'Mark for Deletion'}
+                </Button>
+              </div>
+    
+              {/* Modal for confirmation before delete/mark */}
+              {isModalOpen && (
+                <div className="modal">
+                  <div className="modal-content">
+                    <h2>{modalContent.title}</h2>
+                    <p>{modalContent.message}</p>
+                    <div>
+                      <button onClick={modalContent.action}>Confirm</button>
+                      <button onClick={closeModal}>Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-
-            <table className="operation-table">
-                <thead>
-                    <tr>
-                        <th>Request ID</th>
-                        <th>Deadline</th>
-                        <th>Priority</th>
-                        <th>Record Number</th>
-                        <th>Status</th>
-                        <th>Operation Type</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {operationRequests.map((request) => (
-                        <tr key={request.requestId}>
-                            <td>{request.requestId}</td>
-                            <td>{new Date(request.deadLine).toLocaleString()}</td>
-                            <td>
-                                {editData?.requestId === request.requestId ? (
-                                    <input
-                                        type="text"
-                                        value={editData.priority}
-                                        onChange={(e) => handleInputChange('priority', e.target.value, true)}
-                                        placeholder="Priority"
-                                    />
-                                ) : (
-                                    request.priority
-                                )}
-                            </td>
-                            <td>{request.recordNumber}</td>
-                            <td>
-                                {editData?.requestId === request.requestId ? (
-                                    <select
-                                        value={editData.status}
-                                        onChange={(e) => handleInputChange('status', e.target.value, true)}
-                                        title = "Status"
-                                    >
-                                        <option value="PENDING">PENDING</option>
-                                        <option value="ACCEPTED">ACCEPTED</option>
-                                        <option value="REJECTED">REJECTED</option>
-                                    </select>
-                                ) : (
-                                    request.status
-                                )}
-                            </td>
-                            <td>{request.operationType}</td>
-                            <td>
-                                {editData?.requestId === request.requestId ? (
-                                    <>
-                                        <button onClick={handleUpdate}>Save</button>
-                                        <button onClick={() => setEditData(null)}>Cancel</button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button onClick={() => setEditData(request)}>Edit</button>
-                                        <button onClick={() => handleDelete(request.requestId)}>Delete</button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            </main>
+            <Footer /> {/* Footer at the bottom */}
         </div>
-    );
+      );
+    
+    
 };
 
 export default OperationRequest;

@@ -4,7 +4,7 @@ import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
-import MainPageStaff from './pages/Staff/MainPageStaff';
+
 import AdminPage from './pages/Admin/AdminPage';
 import AdminStaff from './pages/AdminStaff';
 import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
@@ -15,6 +15,8 @@ import AdminOpType from './pages/AdminOpType';
 import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
+
+import MainPageStaff from './pages/Staff/MainPageStaff';
 import OpRequest from './pages/Staff/OperationRequest';
 
 
@@ -54,19 +56,19 @@ const App: React.FC = () => {
 
                 {/* Admin routes protected for 'Admin' role only */}
                 <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
-                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/admin" element={<AdminPage />} >
                         <Route path="/admin/patient" element={<AdminPatient />} />
                         <Route path="/admin/patient/create" element={<CreatePatient />} /> 
                         <Route path="/admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
                         <Route path="/staff" element={<AdminStaff />} />
                         <Route path="opType" element={<AdminOpType />} />
+                    </Route>
                 </Route>
 
                 {/* Admin routes protected for 'Admin' role only */}
-                <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/login" />}>
-                    <Route path="/staff" element={<MainPageStaff />}>
-                        <Route path="opRequest" element={<OpRequest />} />
-                    </Route>
+                <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/mainPageStaff" />}>
+                    <Route path="/mainPageStaff" element={<MainPageStaff />} />
+                    <Route path="/operationRequest" element={<OpRequest />} />
                 </Route>
 
                 {/* Patient route protected for 'Patient' role only */}
