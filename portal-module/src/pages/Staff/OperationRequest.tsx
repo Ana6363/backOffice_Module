@@ -9,9 +9,18 @@ import SelectableTable from '../../components/Table/SelectableTable';
 
 const OperationRequest: React.FC = () => {
     const navigate = useNavigate();
-    const [operationRequests, setOperationRequests] = useState<any[]>([]);
-    const [editData, setEditData] = useState<any>(null);
-    const [newRequestData, setNewRequestData] = useState({
+
+    const [operationRequestsList, setOperationRequestsList] = useState<any[]>([]);
+    const [filterData, setFilterData] = useState({
+        deadline: '',
+        priority: '',
+        recordNumber: '',
+        status: '',
+        operationTypeName: '',
+    });
+
+
+    const [requestData, setRequestData] = useState({
         deadline: '',
         priority: '',
         recordNumber: '',
@@ -29,10 +38,28 @@ const OperationRequest: React.FC = () => {
 
     const loadOperationRequests = useCallback(async () => {
         try {
-            const data = await fetchOperationRequest({});
-            setOperationRequests(data);
+            const data = await fetchOperationRequest(filterData);
+            if (data) {
+                setOperationRequestsList(data);
+            } else {
+                console.error('No operation requests found.');
+                setRequestData({
+                    deadline: '',
+                    priority: '',
+                    recordNumber: '',
+                    status: '',
+                    operationTypeName: '',
+                }); // Reset the request data
+            }
         } catch (error) {
             console.error('Failed to load operation requests:', error);
+            setRequestData({
+                deadline: '',
+                priority: '',
+                recordNumber: '',
+                status: '',
+                operationTypeName: '',
+            }); // Reset the request data
         }
     }, []);
 
@@ -42,9 +69,9 @@ const OperationRequest: React.FC = () => {
 
     const handleInputChange = (field: string, value: string, isEdit = false) => {
         if (isEdit) {
-            setEditData((prev: any) => ({ ...prev, [field]: value }));
+            setFilterData((prev: any) => ({ ...prev, [field]: value }));
         } else {
-            setNewRequestData((prev) => ({ ...prev, [field]: value }));
+            setRequestData((prev) => ({ ...prev, [field]: value }));
         }
     };
 
@@ -71,7 +98,7 @@ const OperationRequest: React.FC = () => {
             async () => {
                 try {
                     await deleteOperationRequest(selectedOperationRequest.recordNumber);
-                    setOperationRequests((prevRequests) =>
+                    setOperationRequestsList((prevRequests) =>
                         prevRequests.filter((request) => request.recordNumber !== selectedOperationRequest.recordNumber)
                     );
                     closeModal();
@@ -107,7 +134,7 @@ const OperationRequest: React.FC = () => {
                     {/* Table Container */}
                     <div className="table-container">
                         <SelectableTable
-                            data={operationRequests}
+                            data={operationRequestsList}
                             headers={[
                                 { key: 'recordNumber', label: 'Record Number' },
                                 { key: 'priority', label: 'Priority' },
