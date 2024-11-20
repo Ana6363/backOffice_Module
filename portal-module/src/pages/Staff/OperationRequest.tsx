@@ -12,7 +12,7 @@ const OperationRequest: React.FC = () => {
 
     const [operationRequestsList, setOperationRequestsList] = useState<any[]>([]);
     const [filterData, setFilterData] = useState({
-        deadline: '',
+        deadLine: '',
         priority: '',
         recordNumber: '',
         status: '',
@@ -21,7 +21,7 @@ const OperationRequest: React.FC = () => {
 
 
     const [requestData, setRequestData] = useState({
-        deadline: '',
+        deadLine: '',
         priority: '',
         recordNumber: '',
         status: '',
@@ -44,7 +44,7 @@ const OperationRequest: React.FC = () => {
             } else {
                 console.error('No operation requests found.');
                 setRequestData({
-                    deadline: '',
+                    deadLine: '',
                     priority: '',
                     recordNumber: '',
                     status: '',
@@ -54,7 +54,7 @@ const OperationRequest: React.FC = () => {
         } catch (error) {
             console.error('Failed to load operation requests:', error);
             setRequestData({
-                deadline: '',
+                deadLine: '',
                 priority: '',
                 recordNumber: '',
                 status: '',
@@ -138,7 +138,7 @@ const OperationRequest: React.FC = () => {
                             headers={[
                                 { key: 'recordNumber', label: 'Record Number' },
                                 { key: 'priority', label: 'Priority' },
-                                { key: 'deadline', label: 'Deadline' },
+                                { key: 'deadLine', label: 'Deadline' },
                                 { key: 'status', label: 'Status' },
                                 { key: 'operationTypeName', label: 'Operation Type' },
                             ]}

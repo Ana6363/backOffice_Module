@@ -9,7 +9,7 @@ import './CreateOperationRequest.css';
 const CreateOperationRequest: React.FC = () => {
     const navigate = useNavigate();
     const [newRequestData, setNewRequestData] = useState({
-        deadline: '',
+        deadLine: '',
         priority: '',
         recordNumber: '',
         status: '',
@@ -37,7 +37,7 @@ const CreateOperationRequest: React.FC = () => {
         try {
             await createOperationRequest(newRequestData);
             setSuccessMessage('Operation Request created successfully!');
-            setNewRequestData({ deadline: '', priority: '', recordNumber: '', status: '', operationTypeName: '' });
+            setNewRequestData({ deadLine: '', priority: '', recordNumber: '', status: '', operationTypeName: '' });
             // Redirect to the operations list or another page if needed
             navigate('/operationRequest');
         } catch (error) {
@@ -66,7 +66,7 @@ const CreateOperationRequest: React.FC = () => {
                                 type="datetime-local"
                                 id="deadline"
                                 name="deadline"
-                                value={newRequestData.deadline}
+                                value={newRequestData.deadLine}
                                 onChange={handleChange}
                                 required
                             />

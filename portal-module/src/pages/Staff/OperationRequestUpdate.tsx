@@ -11,7 +11,7 @@ const UpdateOperationRequest: React.FC = () => {
     const { id } = useParams(); // Get the ID of the operation request from the URL
     const [editData, setEditData] = useState<any>({
         requestId: '',
-        deadline: '',
+        deadLine: '',
         priority: '',
         recordNumber: '',
         status: '',

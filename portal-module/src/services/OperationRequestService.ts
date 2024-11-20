@@ -13,11 +13,11 @@ const getStaffIdFromEmail = () => {
 
 export const fetchOperationRequest = async (filter: {
     requestId?: string;
-    deadline?: string;
+    deadLine?: string;
     priority?: string;
     recordNumber?: string;
     status?: string;
-    operationType?: string;
+    operationTypeName?: string;
 }) => {
     const staffId = getStaffIdFromEmail();
 
@@ -53,7 +53,7 @@ export const fetchOperationRequest = async (filter: {
 };
 
 export const createOperationRequest = async (operationRequestData: {
-    deadline: string;
+    deadLine: string;
     priority: string;
     recordNumber: string;
     status: string;
@@ -92,13 +92,13 @@ export const createOperationRequest = async (operationRequestData: {
 
 export const updateOperationRequest = async (operationRequestData: {
     requestId: string;
-    deadline: string;
+    deadLine: string;
     appointementDate: string;
     priority: string;
     recordNumber: string;
     staffId: string;
     status: string;
-    operationType: string;
+    operationTypeName: string;
 }) => {
     const staffId = getStaffIdFromEmail();
     const requestDataWithStaffId = { ...operationRequestData, staffId };
