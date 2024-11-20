@@ -76,18 +76,6 @@ const CreateStaff: React.FC = () => {
                     <form onSubmit={handleSubmit} className="staff-form">
 
                         <div className="form-group">
-                            <label htmlFor="licenseNumber">License Number</label>
-                            <input
-                                type="text"
-                                id="licenseNumber"
-                                name="licenseNumber"
-                                value={staffData.licenseNumber}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
                             <label htmlFor="specialization">Specialization</label>
                             <input
                                 type="text"

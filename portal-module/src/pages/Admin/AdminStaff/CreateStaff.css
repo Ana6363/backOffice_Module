@@ -10,7 +10,7 @@
 /* Make sure the body and html take the full height */
 html, body {
     height: 100%;
-    margin: 0; /* Remove default margin */
+
 }
 
 /* Navbar styling */
@@ -27,7 +27,7 @@ html, body {
     padding: 20px;
     background-color: white;
     margin-top: 2rem; /* Reduce top margin */
-    margin-bottom: 0; /* Ensure no extra bottom margin */
+    margin-bottom: 50rem; /* Ensure no extra bottom margin */
 }
 
 /* Container for the form */
@@ -36,6 +36,7 @@ html, body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0;
+    display: flex;
 }
 
 /* Heading for the page */
@@ -52,16 +53,15 @@ h1 {
 .staff-form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    max-width: 60rem;
-    margin: 0 auto;
+    max-width: 20rem;
+    margin-bottom: 20rem;
 }
 
 /* Form group styling */
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.2rem;
 }
 
 /* Label styling */
@@ -92,6 +92,7 @@ h1 {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    align-self: center;
 }
 
 .table th,
@@ -136,7 +137,7 @@ footer {
     text-align: center;
     font-size: 0.9rem;
     color: #333;
-    margin-top: 50rem; /* Ensure footer stays at the bottom */
+    margin-top: 1000rem; /* Ensure footer stays at the bottom */
 }
 
 /* Responsive design */
