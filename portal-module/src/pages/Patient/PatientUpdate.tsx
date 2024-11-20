@@ -76,6 +76,7 @@ const UpdatePatient: React.FC = () => {
           </div>
 
           <div className="mb-4">
+            <label>Emergency Contact</label>
             <input
               type="text"
               name="emergencyContact"

@@ -36,7 +36,7 @@ const TokenTest: React.FC = () => {
                 } else if (role === 'Patient') {
                     navigate('/mainPagePatient', { replace: true });
                 } else if (role === 'Doctor' || role === 'Nurse') {
-                    navigate('/staff', { replace: true });
+                    navigate('/mainPageStaff', { replace: true });
                 }  
             } catch (error) {
                 console.error("Error decoding token:", error);
