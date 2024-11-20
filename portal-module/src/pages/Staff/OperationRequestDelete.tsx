@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { deleteOperationRequest, fetchOperationRequest } from '../../services/OperationRequestService';
-import './StafffPage.css';
+import './StaffPage.css';
 import Button from '../../components/Buttons/Buttons';
 import Navbar from '../../components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -9,22 +9,15 @@ import Footer from '../../components/Footer/Footer';
 
 const DeleteOperationRequest: React.FC = () => {
     const [operationRequests, setOperationRequests] = useState<any[]>([]);
-    const [editData, setEditData] = useState<any>(null);
-    const [newRequestData, setNewRequestData] = useState({
-        deadline: '',
-        priority: '',
-        recordNumber: '',
-        status: '',
-        operationTypeName: '',
-    });
+    const [selectedRequest, setSelectedRequest] = useState<any>(null);  // Store the selected operation request for deletion
     const [isModalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
 
-    
+    // Load all operation requests
     const loadOperationRequests = useCallback(async () => {
         try {
             const data = await fetchOperationRequest({});
-            if (data) setOperationRequests(data);
+            setOperationRequests(data);
         } catch (error) {
             console.error('Failed to load operation requests:', error);
         }
@@ -34,16 +27,17 @@ const DeleteOperationRequest: React.FC = () => {
         loadOperationRequests();
     }, [loadOperationRequests]);
 
+    // Handle delete request
     const handleDeleteOperationRequest = async () => {
-        const requestId = editData?.id; // Assuming editData contains the request ID
-        if (!requestId) {
+        if (!selectedRequest) {
             alert('No request selected for deletion.');
             return;
         }
         try {
-            await deleteOperationRequest(requestId);
+            await deleteOperationRequest(selectedRequest.requestId);
             alert('Operation Request deleted successfully!');
-            loadOperationRequests();
+            loadOperationRequests(); // Reload operation requests after deletion
+            setModalOpen(false); // Close the modal after deletion
         } catch (error) {
             alert('Failed to delete Operation Request.');
         }
@@ -51,37 +45,48 @@ const DeleteOperationRequest: React.FC = () => {
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/operationRequest' },
-        
+        { id: 2, name: 'Operations Request', route: '/staff' },
     ];
 
-    return (
-        <div className="app-wrapper"> {/* Ensure full-page layout */}
-          <Navbar menuItemsProp={menuItems} />
-          <main className="main-content"> {/* Main content to push footer down */}
-            <div className="container mx-auto p-4">
-              <h1 className="text-2xl font-bold mb-4">Confirm Delete</h1>
-              <p>Are you sure you want to delete your profile?</p>
-    
-              <div className="flex justify-between mt-4">
-                <Button onClick={() => setModalOpen(true)}>Confirm Delete</Button>
-                <Button onClick={() => navigate('/')}>Cancel</Button>
-              </div>
-            </div>
-    
-           
-              <Modal
-                title="Confirm Deletion"
-                message="Are you sure you want to delete your profile? This action cannot be undone."
-                onClose={() => setModalOpen(false)}
-                onConfirm={handleDeleteOperationRequest}
-              />
-            
-          </main>
-    
-          <Footer /> {/* Footer at the bottom */}
-        </div>
-      );
+    // Select an operation request to delete
+    const handleSelectRequestForDeletion = (request: any) => {
+        setSelectedRequest(request);  // Set the selected request for deletion
+        setModalOpen(true);  // Open the confirmation modal
     };
-    
-    export default DeleteOperationRequest;
+
+    return (
+        <div className="app-wrapper">
+            <Navbar menuItemsProp={menuItems} />
+            <main className="main-content">
+                <div className="container mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4">Operation Requests</h1>
+                    <p>Select an operation request to delete.</p>
+
+                    {/* List of Operation Requests */}
+                    <div className="operation-requests-list">
+                        {operationRequests.map((request: any) => (
+                            <div key={request.requestId} className="operation-request-item">
+                                <span>{request.recordNumber}</span>
+                                <Button onClick={() => handleSelectRequestForDeletion(request)}>Delete</Button>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Modal Confirmation */}
+                    {isModalOpen && (
+                        <Modal
+                            title="Confirm Deletion"
+                            message={`Are you sure you want to delete the operation request with record number ${selectedRequest?.recordNumber}? This action cannot be undone.`}
+                            onClose={() => setModalOpen(false)}
+                            onConfirm={handleDeleteOperationRequest}
+                        />
+                    )}
+                </div>
+            </main>
+
+            <Footer />
+        </div>
+    );
+};
+
+export default DeleteOperationRequest;

@@ -68,15 +68,14 @@ const App: React.FC = () => {
                         <Route path="opType" element={<AdminOpType />} />
                 </Route>
 
-                 {/* Admin routes protected for 'Admin' role only */}
+                 {/* Admin routes protected for 'Staff' role only */}
                  <Route element={<ProtectedRoute allowedRoles={['Doctor','Nurse']} redirectPath="/mainPageStaff" />}>
                     <Route path="/mainPageStaff" element={<MainPageStaff />} />
-                    <Route path="/staff" element={<OperationRequest />} >
-                        <Route path="operationRequest/create" element={<OperationRequestCreate />} />
-                        <Route path="operationRequest/update" element={<OperationRequestUpdate />} />
-                        <Route path="operationRequest/delete" element={<OperationRequestDelete />} />
+                    <Route path="/staff" element={<OperationRequest />} />
+                    <Route path="/staff/create" element={<OperationRequestCreate />} />
+                    <Route path="/staff/update" element={<OperationRequestUpdate />} />
+                    <Route path="/staff/delete" element={<OperationRequestDelete />} />
 
-                    </Route>
                 </Route>
 
                 {/* Patient route protected for 'Patient' role only */}

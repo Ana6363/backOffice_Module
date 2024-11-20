@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchOperationRequest, createOperationRequest, updateOperationRequest, deleteOperationRequest } from '../../services/OperationRequestService';
-import './StafffPage.css';
+import './StaffPage.css';
 import Button from '../../components/Buttons/Buttons'; 
 import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
@@ -25,7 +25,7 @@ const OperationRequest: React.FC = () => {
         title: '',
         message: '',
         action: () => {},
-      });
+    });
 
     const loadOperationRequests = useCallback(async () => {
         try {
@@ -48,20 +48,39 @@ const OperationRequest: React.FC = () => {
         }
     };
 
-    const handleNavigateToCreate  = () => {
+    const handleNavigateToCreate = () => {
         navigate('/operationRequest/create'); // Navigate to the create page
     };
 
     const handleNavigateToUpdate = () => {
         if (!selectedOperationRequest) {
-            alert("No operation request selected.");
+            alert('No operation request selected.');
             return;
         }
-        navigate('/operationRequest/update'); // Navigate to the update page
+        navigate('/operationRequest/update', { state: { selectedOperationRequest } }); // Passing selected request to the update page
     };
 
     const handleNavigateToDelete = () => {
-        navigate('/operationRequest/delete'); // Navigate to the delete page
+        if (!selectedOperationRequest) {
+            alert('No operation request selected.');
+            return;
+        }
+        openModal(
+            'Confirm Deletion',
+            `Are you sure you want to delete the request for record number ${selectedOperationRequest.recordNumber}?`,
+            async () => {
+                try {
+                    await deleteOperationRequest(selectedOperationRequest.recordNumber);
+                    setOperationRequests((prevRequests) =>
+                        prevRequests.filter((request) => request.recordNumber !== selectedOperationRequest.recordNumber)
+                    );
+                    closeModal();
+                } catch (error) {
+                    console.error('Failed to delete operation request:', error);
+                    closeModal();
+                }
+            }
+        );
     };
 
     const openModal = (title: string, message: string, action: () => void) => {
@@ -75,66 +94,66 @@ const OperationRequest: React.FC = () => {
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/operationRequest' },
-        
+        { id: 2, name: 'Operations Request', route: '/staff' },
     ];
 
     return (
         <div className="app-wrapper">
-          <Navbar menuItemsProp={menuItems} />
-          <main className="main-content">
-            <div className="container">
-              <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>
-    
-              {/* Table Container */}
-              <div className="table-container">
-                <SelectableTable
-                  data={operationRequests}
-                  headers={[
-                    { key: 'recordNumber', label: 'Record Number' },
-                    { key: 'priority', label: 'Priority' },
-                    { key: 'deadline', label: 'Deadline' },
-                    { key: 'status', label: 'Status' },
-                    { key: 'operationTypeName', label: 'Operation Type' },
-                  ]}
-                  onRowSelect={setSelectedOperationRequest}
-                />
-              </div>
-    
-              {/* Action Buttons */}
-              <div className="action-buttons">
-                <Button onClick={handleNavigateToCreate} className="button button-primary">
-                  Create Request
-                </Button>
-                <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
-                  Update Request
-                </Button>
-                <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
-                  {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Delete Request'}
-                </Button>
-              </div>
-              
-    
-              {/* Modal for confirmation before delete/mark */}
-              {isModalOpen && (
-                <div className="modal">
-                  <div className="modal-content">
-                    <h2>{modalContent.title}</h2>
-                    <p>{modalContent.message}</p>
-                    <div>
-                      <button onClick={modalContent.action}>Confirm</button>
-                      <button onClick={closeModal}>Cancel</button>
+            <Navbar menuItemsProp={menuItems} />
+            <main className="main-content">
+                <div className="container">
+                    <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>
+
+                    {/* Table Container */}
+                    <div className="table-container">
+                        <SelectableTable
+                            data={operationRequests}
+                            headers={[
+                                { key: 'recordNumber', label: 'Record Number' },
+                                { key: 'priority', label: 'Priority' },
+                                { key: 'deadline', label: 'Deadline' },
+                                { key: 'status', label: 'Status' },
+                                { key: 'operationTypeName', label: 'Operation Type' },
+                            ]}
+                            onRowSelect={setSelectedOperationRequest}
+                        />
                     </div>
-                  </div>
+
+                    {/* Action Buttons */}
+                    <div className="action-buttons">
+                        <Button onClick={handleNavigateToCreate} className="button button-primary">
+                            Create Request
+                        </Button>
+                        <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
+                            Update Request
+                        </Button>
+                        <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
+                            {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Mark for Deletion'}
+                        </Button>
+                    </div>
+
+                    {/* Modal for confirmation before delete/mark */}
+                    {isModalOpen && (
+                        <div className="modal">
+                            <div className="modal-content">
+                                <h2>{modalContent.title}</h2>
+                                <p>{modalContent.message}</p>
+                                <div className="modal-actions">
+                                    <button onClick={modalContent.action} className="confirm-btn">
+                                        Confirm
+                                    </button>
+                                    <button onClick={closeModal} className="cancel-btn">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
-              )}
-            </div>
             </main>
             <Footer /> {/* Footer at the bottom */}
         </div>
-      );
-    
-    
+    );
 };
 
 export default OperationRequest;
