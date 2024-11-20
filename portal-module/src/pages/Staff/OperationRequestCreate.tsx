@@ -49,7 +49,7 @@ const CreateOperationRequest: React.FC = () => {
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/staff' },
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
     ];
 
     return (

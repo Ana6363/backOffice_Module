@@ -39,8 +39,8 @@ const DeletePatient: React.FC = () => {
   const handleDeletePatient = async () => {
     try {
       await deletePatient(patientData.recordNumber);
-      alert('Patient deletion scheduled in 24h');
-      navigate('/'); // Redirect after delete
+      alert('Account deleted successfully!');
+      navigate('/login'); // Redirect after delete
     } catch (error) {
       console.error('Error deleting patient:', error);
     }

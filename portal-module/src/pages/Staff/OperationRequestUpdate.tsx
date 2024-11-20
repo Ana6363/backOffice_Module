@@ -72,7 +72,7 @@ const UpdateOperationRequest: React.FC = () => {
     // Navigation menu items
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/staff' },
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
     ];
 
     if (isLoading) {

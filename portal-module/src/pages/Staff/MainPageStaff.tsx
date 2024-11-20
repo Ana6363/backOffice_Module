@@ -4,10 +4,10 @@ import WelcomePage from '../../components/MainPage/MainPage';
 const StaffWelcome = () => {
   const staffMenuItems = [
     { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-    { id: 2, name: 'Operations Request', route: '/staff' },
+    { id: 2, name: 'Operations Request', route: '/operationRequest' },
   ];
 
-  return <WelcomePage menuItems={staffMenuItems} />;
+  return (<WelcomePage menuItems={staffMenuItems} />);
 };
 
 export default StaffWelcome;
