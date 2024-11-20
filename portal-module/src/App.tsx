@@ -69,7 +69,7 @@ const App: React.FC = () => {
                         <Route path="/admin/staff" element={<AdminStaff />} />
                         <Route path="/admin/staff/create" element={<CreateStaff />} />
                         <Route path="/admin/staff/update/:staffId" element={<UpdateStaff />} /> 
-                        <Route path="opType" element={<AdminOpType />} />
+                        <Route path="/admin/opType" element={<AdminOpType />} />
                 </Route>
 
                  {/* Admin routes protected for 'Staff' role only */}
