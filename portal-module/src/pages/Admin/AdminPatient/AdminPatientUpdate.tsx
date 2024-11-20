@@ -80,8 +80,8 @@ const UpdatePatient: React.FC = () => {
     };
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
-        { id: 2, name: 'Manage Patients', route: 'patient' },
-        { id: 3, name: 'Manage Staff', route: 'staff' },
+        { id: 2, name: 'Manage Patients', route: '/admin/patient' },
+        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
         { id: 4, name: 'Manage Operation Types', route: 'opTypes' },
     ];
 

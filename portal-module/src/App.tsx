@@ -6,7 +6,9 @@ import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
 
 import AdminPage from './pages/Admin/AdminPage';
-import AdminStaff from './pages/AdminStaff';
+import AdminStaff from './pages/Admin/AdminStaff/AdminStaff';
+import CreateStaff from './pages/Admin/AdminStaff/CreateStaff';
+import UpdateStaff from './pages/Admin/AdminStaff/UpdateStaff';
 import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
 import CreatePatient from './pages/Admin/AdminPatient/AdminPatientCreate'; 
 import UpdatePatient from './pages/Admin/AdminPatient/AdminPatientUpdate';
@@ -64,7 +66,9 @@ const App: React.FC = () => {
                         <Route path="/admin/patient" element={<AdminPatient />} />
                         <Route path="/admin/patient/create" element={<CreatePatient />} /> 
                         <Route path="/admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
-                        <Route path="/staff" element={<AdminStaff />} />
+                        <Route path="/admin/staff" element={<AdminStaff />} />
+                        <Route path="/admin/staff/create" element={<CreateStaff />} />
+                        <Route path="/admin/staff/update/:staffId" element={<UpdateStaff />} /> 
                         <Route path="opType" element={<AdminOpType />} />
                 </Route>
 
