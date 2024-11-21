@@ -39,6 +39,7 @@ const OperationRequest: React.FC = () => {
     const loadOperationRequests = useCallback(async () => {
         try {
             const data = await fetchOperationRequest(filterData);
+            console.log('Fetched Operation Requests:', data);
             if (data) {
                 setOperationRequestsList(data);
             } else {
@@ -61,19 +62,13 @@ const OperationRequest: React.FC = () => {
                 operationTypeName: '',
             }); // Reset the request data
         }
-    }, []);
+    }, [filterData]);
 
     useEffect(() => {
         loadOperationRequests();
     }, [loadOperationRequests]);
 
-    const handleInputChange = (field: string, value: string, isEdit = false) => {
-        if (isEdit) {
-            setFilterData((prev: any) => ({ ...prev, [field]: value }));
-        } else {
-            setRequestData((prev) => ({ ...prev, [field]: value }));
-        }
-    };
+    
 
     const handleNavigateToCreate = () => {
         navigate('/operationRequest/create'); // Navigate to the create page
