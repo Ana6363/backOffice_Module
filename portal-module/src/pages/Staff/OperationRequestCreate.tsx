@@ -9,9 +9,9 @@ import './CreateOperationRequest.css';
 const CreateOperationRequest: React.FC = () => {
     const navigate = useNavigate();
     const [newRequestData, setNewRequestData] = useState({
-        deadLine: '',
+        deadline: '',
         priority: '',
-        recordNumber: '',
+        userId: '',
         operationTypeName: '',
     });
 
@@ -28,7 +28,6 @@ const CreateOperationRequest: React.FC = () => {
     };
 
     const handleCreateOperationRequest = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent page reload on form submit
         setLoading(true);
         setErrorMessage('');
         setSuccessMessage('');
@@ -36,7 +35,7 @@ const CreateOperationRequest: React.FC = () => {
         try {
             await createOperationRequest(newRequestData);
             setSuccessMessage('Operation Request created successfully!');
-            setNewRequestData({ deadLine: '', priority: '', recordNumber: '', operationTypeName: '' });
+            setNewRequestData({ deadline: '', priority: '', userId: '', operationTypeName: '' });
             // Redirect to the operations list or another page if needed
             navigate('/operationRequest');
         } catch (error) {
@@ -65,7 +64,7 @@ const CreateOperationRequest: React.FC = () => {
                                 type="datetime-local"
                                 id="deadline"
                                 name="deadline"
-                                value={newRequestData.deadLine}
+                                value={newRequestData.deadline}
                                 onChange={handleChange}
                                 required
                             />
@@ -85,14 +84,14 @@ const CreateOperationRequest: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="recordNumber">Record Number</label>
+                            <label htmlFor="userId">Email</label>
                             <input
                                 type="text"
-                                id="recordNumber"
-                                name="recordNumber"
-                                value={newRequestData.recordNumber}
+                                id="userId"
+                                name="userId"
+                                value={newRequestData.userId}
                                 onChange={handleChange}
-                                placeholder="Record Number"
+                                placeholder="Email"
                                 required
                             />
                         </div>
