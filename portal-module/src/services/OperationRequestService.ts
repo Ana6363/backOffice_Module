@@ -20,6 +20,7 @@ export const fetchOperationRequest = async (filter: {
     operationTypeName?: string;
 }) => {
     const staffId = getStaffIdFromEmail();
+    console.log(staffId);
 
     const filterWithStaffId = { ...filter, staffId };
 

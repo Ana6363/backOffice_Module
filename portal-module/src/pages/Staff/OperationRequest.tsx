@@ -135,7 +135,7 @@ const OperationRequest: React.FC = () => {
                                 { key: 'priority', label: 'Priority' },
                                 { key: 'deadLine', label: 'Deadline' },
                                 { key: 'status', label: 'Status' },
-                                { key: 'operationTypeName', label: 'Operation Type' },
+                                { key: 'operationType', label: 'Operation Type' },
                             ]}
                             onRowSelect={setSelectedOperationRequest}
                         />
