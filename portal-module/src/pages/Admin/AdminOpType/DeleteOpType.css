@@ -1,0 +1,38 @@
+/* Adicionando um estilo simples para a mini-tabela de dados */
+.operation-type-details {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.operation-type-details th,
+.operation-type-details td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.operation-type-details th {
+    background-color: #224889;
+    color: white;
+    font-weight: bold;
+}
+
+.operation-type-details td {
+    background-color: #f9f9f9;
+}
+
+.operation-type-details tr:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
+.operation-type-details tr:hover {
+    background-color: #ddd;
+}
+/* Centralizando os botões com Flexbox */
+.button-container {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    gap: 20px; /* Espaço entre os botões */
+    margin-top: 20px; /* Espaço acima dos botões */
+}

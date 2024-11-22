@@ -24,6 +24,7 @@ import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
 import OperationRequestUpdate from './pages/Staff/OperationRequestUpdate';
 import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
+import DeleteOpType from './pages/Admin/AdminOpType/DeleteOpType';
 
 
 
@@ -71,7 +72,9 @@ const App: React.FC = () => {
                         <Route path="/admin/staff/create" element={<CreateStaff />} />
                         <Route path="/admin/staff/update/:staffId" element={<UpdateStaff />} /> 
                         <Route path="/admin/opTypes" element={<AdminOpType />} />
-                        <Route path="/admin/opType/create" element={<CreateOpType />} />
+                        <Route path="/admin/opTypes/create" element={<CreateOpType />} />
+                        <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
+
 
                 </Route>
 
