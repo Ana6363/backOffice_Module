@@ -33,7 +33,7 @@ const CreateOperationRequest: React.FC = () => {
         setSuccessMessage('');
 
         try {
-            await createOperationRequest(newRequestData);
+            await createOperationRequest( newRequestData );
             setSuccessMessage('Operation Request created successfully!');
             setNewRequestData({ deadline: '', priority: '', userId: '', operationTypeName: '' });
             // Redirect to the operations list or another page if needed
@@ -71,16 +71,21 @@ const CreateOperationRequest: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="priority">Priority</label>
-                            <input
-                                type="text"
-                                id="priority"
+                                <label htmlFor="priority">Priority</label>
+                                <select
                                 name="priority"
+                                id="priority"
                                 value={newRequestData.priority}
                                 onChange={handleChange}
-                                placeholder="Priority"
+                                className='input input-bordered w-full mb-2'
+                                title="Priority"
                                 required
-                            />
+                                >
+                                    
+                                    <option value="LOW">LOW</option>
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="HIGH">HIGH</option>
+                                </select>
                         </div>
 
                         <div className="form-group">

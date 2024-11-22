@@ -92,7 +92,6 @@ const OperationRequest: React.FC = () => {
             });
         }
     }, [filterData]);
-    
 
     useEffect(() => {
         loadOperationRequests();
@@ -161,7 +160,7 @@ const OperationRequest: React.FC = () => {
                         <SelectableTable
                             data={operationRequestsList}
                             headers={[
-                                { key: 'recordNumber', label: 'Record Number' },
+                                { key: 'recordNumber', label: 'Email patient' },
                                 { key: 'priority', label: 'Priority' },
                                 { key: 'deadLine', label: 'Deadline' },
                                 { key: 'status', label: 'Status' },

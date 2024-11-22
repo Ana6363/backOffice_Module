@@ -24,32 +24,32 @@ const UpdateOperationRequest: React.FC = () => {
     // Function to load a specific operation request based on ID
     useEffect(() => {
         const fetchOperationRequestData = async () => {
-            try {
+        try {
                 const operationRequestList = await fetchOperationRequest({ requestId: id || '' });
 
                 if (operationRequestList.length === 1) {
                     const opRequest = operationRequestList[0];
                     setRequestData(opRequest);
-                    setEditData({
+                setEditData({
                         deadLine: opRequest.deadLine,
                         priority: opRequest.priority,
                         recordNumber: opRequest.recordNumber,
                         status: opRequest.status,
                         operationTypeName: opRequest.operationTypeName,
-                    });
-                } else {
+                });
+            } else {
                     console.error("Operation Request not found");
                     alert("Operation Request not found");
-                    navigate('/operationRequest');
-                }
-            } catch (error) {
+                navigate('/operationRequest');
+            }
+        } catch (error) {
                 console.error("Error fetching operation request data:", error);
                 alert("Error fetching operation request data");
-            }
-        };
-        if (id) {
-            fetchOperationRequestData();
         }
+    };
+    if (id) {
+            fetchOperationRequestData();
+    }
     } , [id, navigate]);
 
         
@@ -71,7 +71,7 @@ const UpdateOperationRequest: React.FC = () => {
         } catch (error) {
             alert('Failed to update Operation Request');
             console.error(error);
-        } 
+        }
     };
 
     // Navigation menu items
@@ -101,7 +101,7 @@ const UpdateOperationRequest: React.FC = () => {
                                 onChange={handleInputChange}
                                 placeholder="DeadLine"
                                 />
-                            </div>
+                        </div>
 
 
                             <div className="mb-4">
@@ -117,7 +117,7 @@ const UpdateOperationRequest: React.FC = () => {
                                     <option value="MEDIUM">MEDIUM</option>
                                     <option value="HIGH">HIGH</option>
                                 </select>
-                            </div>
+                        </div>
 
                             <div className="mb-4">
                                 <label htmlFor="status">Status</label>
@@ -133,8 +133,8 @@ const UpdateOperationRequest: React.FC = () => {
                                     <option value="REJECTED">REJECTED</option>
                                 </select>
                             </div>
-
-                            <div className="mb-4">
+                            
+                        <div className="mb-4">
                                 <label>Operation Type</label>
                                 <input
                                 type="text"
@@ -143,9 +143,9 @@ const UpdateOperationRequest: React.FC = () => {
                                 onChange={handleInputChange}
                                 placeholder="Operation Type"
                                 />
-                            </div>
-
-                            
+                        </div>
+       
+                    
                                 <Button onClick={handleUpdateOperationRequest} className="button button-primary">
                                     Update Operation Request
                                 </Button>

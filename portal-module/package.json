@@ -7,11 +7,15 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "jsonwebtoken": "^9.0.2",
+    "@types/jest": "^27.5.2",
+    "date-fns": "^4.1.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-datepicker": "^7.5.0",
+    "react-datetime-picker": "^6.0.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^3.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
