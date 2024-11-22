@@ -19,6 +19,12 @@ const OperationRequest: React.FC = () => {
         operationTypeName: '',
     });
 
+    const getHeaders = () => {
+        return {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Example token from local storage
+        };
+    };
 
     const [requestData, setRequestData] = useState({
         deadLine: '',
@@ -41,7 +47,30 @@ const OperationRequest: React.FC = () => {
             const data = await fetchOperationRequest(filterData);
             console.log('Fetched Operation Requests:', data);
             if (data) {
-                setOperationRequestsList(data);
+                const updatedRequests = await Promise.all(
+                    data.map(async (request: any) => {
+                        const recordNumber = request.recordNumber;
+                        if (!recordNumber) return request;
+    
+                        try {
+                            const patientResponse = await fetch(
+                                `http://localhost:5184/api/v1/patient/filter?recordNumber=${recordNumber}`,
+                                { method: 'GET', headers: getHeaders() }
+                            );
+    
+                            if (!patientResponse.ok) throw new Error(`Failed to fetch patient for recordNumber: ${recordNumber}`);
+                            const patientData = await patientResponse.json();
+                            const userId =
+                                patientData?.patients?.$values?.[0]?.patient?.userId || 'Unknown User';
+                            return { ...request, recordNumber: userId };
+                        } catch (error) {
+                            console.error(`Error fetching patient for recordNumber: ${recordNumber}`, error);
+                            return { ...request, recordNumber: 'Error Fetching User' };
+                        }
+                    })
+                );
+    
+                setOperationRequestsList(updatedRequests);
             } else {
                 console.error('No operation requests found.');
                 setRequestData({
@@ -50,7 +79,7 @@ const OperationRequest: React.FC = () => {
                     recordNumber: '',
                     status: '',
                     operationTypeName: '',
-                }); // Reset the request data
+                });
             }
         } catch (error) {
             console.error('Failed to load operation requests:', error);
@@ -60,9 +89,10 @@ const OperationRequest: React.FC = () => {
                 recordNumber: '',
                 status: '',
                 operationTypeName: '',
-            }); // Reset the request data
+            });
         }
     }, [filterData]);
+    
 
     useEffect(() => {
         loadOperationRequests();
