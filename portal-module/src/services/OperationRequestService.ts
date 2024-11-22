@@ -56,7 +56,6 @@ export const createOperationRequest = async (operationRequestData: {
     deadLine: string;
     priority: string;
     recordNumber: string;
-    status: string;
     operationTypeName: string;
 }) => {
     const staffId = getStaffIdFromEmail();
@@ -93,7 +92,6 @@ export const createOperationRequest = async (operationRequestData: {
 export const updateOperationRequest = async (operationRequestData: {
     requestId: string;
     deadLine: string;
-    appointementDate: string;
     priority: string;
     recordNumber: string;
     staffId: string;

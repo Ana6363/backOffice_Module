@@ -12,7 +12,6 @@ const CreateOperationRequest: React.FC = () => {
         deadLine: '',
         priority: '',
         recordNumber: '',
-        status: '',
         operationTypeName: '',
     });
 
@@ -37,7 +36,7 @@ const CreateOperationRequest: React.FC = () => {
         try {
             await createOperationRequest(newRequestData);
             setSuccessMessage('Operation Request created successfully!');
-            setNewRequestData({ deadLine: '', priority: '', recordNumber: '', status: '', operationTypeName: '' });
+            setNewRequestData({ deadLine: '', priority: '', recordNumber: '', operationTypeName: '' });
             // Redirect to the operations list or another page if needed
             navigate('/operationRequest');
         } catch (error) {
