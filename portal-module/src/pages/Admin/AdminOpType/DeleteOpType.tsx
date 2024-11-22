@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchOperationTypes, deleteOperationType } from '../../../services/OpTypeService';  // Ajuste o caminho conforme necessário
+import { fetchOperationTypes, deleteOperationType } from '../../../services/OpTypeService';  
 
 import './DeleteOpType.css'; 
 
 const DeleteOpType: React.FC = () => {
-    const { operationTypeName } = useParams<{ operationTypeName: string }>(); // Pega o nome da operação da URL
+    const { operationTypeName } = useParams<{ operationTypeName: string }>(); 
     const [operationType, setOperationType] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ const DeleteOpType: React.FC = () => {
     useEffect(() => {
         const loadOperationType = async () => {
             try {
-                const data = await fetchOperationTypes(); // CGet all data
+                const data = await fetchOperationTypes(); // Get all data
 
                 // Find Op Type through name
                 const selectedOpType = data.operationType.$values.find(
@@ -72,7 +72,7 @@ const DeleteOpType: React.FC = () => {
             <h1>Confirm Deletion</h1>
             <p>Are you sure you want to delete the following operation type?</p>
             
-            {/* Exibindo os dados do OperationType dentro de uma mini-tabela */}
+            {/* Show OperationType data */}
             <table className="operation-type-details">
                 <thead>
                     <tr>
