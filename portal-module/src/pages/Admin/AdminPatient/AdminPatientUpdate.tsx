@@ -68,7 +68,6 @@ const UpdatePatient: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
         try {
             await updatePatient(formData); // Send updated patient data
             alert("Patient data updated successfully");

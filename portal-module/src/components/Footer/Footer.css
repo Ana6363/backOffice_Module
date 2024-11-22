@@ -2,6 +2,7 @@
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
@@ -15,7 +16,7 @@ html, body {
 
 /* Main content fills the available space */
 .main-content {
-  flex: 1; /* Grow to fill available space */
+  flex: 1; /* Allow this section to grow and take up available space */
   padding: 20px; /* Optional: add padding to the content area */
 }
 
@@ -33,4 +34,11 @@ html, body {
 .footer p {
   margin: 0;
   color: #333;
+}
+
+/* Responsive Design for Footer */
+@media screen and (max-width: 768px) {
+  .footer {
+      font-size: 0.8rem; /* Reduce font size on smaller screens */
+  }
 }
