@@ -167,6 +167,7 @@ const CreateStaff: React.FC = () => {
                                                     type="time"
                                                     value={slot.startTime}
                                                     onChange={(e) => handleSlotChange(index, 'startTime', e.target.value)}
+                                                    placeholder='Start Time'
                                                     required
                                                 />
                                             </td>
@@ -175,6 +176,7 @@ const CreateStaff: React.FC = () => {
                                                     type="time"
                                                     value={slot.endTime}
                                                     onChange={(e) => handleSlotChange(index, 'endTime', e.target.value)}
+                                                    placeholder='End Time'
                                                     required
                                                 />
                                             </td>

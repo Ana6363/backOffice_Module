@@ -115,7 +115,36 @@ button:disabled {
     margin-bottom: 20px;
 }
 
-/* Specific Form Field Styling */
 input[type="datetime-local"] {
     padding-left: 10px;
+    padding-right: 10px;
+    height: 40px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+
+.deadline-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.deadline-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.deadline-input:focus {
+    border-color: #007BFF;
+    box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5);
+    outline: none;
 }
