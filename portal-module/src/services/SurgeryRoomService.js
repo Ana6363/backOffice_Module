@@ -1,6 +1,6 @@
 
 // Define the API URL
-const API_URL = 'http://localhost:5184/api/v1/surgeryRoom';
+const API_URL = 'http://localhost:5184/api/v1';
 
 // Function to get request headers (with authorization token)
 const getHeaders = () => ({
@@ -11,7 +11,7 @@ const getHeaders = () => ({
 // Function to fetch surgery rooms from the API
 export const fetchSurgeryRooms = async () => {
     try {
-        const response = await fetch(`${API_URL}/GetAllSurgeryRooms`, {
+        const response = await fetch(`${API_URL}/surgeryRoom`, {
             method: 'GET',
             headers: getHeaders(),
         });
