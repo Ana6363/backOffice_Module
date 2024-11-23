@@ -2,7 +2,7 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Wall from "./wall.js";
-import { monitorRooms } from "../services/SurgeryRoomService.ts";
+import { monitorRooms } from "../services/SurgeryRoomService.js";
 
 
 /*

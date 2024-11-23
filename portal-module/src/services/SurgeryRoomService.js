@@ -1,4 +1,3 @@
-import Maze from "../3DModel/maze"; // Import the Maze class
 
 // Define the API URL
 const API_URL = 'http://localhost:5184/api/v1/surgeryRoom';
@@ -17,7 +16,10 @@ export const fetchSurgeryRooms = async () => {
             headers: getHeaders(),
         });
 
-        if (!response.ok) throw new Error('Failed to fetch surgery rooms');
+        if (!response.ok) {
+            const errorDetails = await response.text(); // Get the response error body
+            throw new Error(`Failed to fetch surgery rooms: ${errorDetails}`);
+        }
 
         const data = await response.json();
         return data.surgeryRooms || []; // Return surgery rooms or an empty array
@@ -28,7 +30,7 @@ export const fetchSurgeryRooms = async () => {
 };
 
 // Room position mappings
-const roomPositions: Record<string, [number, number]> = {
+const roomPositions = {
     R001: [2, 1],
     R002: [2, 4],
     R003: [2, 7],
@@ -38,10 +40,10 @@ const roomPositions: Record<string, [number, number]> = {
 };
 
 // Interval manager to avoid duplicate intervals
-let monitorInterval: NodeJS.Timeout | null = null;
+let monitorInterval = null;
 
 // Monitor rooms and update the maze map
-export const monitorRooms = (mazeInstance: Maze) => {
+export const monitorRooms = (mazeInstance) => {
     // Clear any previous interval if already running
     if (monitorInterval) {
         clearInterval(monitorInterval);
@@ -53,7 +55,7 @@ export const monitorRooms = (mazeInstance: Maze) => {
             const rooms = await fetchSurgeryRooms();
 
             // Update the matrix for each room
-            rooms.forEach((room: { roomId: string; status: string }) => {
+            rooms.forEach((room) => {
                 const { roomId, status } = room;
 
                 console.log(`Checking roomId: ${roomId}, status: ${status}`);
@@ -74,8 +76,6 @@ export const monitorRooms = (mazeInstance: Maze) => {
                     console.warn(`Unexpected status '${status}' for room ${roomId}. Skipping.`);
                 }
             });
-
-
         } catch (error) {
             console.error('Error monitoring rooms:', error);
         }
