@@ -1,26 +1,20 @@
-// cypress/support/e2e.ts
+// ***********************************************************
+// This example support/e2e.ts is processed and
+// loaded automatically before your test files.
+//
+// This is a great place to put global configuration and
+// behavior that modifies Cypress.
+//
+// You can change the location of this file or turn off
+// automatically serving support files with the
+// 'supportFile' configuration option.
+//
+// You can read more here:
+// https://on.cypress.io/configuration
+// ***********************************************************
 
-// Import any custom commands (create this file if you have custom commands)
-import './commands';
+// Import commands.js using ES2015 syntax:
+import './commands'
 
-// Catch and ignore uncaught exceptions to prevent tests from failing unnecessarily
-Cypress.on('uncaught:exception', (err) => {
-  console.error('Uncaught exception:', err);
-  return false; // Prevent Cypress from failing the test
-});
-
-// Hook to run code before each test
-beforeEach(() => {
-  // Clear cookies, localStorage, and sessionStorage before each test
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.log('Running setup before each test...');
-});
-
-// Hook to run code after each test
-afterEach(() => {
-  cy.log('Cleaning up after each test...');
-});
-
-// Optional: Define global variables or configuration settings
-Cypress.env('apiBaseUrl', 'http://localhost:5184/api/v1'); // Example for setting an environment variable
+// Alternatively you can use CommonJS syntax:
+// require('./commands')

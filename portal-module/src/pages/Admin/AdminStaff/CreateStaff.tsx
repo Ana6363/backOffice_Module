@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { createStaff } from '../../../services/StaffService';
 import Button from '../../../components/Buttons/Buttons';
 import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
 import './CreateStaff.css';
 
 const CreateStaff: React.FC = () => {
@@ -241,7 +240,6 @@ const CreateStaff: React.FC = () => {
                     </form>
                 </div>
             </main>
-            <Footer />
         </div>
     );
 };

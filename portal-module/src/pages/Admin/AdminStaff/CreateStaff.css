@@ -129,33 +129,3 @@ h1 {
 .button-danger:hover {
     background-color: #c82333;
 }
-
-/* Footer styling */
-footer {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #333;
-    margin-top: 1000rem; /* Ensure footer stays at the bottom */
-}
-
-/* Responsive design */
-@media screen and (max-width: 768px) {
-    .main-content {
-        padding: 10px;
-    }
-
-    .staff-form {
-        padding: 10px;
-    }
-
-    .form-group input,
-    .form-group select {
-        font-size: 0.9rem;
-    }
-
-    .button {
-        font-size: 1rem;
-    }
-}
