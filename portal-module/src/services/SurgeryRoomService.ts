@@ -1,24 +1,15 @@
-// Definindo a URL base da API
+import Maze from "../3DModel/maze"; // Import the Maze class
+
+// Define the API URL
 const API_URL = 'http://localhost:5184/api/v1/surgeryRoom';
 
-// Função para obter os cabeçalhos de requisição (com token de autorização)
-// Mapeamento de roomId para as posições na matriz
-const roomPositions = {
-    'R001': [2, 1],
-    'R002': [2, 4],
-    'R003': [2, 7],
-    'R004': [8, 1],
-    'R005': [8, 4],
-    'R006': [8, 7]
-};
-
-// Função para obter os cabeçalhos de requisição (com token de autorização)
+// Function to get request headers (with authorization token)
 const getHeaders = () => ({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
 });
 
-// Função para buscar as salas de cirurgia da API
+// Function to fetch surgery rooms from the API
 export const fetchSurgeryRooms = async () => {
     try {
         const response = await fetch(`${API_URL}/GetAllSurgeryRooms`, {
@@ -29,50 +20,64 @@ export const fetchSurgeryRooms = async () => {
         if (!response.ok) throw new Error('Failed to fetch surgery rooms');
 
         const data = await response.json();
-        return data.surgeryRooms || []; // Retorna as salas de cirurgia ou um array vazio se não houver dados
+        return data.surgeryRooms || []; // Return surgery rooms or an empty array
     } catch (error) {
         console.error('Error fetching surgery rooms:', error);
         throw new Error('Failed to fetch surgery rooms');
     }
 };
 
-// Função que simula a chamada ao endpoint de todas as salas
-// Função para monitorar e atualizar o estado das salas de cirurgia
-export const monitorRooms = (mazeInstance: any) => {
-    setInterval(async () => {
+// Room position mappings
+const roomPositions: Record<string, [number, number]> = {
+    R001: [2, 1],
+    R002: [2, 4],
+    R003: [2, 7],
+    R004: [8, 1],
+    R005: [8, 4],
+    R006: [8, 7],
+};
+
+// Interval manager to avoid duplicate intervals
+let monitorInterval: NodeJS.Timeout | null = null;
+
+// Monitor rooms and update the maze map
+export const monitorRooms = (mazeInstance: Maze) => {
+    // Clear any previous interval if already running
+    if (monitorInterval) {
+        clearInterval(monitorInterval);
+    }
+
+    monitorInterval = setInterval(async () => {
         try {
-            // Buscando todas as salas com o método fetchSurgeryRooms
+            // Fetch surgery rooms
             const rooms = await fetchSurgeryRooms();
 
-            // Verificando o status de cada sala e atualizando o modelo 3D
-            rooms.forEach((room: { roomId: keyof typeof roomPositions; status: string }) => {
+            // Update the matrix for each room
+            rooms.forEach((room: { roomId: string; status: string }) => {
                 const { roomId, status } = room;
 
-                console.log(`Checking status of room ${roomId}: ${status}`); // Log para debugar
+                console.log(`Checking roomId: ${roomId}, status: ${status}`);
 
-                // Verificando se o roomId está mapeado nas posições
-                if (roomPositions[roomId]) {
-                    const [row, col] = roomPositions[roomId]; // Obtendo a posição da sala
+                // Ensure roomId is mapped to a position
+                if (!roomPositions[roomId]) {
+                    console.warn(`Room ${roomId} not found in roomPositions mapping. Skipping.`);
+                    return;
+                }
 
-                    console.log(`Room ${roomId} mapped to position: [${row}, ${col}]`); // Log para debugar
+                const [row, col] = roomPositions[roomId];
+                console.log(`Mapped room ${roomId} to position: [${row}, ${col}]`);
 
-                    // Verificando se o status está correto e atualizando a célula no modelo 3D
-                    if (status === 'Occupied') {
-                        console.log(`Room ${roomId} is occupied. Updating matrix...`);
-                        mazeInstance.updateRoomStatusAtPosition(row, col, 'Occupied'); // Atualiza a sala para "ocupado"
-                    } else if (status === 'Available') {
-                        console.log(`Room ${roomId} is available. Updating matrix...`);
-                        mazeInstance.updateRoomStatusAtPosition(row, col, 'Available'); // Atualiza a sala para "livre"
-                    }
+                // Update the maze instance's map
+                if (status === 'Occupied' || status === 'Available') {
+                    mazeInstance.updateRoomStatusAtPosition(row, col, status);
                 } else {
-                    console.warn(`Room ${roomId} not found in roomPositions mapping.`);
+                    console.warn(`Unexpected status '${status}' for room ${roomId}. Skipping.`);
                 }
             });
+
+
         } catch (error) {
             console.error('Error monitoring rooms:', error);
         }
-    }, 60000); // Atualiza a cada 1 minuto (60000 ms)
+    }, 60000); // Update every 1 minute
 };
-
-
-

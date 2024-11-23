@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Wall from "./wall.js";
+import { monitorRooms } from "../services/SurgeryRoomService.ts";
 
 
 /*
@@ -142,6 +143,7 @@ export default class Maze {
             }
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
+            monitorRooms(this.map);
             this.loaded = true;
         }
 
@@ -182,28 +184,35 @@ export default class Maze {
             error => this.onError(this.url, error)
         );
     }
-    // Função para atualizar os objetos 3D conforme a mudança no estado da matriz
-   // Método para atualizar o status de um quarto específico
-// Função no Maze para atualizar a sala em uma posição específica
-updateRoomStatusAtPosition(row, col, status) {
-    const map = this.map;
 
-    // Mapeamento entre status e números de células
-    const statusMapping = {
-        'Occupied': 7,  // Status de ocupado
-        'Available': 6      // Status de livre
-    };
-
-    // Verifica se a posição está dentro do tamanho da matriz
-    if (row >= 0 && row < this.size.height && col >= 0 && col < this.size.width) {
-        const roomNumber = map[row][col];
-
-        // Verifica se a sala tem o número 6 (indicado como disponível)
-        if (roomNumber === 6 && statusMapping[status]) {
-            map[row][col] = statusMapping[status];  // Atualiza o número da célula (6 ou 7)
+    updateRoomStatusAtPosition(row, col, status) {
+        const map = this.map;
+    
+        // Map status to cell values
+        const statusMapping = {
+            Occupied: 7,  // Status "Occupied"
+            Available: 6, // Status "Available"
+        };
+    
+        // Validate position and update map
+        if (row >= 0 && row < this.size.height && col >= 0 && col < this.size.width) {
+            const currentCell = map[row][col];
+    
+            if (currentCell === 6 || currentCell === 7) {
+                console.log(
+                    `Updating position [${row}, ${col}] from ${currentCell} to ${statusMapping[status]}`
+                );
+                map[row][col] = statusMapping[status];
+            } else {
+                console.warn(
+                    `Position [${row}, ${col}] not updated. Current cell value: ${currentCell}`
+                );
+            }
+        } else {
+            console.error(`Invalid position [${row}, ${col}] - Out of bounds.`);
         }
     }
-}
+    
 
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates
