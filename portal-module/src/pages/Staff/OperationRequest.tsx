@@ -143,14 +143,15 @@ const OperationRequest: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const menuItems = [
+    const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
-    ];
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+      ];
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={staffMenuItems} />
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>

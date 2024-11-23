@@ -23,6 +23,7 @@ import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
 import OperationRequestUpdate from './pages/Staff/OperationRequestUpdate';
 import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
+import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
 
 
 
@@ -79,6 +80,7 @@ const App: React.FC = () => {
                     <Route path="/operationRequest/create" element={<OperationRequestCreate />} />
                     <Route path="/operationRequest/update" element={<OperationRequestUpdate />} />
                     <Route path="/operationRequest/delete" element={<OperationRequestDelete />} />
+                    <Route path='/surgeryRoom3DModel' element={<SurgeryRoom3D/>} />
 
                 </Route>
 

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Wall from "./wall.js";
+import { monitorRooms } from "../services/SurgeryRoomService.ts";
 
 
 /*
@@ -142,6 +143,7 @@ export default class Maze {
             }
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
+            monitorRooms(this.map);
             this.loaded = true;
         }
 
@@ -182,6 +184,36 @@ export default class Maze {
             error => this.onError(this.url, error)
         );
     }
+
+    updateRoomStatusAtPosition(row, col, status) {
+        const map = this.map;
+    
+        // Map status to cell values
+        const statusMapping = {
+            Occupied: 7,  // Status "Occupied"
+            Available: 6, // Status "Available"
+        };
+    
+        // Validate position and update map
+        if (row >= 0 && row < this.size.height && col >= 0 && col < this.size.width) {
+            const currentCell = map[row][col];
+    
+            if (currentCell === 6 || currentCell === 7) {
+                console.log(
+                    `Updating position [${row}, ${col}] from ${currentCell} to ${statusMapping[status]}`
+                );
+                map[row][col] = statusMapping[status];
+            } else {
+                console.warn(
+                    `Position [${row}, ${col}] not updated. Current cell value: ${currentCell}`
+                );
+            }
+        } else {
+            console.error(`Invalid position [${row}, ${col}] - Out of bounds.`);
+        }
+    }
+    
+
 
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates
     cellToCartesian(position) {

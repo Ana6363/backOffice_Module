@@ -75,16 +75,17 @@ const UpdateOperationRequest: React.FC = () => {
     };
 
     // Navigation menu items
-    const menuItems = [
+    const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
-    ];
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+      ];
 
     
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={staffMenuItems} />
             <main className="main-content">
                 <div className="container mx-auto p-4">
                     <h1 className="text-2xl font-bold mb-4">Update Operation Request</h1>
