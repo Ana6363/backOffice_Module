@@ -16,15 +16,30 @@ const DeleteOpType: React.FC = () => {
             try {
                 const data = await fetchOperationTypes(); // Get all data
 
-                // Find Op Type through name
-                const selectedOpType = data.operationType.$values.find(
-                    (opType: any) => opType.operationTypeName === operationTypeName
-                );
+                if (data && data.operationType && data.operationType.$values) {
+                    const operationTypes = data.operationType.$values;
 
-                if (selectedOpType) {
-                    setOperationType(selectedOpType);
+                    // Process the operation types like in the listing
+                    const selectedOpType = operationTypes.find(
+                        (opType: any) => opType.operationTypeName === operationTypeName
+                    );
+
+                    if (selectedOpType) {
+                        // Process specialization in the same way as listing
+                        const processedOpType = {
+                            ...selectedOpType,
+                            specialization: selectedOpType.specializations && selectedOpType.specializations.$values && selectedOpType.specializations.$values.length > 0
+                                ? selectedOpType.specializations.$values[0].name
+                                : "No specialization",
+                        };
+
+                        setOperationType(processedOpType);
+                    } else {
+                        console.error('Operation type not found');
+                        setOperationType(null);
+                    }
                 } else {
-                    console.error('Operation type not found');
+                    console.error('Unexpected data format:', data);
                     setOperationType(null);
                 }
                 setLoading(false);
@@ -87,7 +102,7 @@ const DeleteOpType: React.FC = () => {
                     </tr>
                     <tr>
                         <td>Specialization</td>
-                        <td>{operationType.specialization || 'No specialization'}</td>
+                        <td>{operationType.specialization || 'No specialization'}</td> 
                     </tr>
                     <tr>
                         <td>Preparation Time</td>
