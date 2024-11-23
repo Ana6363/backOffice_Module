@@ -8,13 +8,13 @@ import Footer from '../../../components/Footer/Footer';
 import './CreateOpType.css'; 
 
 const CreateOpType: React.FC = () => {
-    const navigate = useNavigate();  // Hook de navegação do React Router
+    const navigate = useNavigate();  
     const [operationTypeData, setOperationTypeData] = useState({
         operationTypeName: '',
         preparationTime: 0,
         surgeryTime: 0,
         cleaningTime: 0,
-        specializations: [{ name: '', neededPersonnel: 0 }] // Inicializa com uma especialização
+        specializations: [{ name: '', neededPersonnel: 1 }] // Inicializa com uma especialização
     });
 
     const handleSpecializationChange = (index: number, key: string, value: string | number) => {
@@ -55,12 +55,10 @@ const CreateOpType: React.FC = () => {
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
     ];
 
-    // Função para retroceder à página anterior
     const goBack = () => {
-        navigate(-1); // Retrocede uma página no histórico
+        navigate(-1); 
     };
 
-    // Verificar se há pelo menos uma especialização com nome e número de pessoal
     const isFormValid = operationTypeData.specializations.some(
         spec => spec.name.trim() !== '' && spec.neededPersonnel > 0
     );
@@ -92,6 +90,7 @@ const CreateOpType: React.FC = () => {
                                 name="preparationTime"
                                 value={operationTypeData.preparationTime}
                                 onChange={(e) => setOperationTypeData({ ...operationTypeData, preparationTime: +e.target.value })}
+                                min='0'
                                 required
                             />
                         </div>
@@ -104,6 +103,7 @@ const CreateOpType: React.FC = () => {
                                 name="surgeryTime"
                                 value={operationTypeData.surgeryTime}
                                 onChange={(e) => setOperationTypeData({ ...operationTypeData, surgeryTime: +e.target.value })}
+                                min='0'
                                 required
                             />
                         </div>
@@ -116,6 +116,7 @@ const CreateOpType: React.FC = () => {
                                 name="cleaningTime"
                                 value={operationTypeData.cleaningTime}
                                 onChange={(e) => setOperationTypeData({ ...operationTypeData, cleaningTime: +e.target.value })}
+                                min='0'
                                 required
                             />
                         </div>
@@ -136,6 +137,7 @@ const CreateOpType: React.FC = () => {
                                         placeholder="Needed Personnel"
                                         value={spec.neededPersonnel}
                                         onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
+                                        min='1'
                                         required
                                     />
                                 </div>
@@ -144,18 +146,16 @@ const CreateOpType: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            {/* Botão de criação desabilitado até que uma especialização válida seja adicionada */}
-                            <button 
+                            <Button 
                                 type="submit" 
-                                disabled={!isFormValid} // Botão desabilitado se não houver especializações válidas
-                                className={!isFormValid ? 'button-disabled' : ''} // Adiciona classe para estilo desabilitado
+                                disabled={!isFormValid} 
+                                className={!isFormValid ? 'button-disabled' : ''} 
                             >
                                 Create Operation Type
-                            </button>
+                            </Button>
                         </div>
                     </form>
 
-                    {/* Botão para retroceder à página anterior */}
                     <Button onClick={goBack} className="button-secondary">
                         Go Back
                     </Button>
