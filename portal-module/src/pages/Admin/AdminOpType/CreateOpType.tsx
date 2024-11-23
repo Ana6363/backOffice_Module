@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createOperationType } from '../../../services/OpTypeService';
 import Button from '../../../components/Buttons/Buttons';
 import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
+import { specializations } from './Specializations'; 
 import './CreateOpType.css'; 
 
 const CreateOpType: React.FC = () => {
@@ -14,7 +14,7 @@ const CreateOpType: React.FC = () => {
         preparationTime: 0,
         surgeryTime: 0,
         cleaningTime: 0,
-        specializations: [{ name: '', neededPersonnel: 1 }] // Inicializa com uma especialização
+        specializations: [{ name: '', neededPersonnel: 1 }] 
     });
 
     const handleSpecializationChange = (index: number, key: string, value: string | number) => {
@@ -32,7 +32,7 @@ const CreateOpType: React.FC = () => {
     const addSpecialization = () => {
         setOperationTypeData({
             ...operationTypeData,
-            specializations: [...operationTypeData.specializations, { name: '', neededPersonnel: 0 }],
+            specializations: [...operationTypeData.specializations, { name: '', neededPersonnel: 1 }],
         });
     };
 
@@ -59,7 +59,7 @@ const CreateOpType: React.FC = () => {
         navigate(-1); 
     };
 
-    const isFormValid = operationTypeData.specializations.some(
+    const isFormValid = operationTypeData.specializations.every(
         spec => spec.name.trim() !== '' && spec.neededPersonnel > 0
     );
 
@@ -125,13 +125,19 @@ const CreateOpType: React.FC = () => {
                             <h3 className="text-xl font-semibold">Specializations</h3>
                             {operationTypeData.specializations.map((spec, index) => (
                                 <div key={index} className="specialization-group">
-                                    <input
-                                        type="text"
-                                        placeholder="Specialization name"
+                                    <select
                                         value={spec.name}
                                         onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}
                                         required
-                                    />
+                                    >
+                                        <option value="">Select Specialization</option>
+                                        {specializations.map((specialization, i) => (
+                                            <option key={i} value={specialization.name}>
+                                                {specialization.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                     <input
                                         type="number"
                                         placeholder="Needed Personnel"
@@ -146,13 +152,13 @@ const CreateOpType: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <Button 
+                            <button 
                                 type="submit" 
                                 disabled={!isFormValid} 
                                 className={!isFormValid ? 'button-disabled' : ''} 
                             >
                                 Create Operation Type
-                            </Button>
+                            </button>
                         </div>
                     </form>
 
