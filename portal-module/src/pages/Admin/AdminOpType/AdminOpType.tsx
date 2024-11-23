@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { fetchOperationTypes, createOperationType, updateOperationType, deleteOperationType } from '../../../services/OpTypeService';
+import React, { useState, useEffect } from 'react';
+import { fetchOperationTypes } from '../../../services/OpTypeService';
 import { useNavigate } from 'react-router-dom';
 import SelectableTable from '../../../components/Table/SelectableTable';
 import Navbar from '../../../components/Navbar/Navbar';
@@ -9,55 +9,44 @@ import './AdminOpType.css';
 
 const AdminOpType: React.FC = () => {
     const navigate = useNavigate();
+    const [opTypeList, setOpTypeList] = useState<any[]>([]);
+    const [selectedOpType, setSelectedOpType] = useState<any | null>(null);
+
+    
+    const loadOperationTypes = async () => {
+        try {
+            const data = await fetchOperationTypes();
+    
+            if (data && data.operationType && data.operationType.$values) {
+                const operationTypes = data.operationType.$values;
+    
+                const processedOpTypes = operationTypes.map((operationType) => ({
+                    ...operationType,
+                    specializationDetails: operationType.specializations && operationType.specializations.$values && operationType.specializations.$values.length > 0
+                        ? operationType.specializations.$values.map(spec => `${spec.name.padEnd(20, ' ')} : ${spec.neededPersonnel} personnel`).join('\n') 
+                        : "No specialization",
+                }));
+    
+                setOpTypeList(processedOpTypes);
+            } else if (data && Array.isArray(data)) {
+                setOpTypeList(data);
+            } else {
+                console.error('Unexpected data format:', data);
+                setOpTypeList([]);
+            }
+        } catch (error) {
+            console.error('Error fetching operation types:', error);
+            setOpTypeList([]);
+        }
+    };
     
 
-    const [opTypeList, setOpTypeList] = useState<any[]>([]);
-    const [filter, setFilter] = useState({
-        operationTypeName: '',
-    });
-    const [selectedOpType, setSelectedOpType] = useState<any | null>(null); // Selected operation type
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalContent, setModalContent] = useState({
-        title: '',
-        message: '',
-        action: () => {},
-    });
-
-
-const loadOperationTypes = async () => {
-    try {
-        const data = await fetchOperationTypes(); 
-
-        if (data && data.operationType && data.operationType.$values) {
-            const operationTypes = data.operationType.$values;
-
-            const processedOpTypes = operationTypes.map((operationType) => ({
-                ...operationType,
-                specialization: operationType.specializations && operationType.specializations.$values && operationType.specializations.$values.length > 0
-                    ? operationType.specializations.$values[0].name 
-                    : "No specialization", 
-            }));
-
-            setOpTypeList(processedOpTypes); 
-        } else if (data && Array.isArray(data)) {
-            setOpTypeList(data); 
-        } else {
-            console.error('Unexpected data format:', data);
-            setOpTypeList([]); 
-        }
-    } catch (error) {
-        console.error('Error fetching operation types:', error);
-        setOpTypeList([]); 
-    }
-};
-
-useEffect(() => {
-    loadOperationTypes();
-}, []);
-
+    useEffect(() => {
+        loadOperationTypes();
+    }, []);
 
     const handleCreateOpType = () => {
-        navigate('/admin/opTypes/create');  // Redirect to create new operation type page
+        navigate('/admin/opTypes/create');
     };
 
     const handleUpdateOpType = () => {
@@ -65,33 +54,16 @@ useEffect(() => {
             alert('No operation type selected.');
             return;
         }
-        navigate(`/admin/opTypes/update/${selectedOpType.operationTypeId}`); // Redirect to update page with ID
+        navigate(`/admin/opTypes/update/${selectedOpType.operationTypeId}`);
     };
-
-    
 
     const handleDeleteOpType = () => {
         if (selectedOpType) {
-            // Redirects to new page to confirm deletion through name 
             navigate(`/admin/opTypes/delete/${selectedOpType.operationTypeName}`);
         } else {
             alert('No operation type selected.');
         }
     };
-
-
-
-
-    const openModal = (title: string, message: string, action: () => void) => {
-        setModalContent({ title, message, action });
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
@@ -100,7 +72,6 @@ useEffect(() => {
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
     ];
 
-
     return (
         <div className="app-wrapper">
             <Navbar menuItemsProp={menuItems} />
@@ -108,7 +79,6 @@ useEffect(() => {
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Admin Operation Type Page</h1>
 
-                    {/* Table Container */}
                     <div className="table-container">
                         <SelectableTable
                             data={opTypeList}
@@ -117,14 +87,15 @@ useEffect(() => {
                                 { key: 'preparationTime', label: 'Preparation Time' },
                                 { key: 'surgeryTime', label: 'Surgery Time' },
                                 { key: 'cleaningTime', label: 'Cleaning Time' },
-                                { key: 'specialization', label: 'Specialization' },
+                                //{ key: 'specialization', label: 'Specialization' },
+                                //{ key: 'neededPersonnel', label: 'Needed Personnel' }, 
+                                { key: 'specializationDetails', label: 'Specializations (Personnel)' }, 
 
                             ]}
                             onRowSelect={setSelectedOpType}
                         />
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="action-buttons">
                         <Button onClick={handleCreateOpType} className="button button-primary">
                             Create Operation Type
@@ -136,11 +107,9 @@ useEffect(() => {
                             Delete Operation Type
                         </Button>
                     </div>
-
-                    
                 </div>
             </main>
-            <Footer /> {/* Footer at the bottom */}
+            <Footer />
         </div>
     );
 };
