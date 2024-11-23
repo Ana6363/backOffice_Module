@@ -73,8 +73,8 @@ const App: React.FC = () => {
                         <Route path="/admin/staff/create" element={<CreateStaff />} />
                         <Route path="/admin/staff/update/:staffId" element={<UpdateStaff />} /> 
                         <Route path="/admin/opTypes" element={<AdminOpType />} />
-                        <Route path="/admin/opType/create" element={<CreateOpType />} />
-                        <Route path="/admin/opType/update/:operationTypeId" element={<UpdateOpType />} />
+                        <Route path="/admin/opTypes/create" element={<CreateOpType />} />
+                        <Route path="/admin/opTypes/update/:operationTypeId" element={<UpdateOpType />} />
                         <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
 
 

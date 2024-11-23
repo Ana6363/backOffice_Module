@@ -57,7 +57,7 @@ useEffect(() => {
 
 
     const handleCreateOpType = () => {
-        navigate('/admin/opType/create');  // Redirect to create new operation type page
+        navigate('/admin/opTypes/create');  // Redirect to create new operation type page
     };
 
     const handleUpdateOpType = () => {
@@ -65,7 +65,7 @@ useEffect(() => {
             alert('No operation type selected.');
             return;
         }
-        navigate(`/admin/opType/update/${selectedOpType.operationTypeId}`); // Redirect to update page with ID
+        navigate(`/admin/opTypes/update/${selectedOpType.operationTypeId}`); // Redirect to update page with ID
     };
 
     
