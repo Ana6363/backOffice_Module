@@ -1,10 +1,24 @@
+// Definindo a URL base da API
 const API_URL = 'http://localhost:5184/api/v1/surgeryRoom';
 
+// Função para obter os cabeçalhos de requisição (com token de autorização)
+// Mapeamento de roomId para as posições na matriz
+const roomPositions = {
+    'R001': [2, 1],
+    'R002': [2, 4],
+    'R003': [2, 7],
+    'R004': [8, 1],
+    'R005': [8, 4],
+    'R006': [8, 7]
+};
+
+// Função para obter os cabeçalhos de requisição (com token de autorização)
 const getHeaders = () => ({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
 });
 
+// Função para buscar as salas de cirurgia da API
 export const fetchSurgeryRooms = async () => {
     try {
         const response = await fetch(`${API_URL}/GetAllSurgeryRooms`, {
@@ -15,73 +29,50 @@ export const fetchSurgeryRooms = async () => {
         if (!response.ok) throw new Error('Failed to fetch surgery rooms');
 
         const data = await response.json();
-        return data.surgeryRooms || [];
+        return data.surgeryRooms || []; // Retorna as salas de cirurgia ou um array vazio se não houver dados
     } catch (error) {
         console.error('Error fetching surgery rooms:', error);
         throw new Error('Failed to fetch surgery rooms');
     }
 };
 
-// Método para atualizar o status de uma sala
-export const updateSurgeryRoomStatus = async (roomId: string, status: string) => {
-    try {
-        const response = await fetch(`${API_URL}/updateStatus`, {
-            method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify({ roomId, status }),
-        });
-
-        if (!response.ok) throw new Error('Failed to update surgery room status');
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error updating surgery room status:', error);
-        throw new Error('Failed to update surgery room status');
-    }
-};
-
-// Supondo que a função fetchSurgeryRooms já tenha sido definida no serviço.
-
-let surgeryRoomInterval: NodeJS.Timeout | null = null;
-
-// Função para atualizar a matriz com base no status da sala
-const updateRoomMatrix = (statusData: any, matrix: number[][]) => {
-    statusData.forEach((room: any) => {
-        const { roomId, status } = room; // Aqui assumimos que roomId e status são parte do objeto retornado
-
-        // Converter roomId em coordenadas de matriz (row, col)
-        const roomCoordinates = convertRoomIdToCoordinates(roomId);
-
-        if (status === 'occupied') {
-            matrix[roomCoordinates.row][roomCoordinates.col] = 7; // Se ocupado
-        } else if (status === 'available') {
-            matrix[roomCoordinates.row][roomCoordinates.col] = 6; // Se disponível
-        }
-    });
-};
-
-// Função para chamar o endpoint e obter todas as salas de cirurgia
-export const monitorSurgeryRooms = (matrix: number[][]) => {
-    if (surgeryRoomInterval) clearInterval(surgeryRoomInterval); // Limpar intervalo anterior se existir
-
-    surgeryRoomInterval = setInterval(async () => {
+// Função que simula a chamada ao endpoint de todas as salas
+// Função para monitorar e atualizar o estado das salas de cirurgia
+export const monitorRooms = (mazeInstance: any) => {
+    setInterval(async () => {
         try {
-            const surgeryRooms = await fetchSurgeryRooms();  // Obter status de todas as salas
-            updateRoomMatrix(surgeryRooms, matrix);  // Atualizar a matriz
-            console.log('Matriz de cirurgia atualizada com sucesso');
+            // Buscando todas as salas com o método fetchSurgeryRooms
+            const rooms = await fetchSurgeryRooms();
+
+            // Verificando o status de cada sala e atualizando o modelo 3D
+            rooms.forEach((room: { roomId: keyof typeof roomPositions; status: string }) => {
+                const { roomId, status } = room;
+
+                console.log(`Checking status of room ${roomId}: ${status}`); // Log para debugar
+
+                // Verificando se o roomId está mapeado nas posições
+                if (roomPositions[roomId]) {
+                    const [row, col] = roomPositions[roomId]; // Obtendo a posição da sala
+
+                    console.log(`Room ${roomId} mapped to position: [${row}, ${col}]`); // Log para debugar
+
+                    // Verificando se o status está correto e atualizando a célula no modelo 3D
+                    if (status === 'Occupied') {
+                        console.log(`Room ${roomId} is occupied. Updating matrix...`);
+                        mazeInstance.updateRoomStatusAtPosition(row, col, 'Occupied'); // Atualiza a sala para "ocupado"
+                    } else if (status === 'Available') {
+                        console.log(`Room ${roomId} is available. Updating matrix...`);
+                        mazeInstance.updateRoomStatusAtPosition(row, col, 'Available'); // Atualiza a sala para "livre"
+                    }
+                } else {
+                    console.warn(`Room ${roomId} not found in roomPositions mapping.`);
+                }
+            });
         } catch (error) {
-            console.error('Erro ao monitorar as salas de cirurgia:', error);
+            console.error('Error monitoring rooms:', error);
         }
-    }, 60000);  // Monitoramento a cada 60 segundos (1 minuto)
+    }, 60000); // Atualiza a cada 1 minuto (60000 ms)
 };
 
-// Função para converter roomId em coordenadas (isso depende de como o seu ID é gerado, por exemplo, pode ser baseado no índice ou outros parâmetros)
-const convertRoomIdToCoordinates = (roomId: string) => {
-    // Aqui estamos apenas fazendo um exemplo de conversão de um id simples para coordenadas
-    const row = parseInt(roomId.split('-')[0]);
-    const col = parseInt(roomId.split('-')[1]);
 
-    return { row, col };
-};
 

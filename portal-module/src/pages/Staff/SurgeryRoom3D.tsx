@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSurgeryRooms, updateSurgeryRoomStatus } from '../../services/SurgeryRoomService';
+import { fetchSurgeryRooms, monitorRooms } from '../../services/SurgeryRoomService';
 import './StaffPage.css';
 import Button from '../../components/Buttons/Buttons'; 
 import Navbar from '../../components/Navbar/Navbar';
@@ -12,40 +12,40 @@ const StaffPage: React.FC = () => {
     // Função para buscar as salas de cirurgia da API
     const loadSurgeryRooms = async () => {
         try {
-            const rooms = await fetchSurgeryRooms();
+            const rooms = await fetchSurgeryRooms(); // Chama a API para buscar as salas
             setSurgeryRooms(rooms);
         } catch (error) {
             console.error('Error fetching surgery rooms:', error);
         }
     };
 
+    // Função para inicializar a monitoração das salas de cirurgia
+    const startMonitoringRooms = () => {
+        // Inicia o monitoramento a cada minuto
+        monitorRooms({
+            updateRoomStatus: (roomId: string, status: string) => {
+                // Atualiza o estado das salas na UI
+                setSurgeryRooms((prevRooms) =>
+                    prevRooms.map((room) =>
+                        room.roomId === roomId ? { ...room, status } : room
+                    )
+                );
+            }
+        });
+    };
+
     // Atualiza o estado das salas de cirurgia a cada minuto
     useEffect(() => {
         loadSurgeryRooms(); // Carrega as salas inicialmente
+        const intervalId = setInterval(startMonitoringRooms, 60000); // Inicia o monitoramento contínuo a cada minuto
 
-        const interval = setInterval(() => {
-            loadSurgeryRooms(); // Atualiza a cada minuto
-        }, 60000); // 60000ms = 1 minuto
-
-        return () => clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
+        // Limpa o intervalo quando o componente for desmontado
+        return () => clearInterval(intervalId);
     }, []);
 
-    // Função para modificar o estado de uma sala de cirurgia
-    const handleUpdateRoomStatus = async (roomId: string, newStatus: string) => {
-        try {
-            await updateSurgeryRoomStatus(roomId, newStatus);
-            setSurgeryRooms((prevRooms) =>
-                prevRooms.map((room) =>
-                    room.id === roomId ? { ...room, status: newStatus } : room
-                )
-            );
-        } catch (error) {
-            console.error('Error updating surgery room status:', error);
-        }
-    };
+    // Função para navegar para o modelo 3D
     const navigateTo3D = () => {
-        window.location.href =
-            'http://127.0.0.1:5500/portal-module/src/3DModel/Thumb_Raiser.html';
+        window.location.href = 'http://127.0.0.1:5500/portal-module/src/3DModel/Thumb_Raiser.html';
     };
 
     const staffMenuItems = [
