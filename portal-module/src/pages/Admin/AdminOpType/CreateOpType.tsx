@@ -36,8 +36,23 @@ const CreateOpType: React.FC = () => {
         });
     };
 
+    const removeSpecialization = (index: number) => {
+        const updatedSpecializations = operationTypeData.specializations.filter((_, i) => i !== index);
+        setOperationTypeData({
+            ...operationTypeData,
+            specializations: updatedSpecializations,
+        });
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        // Ensure Op. Type has at least one Specialization
+        if (operationTypeData.specializations.every(spec => spec.name.trim() === '')) {
+            alert('Please select at least one specialization.');
+            return;
+        }
+
         try {
             await createOperationType(operationTypeData);
             alert('Operation Type created successfully');
@@ -146,9 +161,22 @@ const CreateOpType: React.FC = () => {
                                         min='1'
                                         required
                                     />
+
+                                    <Button 
+                                        onClick={() => removeSpecialization(index)} 
+                                        className="button-danger"
+                                    >
+                                        Remove Specialization
+                                    </Button>
                                 </div>
                             ))}
-                            
+
+                            <Button 
+                                onClick={addSpecialization} 
+                                className="button-primary"
+                            >
+                                Add New Specialization
+                            </Button>
                         </div>
 
                         <div className="form-group">

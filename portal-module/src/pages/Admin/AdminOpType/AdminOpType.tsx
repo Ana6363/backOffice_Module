@@ -23,7 +23,9 @@ const AdminOpType: React.FC = () => {
                 const processedOpTypes = operationTypes.map((operationType) => ({
                     ...operationType,
                     specializationDetails: operationType.specializations && operationType.specializations.$values && operationType.specializations.$values.length > 0
-                        ? operationType.specializations.$values.map(spec => `${spec.name.padEnd(20, ' ')} : ${spec.neededPersonnel} personnel`).join('\n') 
+                        //? operationType.specializations.$values.map(spec => `${spec.name.padEnd(20, ' ')} : ${spec.neededPersonnel} `).join('\n') 
+                        ? operationType.specializations.$values.map(spec => ` ${spec.neededPersonnel} ${spec.name.padEnd(20, '')},  `).join('\n') 
+
                         : "No specialization",
                 }));
     
