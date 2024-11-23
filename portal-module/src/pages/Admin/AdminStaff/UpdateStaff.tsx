@@ -212,16 +212,16 @@ const UpdateStaff: React.FC = () => {
                                 </Button>
                             </div>
 
-                            <Button onClick={() => handleSubmit} className="button button-primary">
-                                Update Staff
-                            </Button>
+                            <Button type="submit" className="button button-primary">
+                            Update Staff
+                        </Button>
+
                         </form>
                     ) : (
                         <div>No staff data available</div>
                     )}
                 </div>
             </main>
-            <Footer />
         </div>
     );
 };
