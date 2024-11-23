@@ -45,7 +45,7 @@ const StaffPage: React.FC = () => {
 
     // Função para navegar para o modelo 3D
     const navigateTo3D = () => {
-        window.location.href = '../src/3DModel/Thumb_Raiser.html';
+        window.location.href = 'http://127.0.0.1:5500/portal-module/src/3DModel/Thumb_Raiser.html';
     };
 
     const staffMenuItems = [
