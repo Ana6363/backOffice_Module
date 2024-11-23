@@ -28,16 +28,18 @@ const CreateOperationRequest: React.FC = () => {
     };
 
     const handleCreateOperationRequest = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent form submission
         setLoading(true);
         setErrorMessage('');
         setSuccessMessage('');
 
         try {
-            await createOperationRequest( newRequestData );
-            setSuccessMessage('Operation Request created successfully!');
+            await createOperationRequest(newRequestData);
+            const success = 'Operation Request created successfully!';
+            setSuccessMessage(success);
             setNewRequestData({ deadline: '', priority: '', userId: '', operationTypeName: '' });
-            // Redirect to the operations list or another page if needed
-            navigate('/operationRequest');
+            window.alert(success); // Show success message as an alert
+            navigate('/operationRequest'); // Redirect after success
         } catch (error) {
             setErrorMessage('Failed to create Operation Request.');
         } finally {
@@ -49,7 +51,7 @@ const CreateOperationRequest: React.FC = () => {
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
         { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
-      ];
+    ];
 
     return (
         <div className="app-wrapper">
@@ -57,7 +59,6 @@ const CreateOperationRequest: React.FC = () => {
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Create New Operation Request</h1>
-                    {/* Form for creating operation request */}
                     <form onSubmit={handleCreateOperationRequest} className="request-form">
                         <div className="form-group">
                             <label htmlFor="deadline">Deadline</label>
@@ -72,21 +73,20 @@ const CreateOperationRequest: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                                <label htmlFor="priority">Priority</label>
-                                <select
+                            <label htmlFor="priority">Priority</label>
+                            <select
                                 name="priority"
                                 id="priority"
                                 value={newRequestData.priority}
                                 onChange={handleChange}
-                                className='input input-bordered w-full mb-2'
+                                className="input input-bordered w-full mb-2"
                                 title="Priority"
                                 required
-                                >
-                                    
-                                    <option value="LOW">LOW</option>
-                                    <option value="MEDIUM">MEDIUM</option>
-                                    <option value="HIGH">HIGH</option>
-                                </select>
+                            >
+                                <option value="LOW">LOW</option>
+                                <option value="MEDIUM">MEDIUM</option>
+                                <option value="HIGH">HIGH</option>
+                            </select>
                         </div>
 
                         <div className="form-group">
@@ -120,7 +120,11 @@ const CreateOperationRequest: React.FC = () => {
                         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                         <div className="form-group">
-                            <Button onClick={() => handleCreateOperationRequest({} as React.FormEvent)} className="button button-primary" disabled={loading}>
+                            <Button
+                                type="submit"
+                                className="button button-primary"
+                                disabled={loading}
+                            >
                                 {loading ? 'Creating...' : 'Create Request'}
                             </Button>
                         </div>

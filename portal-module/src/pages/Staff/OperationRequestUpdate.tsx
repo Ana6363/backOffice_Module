@@ -24,29 +24,33 @@ const UpdateOperationRequest: React.FC = () => {
     // Function to load a specific operation request based on ID
     useEffect(() => {
         const fetchOperationRequestData = async () => {
-        try {
-                const operationRequestList = await fetchOperationRequest({ requestId: id || '' });
-
-                if (operationRequestList.length === 1) {
-                    const opRequest = operationRequestList[0];
-                    setRequestData(opRequest);
-                setEditData({
-                        deadLine: opRequest.deadLine,
-                        priority: opRequest.priority,
-                        recordNumber: opRequest.recordNumber,
-                        status: opRequest.status,
-                        operationTypeName: opRequest.operationTypeName,
-                });
-            } else {
-                    console.error("Operation Request not found");
-                    alert("Operation Request not found");
-                navigate('/operationRequest');
+            try {
+                const operationRequestList = await fetchOperationRequest({}); // Fetch all operation requests
+                console.log('Fetched Operation Requests:', operationRequestList);
+        
+                // Find the specific operation request by ID
+                const opRequest = operationRequestList.find((request: any) => request.requestId === id);
+        
+                if (opRequest) {
+                    setRequestData(opRequest); // Set the operation request for display
+                    setEditData({
+                        deadLine: opRequest.deadLine || '',
+                        priority: opRequest.priority || '',
+                        recordNumber: opRequest.recordNumber || '',
+                        status: opRequest.status || '',
+                        operationTypeName: opRequest.operationTypeName || '',
+                    });
+                } else {
+                    console.error('Operation Request not found');
+                    alert('Operation Request not found');
+                    navigate('/operationRequest'); // Redirect if not found
+                }
+            } catch (error) {
+                console.error('Error fetching operation request data:', error);
+                alert('Error fetching operation request data');
             }
-        } catch (error) {
-                console.error("Error fetching operation request data:", error);
-                alert("Error fetching operation request data");
-        }
-    };
+        };
+        
     if (id) {
             fetchOperationRequestData();
     }

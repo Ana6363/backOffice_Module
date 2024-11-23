@@ -68,6 +68,7 @@ const UpdatePatient: React.FC = () => {
             <input
               type="text"
               name="phoneNumber"
+              id="phoneNumber"
               value={patientData.phoneNumber}
               onChange={(e) => setPatientData({ ...patientData, phoneNumber: Number(e.target.value) })}
               className="input input-bordered w-full mb-2"
@@ -80,6 +81,7 @@ const UpdatePatient: React.FC = () => {
             <input
               type="text"
               name="emergencyContact"
+              id="emergencyContact"
               value={patientData.emergencyContact}
               onChange={(e) => setPatientData({ ...patientData, emergencyContact: Number(e.target.value) })}
               className="input input-bordered w-full mb-2"
