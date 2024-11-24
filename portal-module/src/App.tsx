@@ -6,6 +6,7 @@ import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
 
 import AdminPage from './pages/Admin/AdminPage';
+import AdminSchedule from './pages/Admin/AdminSchedule/AdminSchedule'
 import AdminStaff from './pages/Admin/AdminStaff/AdminStaff';
 import CreateStaff from './pages/Admin/AdminStaff/CreateStaff';
 import UpdateStaff from './pages/Admin/AdminStaff/UpdateStaff';
@@ -65,6 +66,7 @@ const App: React.FC = () => {
                 <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
                 <Route path="/admin" element={<AdminPage />} />
                         <Route path="/admin/patient" element={<AdminPatient />} />
+                        <Route path="/admin/schedule" element={<AdminSchedule />} />
                         <Route path="/admin/patient/create" element={<CreatePatient />} /> 
                         <Route path="/admin/patient/update/:phoneNumber" element={<UpdatePatient />} />
                         <Route path="/admin/staff" element={<AdminStaff />} />

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { patientToken } from '../../utils/tokens';
 
 describe('Update Patient', () => {

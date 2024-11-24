@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { adminToken } from '../../utils/tokens';
 
 describe('Admin - Create Staff Member', () => {
