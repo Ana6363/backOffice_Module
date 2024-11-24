@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { updateOperationRequest, fetchOperationRequest } from '../../services/OperationRequestService';
 import Button from '../../components/Buttons/Buttons';
 import Navbar from '../../components/Navbar/Navbar';
@@ -12,28 +12,36 @@ const UpdateOperationRequest: React.FC = () => {
 
     const [requestData, setRequestData] = useState<any | null>(null);
     const [editData, setEditData] = useState<any>({
+        requestId: '', // Ensure requestId is part of the state
         deadLine: '',
         priority: '',
         recordNumber: '',
         status: '',
         operationTypeName: '',
     });
-
-    
+    const [isLoading, setIsLoading] = useState(true);
 
     // Function to load a specific operation request based on ID
     useEffect(() => {
         const fetchOperationRequestData = async () => {
+            console.log('Initiating fetch operation request data...');
+
             try {
-                const operationRequestList = await fetchOperationRequest({}); // Fetch all operation requests
-                console.log('Fetched Operation Requests:', operationRequestList);
-        
-                // Find the specific operation request by ID
+                const operationRequestList = await fetchOperationRequest({});
+                console.log('Fetched operation requests:', operationRequestList);
+
+                if (!operationRequestList || operationRequestList.length === 0) {
+                    console.warn('No operation requests found!');
+                }
+
                 const opRequest = operationRequestList.find((request: any) => request.requestId === id);
-        
+                console.log('Selected operation request:', opRequest);
+
                 if (opRequest) {
-                    setRequestData(opRequest); // Set the operation request for display
+                    console.log('Setting request data for the selected operation request.');
+                    setRequestData(opRequest);
                     setEditData({
+                        requestId: opRequest.requestId || '', // Set requestId here
                         deadLine: opRequest.deadLine || '',
                         priority: opRequest.priority || '',
                         recordNumber: opRequest.recordNumber || '',
@@ -41,25 +49,31 @@ const UpdateOperationRequest: React.FC = () => {
                         operationTypeName: opRequest.operationTypeName || '',
                     });
                 } else {
-                    console.error('Operation Request not found');
-                    alert('Operation Request not found');
-                    navigate('/operationRequest'); // Redirect if not found
+                    console.error(`Operation Request with ID ${id} not found.`);
+                    alert(`Operation Request with ID ${id} not found. Redirecting to list.`);
+                    navigate('/operationRequest');
                 }
             } catch (error) {
-                console.error('Error fetching operation request data:', error);
-                alert('Error fetching operation request data');
+                console.error('Error during fetchOperationRequestData:', error);
+                alert('An error occurred while fetching operation request data.');
+            } finally {
+                console.log('Fetch operation request complete. Setting loading state to false.');
+                setIsLoading(false);
             }
         };
-        
-    if (id) {
-            fetchOperationRequestData();
-    }
-    } , [id, navigate]);
 
-        
+        if (id) {
+            console.log('Received ID from URL params:', id);
+            fetchOperationRequestData();
+        } else {
+            console.warn('No ID received in URL params. Redirecting...');
+            navigate('/operationRequest');
+        }
+    }, [id, navigate]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        console.log(`Handling input change. Field: ${name}, Value: ${value}`);
         setEditData({
             ...editData,
             [name]: value,
@@ -67,14 +81,21 @@ const UpdateOperationRequest: React.FC = () => {
     };
 
     const handleUpdateOperationRequest = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent page reload on form submit
+        e.preventDefault();
+        console.log('Submitting update for operation request:', editData);
+
         try {
-            await updateOperationRequest(editData); // Call the API to update
+            if (!editData.requestId) {
+                throw new Error('Request ID is required for updating the operation request.');
+            }
+
+            const response = await updateOperationRequest(editData);
+            console.log('Operation Request update response:', response);
+
             alert('Operation Request updated successfully!');
-            navigate('/operationRequest'); // Redirect to the list of operation requests
+            navigate('/operationRequest');
         } catch (error) {
-            alert('Failed to update Operation Request');
-            console.error(error);
+            console.error('Failed to update Operation Request:', error);
         }
     };
 
@@ -83,9 +104,7 @@ const UpdateOperationRequest: React.FC = () => {
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
         { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
-      ];
-
-    
+    ];
 
     return (
         <div className="app-wrapper">
@@ -94,35 +113,37 @@ const UpdateOperationRequest: React.FC = () => {
                 <div className="container mx-auto p-4">
                     <h1 className="text-2xl font-bold mb-4">Update Operation Request</h1>
 
-
-                    {requestData ? (
+                    {isLoading ? (
+                        // Show loading message while data is being fetched
+                        <p>Loading Operation Request data...</p>
+                    ) : requestData ? (
                         <form onSubmit={handleUpdateOperationRequest} className="request-form">
                             <div className="mb-4">
-                                <label>DeadLine</label>
+                                <label>Deadline</label>
                                 <input
-                                type="datetime-local"
-                                id="deadLine"
-                                value={editData.deadLine}
-                                onChange={handleInputChange}
-                                placeholder="DeadLine"
+                                    type="datetime-local"
+                                    name="deadLine"
+                                    id="deadLine"
+                                    value={editData.deadLine}
+                                    onChange={handleInputChange}
+                                    placeholder="Deadline"
                                 />
-                        </div>
-
+                            </div>
 
                             <div className="mb-4">
-                                <label htmlFor="status">Priority</label>
+                                <label htmlFor="priority">Priority</label>
                                 <select
-                                name="priority"
-                                id="priority"
-                                value={editData.priority}
-                                onChange={handleInputChange}
-                                title='Priority'
+                                    name="priority"
+                                    id="priority"
+                                    value={editData.priority}
+                                    onChange={handleInputChange}
+                                    title="Priority"
                                 >
                                     <option value="LOW">LOW</option>
                                     <option value="MEDIUM">MEDIUM</option>
                                     <option value="HIGH">HIGH</option>
                                 </select>
-                        </div>
+                            </div>
 
                             <div className="mb-4">
                                 <label htmlFor="status">Status</label>
@@ -131,35 +152,32 @@ const UpdateOperationRequest: React.FC = () => {
                                     id="status"
                                     value={editData.status}
                                     onChange={handleInputChange}
-                            
-                                    >
+                                >
                                     <option value="PENDING">PENDING</option>
                                     <option value="ACCEPTED">ACCEPTED</option>
                                     <option value="REJECTED">REJECTED</option>
                                 </select>
                             </div>
-                            
-                        <div className="mb-4">
+
+                            <div className="mb-4">
                                 <label>Operation Type</label>
                                 <input
-                                type="text"
-                                id="operationTypeName"
-                                value={editData.operationTypeName}
-                                onChange={handleInputChange}
-                                placeholder="Operation Type"
+                                    type="text"
+                                    name="operationTypeName"
+                                    id="operationTypeName"
+                                    value={editData.operationTypeName}
+                                    onChange={handleInputChange}
+                                    placeholder="Operation Type"
                                 />
-                        </div>
-       
-                    
-                                <Button onClick={handleUpdateOperationRequest} className="button button-primary">
-                                    Update Operation Request
-                                </Button>
-                            
+                            </div>
+
+                            <Button type="submit" className="button button-primary">
+                                Update Operation Request
+                            </Button>
                         </form>
                     ) : (
-                    <p>Loading Operation Request data...</p>
+                        <p>Operation Request not found.</p>
                     )}
-                    
                 </div>
             </main>
 

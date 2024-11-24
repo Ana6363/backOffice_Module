@@ -28,8 +28,8 @@ describe('Admin - Create Patient', () => {
     cy.get('#lastName').type('string');
     cy.get('#fullName').type('string');
     cy.get('#dateOfBirth').type('2004-12-23');
-    cy.get('#phoneNumber').type('139359458');
-    cy.get('#emergencyContact').type('139359261');
+    cy.get('#phoneNumber').type('13935945');
+    cy.get('#emergencyContact').type('13935926');
     cy.get('#gender').select('Male');
 
     // Submit the form

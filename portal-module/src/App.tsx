@@ -80,8 +80,8 @@ const App: React.FC = () => {
                     <Route path="/mainPageStaff" element={<MainPageStaff />} />
                     <Route path="/operationRequest" element={<OperationRequest />} />
                     <Route path="/operationRequest/create" element={<OperationRequestCreate />} />
-                    <Route path="/operationRequest/update" element={<OperationRequestUpdate />} />
-                    <Route path="/operationRequest/delete" element={<OperationRequestDelete />} />
+                    <Route path="/operationRequest/update/:id" element={<OperationRequestUpdate />} />
+                    <Route path="/operationRequest/delete/:id" element={<OperationRequestDelete />} />
                     <Route path='/surgeryRoom3DModel' element={<SurgeryRoom3D/>} />
 
                 </Route>

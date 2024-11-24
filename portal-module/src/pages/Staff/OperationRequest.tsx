@@ -104,28 +104,34 @@ const OperationRequest: React.FC = () => {
     };
 
     const handleNavigateToUpdate = () => {
-        if (!selectedOperationRequest) {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
             alert('No operation request selected.');
             return;
         }
-        navigate('/operationRequest/update', { state: { selectedOperationRequest } }); // Passing selected request to the update page
+    
+        // Use the actual ID in the navigation path
+        navigate(`/operationRequest/update/${selectedOperationRequest.requestId}`);
     };
+    
 
     const handleNavigateToDelete = () => {
-        if (!selectedOperationRequest) {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
             alert('No operation request selected.');
             return;
         }
+    
         openModal(
             'Confirm Deletion',
-            `Are you sure you want to delete the request for record number ${selectedOperationRequest.recordNumber}?`,
+            `Are you sure you want to delete this request}?`,
             async () => {
                 try {
-                    await deleteOperationRequest(selectedOperationRequest.recordNumber);
+                    // Pass requestId to the delete operation service
+                    await deleteOperationRequest(selectedOperationRequest.requestId);
                     setOperationRequestsList((prevRequests) =>
-                        prevRequests.filter((request) => request.recordNumber !== selectedOperationRequest.recordNumber)
+                        prevRequests.filter((request) => request.requestId !== selectedOperationRequest.requestId)
                     );
                     closeModal();
+                    alert('Operation request deleted successfully!');
                 } catch (error) {
                     console.error('Failed to delete operation request:', error);
                     closeModal();
@@ -133,6 +139,7 @@ const OperationRequest: React.FC = () => {
             }
         );
     };
+    
 
     const openModal = (title: string, message: string, action: () => void) => {
         setModalContent({ title, message, action });

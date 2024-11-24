@@ -25,7 +25,7 @@ describe('Admin - Create Op Request Member', () => {
     // Fill the form fields
     cy.get("#deadline").type('2025-01-01T00:00:00');
     cy.get('#priority').select('MEDIUM');
-    cy.get('#userId').type('t@gmail.com');
+    cy.get('#userId').type('testeint@gmail.com');
     cy.get('#operationTypeName').type('ACL Reconstruction Surgery');
 
     // Submit the form
