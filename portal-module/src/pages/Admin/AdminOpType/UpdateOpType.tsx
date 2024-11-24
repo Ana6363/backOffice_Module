@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchOperationTypes, updateOperationType } from '../../../services/OpTypeService'; 
+import { fetchOperationTypes, updateOperationType } from '../../../services/OpTypeService';
 import Button from '../../../components/Buttons/Buttons';
 import Footer from '../../../components/Footer/Footer';
 import Navbar from '../../../components/Navbar/Navbar';
@@ -16,28 +16,29 @@ const UpdateOpType: React.FC = () => {
     useEffect(() => {
         const fetchOpTypeById = async () => {
             try {
-                const data = await fetchOperationTypes(); 
+                const data = await fetchOperationTypes();
 
                 if (data && data.operationType && data.operationType.$values) {
                     const operationTypes = data.operationType.$values;
-                    const foundOpType = operationTypes.find(
-                        (operationType) => operationType.operationTypeId === operationTypeId
+
+                    const operationType = operationTypes.find(
+                        (op) => op.operationTypeId === operationTypeId
                     );
 
-                    if (foundOpType) {
+                    if (operationType) {
                         const processedOpType = {
-                            ...foundOpType,
-                            specialization: foundOpType.specializations && 
-                                           foundOpType.specializations.$values && 
-                                           foundOpType.specializations.$values.length > 0
-                                ? foundOpType.specializations.$values[0].name
-                                : "No specialization assigned",
+                            ...operationType,
+                            specializations: operationType.specializations?.$values?.map((spec: any) => ({
+                                name: spec.name,
+                                neededPersonnel: spec.neededPersonnel,
+                            })) || [],
                         };
-                        setOpType(processedOpType); 
-                        setFormData(processedOpType); 
+
+                        setOpType(processedOpType);
+                        setFormData(processedOpType);
                     } else {
-                        console.error("Operation type not found");
-                        alert("Operation type not found");
+                        console.error('Operation type not found');
+                        alert('Operation type not found');
                         navigate('/admin/opTypes');
                     }
                 } else {
@@ -50,12 +51,12 @@ const UpdateOpType: React.FC = () => {
                 alert('Error loading operation type.');
                 navigate('/admin/opTypes');
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
 
         if (operationTypeId) {
-            fetchOpTypeById();  
+            fetchOpTypeById();
         }
     }, [operationTypeId, navigate]);
 
@@ -67,82 +68,36 @@ const UpdateOpType: React.FC = () => {
         });
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const opTypes = await fetchOperationTypes();  
-                setOpType(opTypes);  
-            } catch (error) {
-                console.error("Error fetching operation types:", error);
-            }
-        };
-    
-        fetchData();  
-    }, []);  
-    
-    /*
     const handleSaveChanges = async (e: React.FormEvent) => {
-        console.log('Entered to save changes')
+        e.preventDefault();
+
         try {
-            const dataToSend = {
-                ...formData,
-                specializations: Array.isArray(opType.specializations) 
-                    ? opType.specializations 
-                    : [], // Garante que seja um array
-            };
-            console.log(dataToSend);
-            await updateOperationType(dataToSend); 
-            //await updateOperationType(formData); 
-
-            const updatedData = await fetchOperationTypes();  
-            setOpType(updatedData);  
-            alert("Operation Type updated successfully.");
-            
-
-            navigate('/admin/opTypes'); 
-        } catch (error) {
-            console.error('Error updating operation type:', error);
-            alert('Error saving changes.');
-        }
-    };*/
-
-    const handleSaveChanges = async (e: React.FormEvent) => {
-        console.log('Entered to save changes');
-        
-        try {
-            // Check if Id is in formData
             if (!formData.operationTypeId) {
                 throw new Error('Operation Type ID is missing');
             }
-    
-            console.log('Data to send to backend:', formData);  
-    
+
+            console.log('Data to send to backend:', formData);
+
             const dataToSend = {
                 ...formData,
-                specializations: Array.isArray(formData.specializations) 
-                    ? formData.specializations 
-                    : [], 
+                specializations: formData.specializations || [],
             };
-    
+
             console.log('Sending data:', dataToSend);
-    
-            await updateOperationType(dataToSend); 
-    
-            const updatedData = await fetchOperationTypes();  
-            console.log('Updated Operation Types:', updatedData); 
-    
-            setOpType(updatedData);  
-            alert("Operation Type updated successfully.");
-    
-            
-            navigate('/admin/opTypes'); 
+
+            await updateOperationType(dataToSend);
+
+            const updatedData = await fetchOperationTypes();
+            console.log('Updated Operation Types:', updatedData);
+
+            setOpType(updatedData);
+            alert('Operation Type updated successfully.');
+            navigate('/admin/opTypes');
         } catch (error) {
             console.error('Error updating operation type:', error);
             alert('Error saving changes.');
         }
     };
-    
-    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -170,12 +125,36 @@ const UpdateOpType: React.FC = () => {
                             <tbody>
                                 <tr>
                                     <td><strong>Operation Type Name:</strong></td>
-                                    <td><input type="text" name="operationTypeName" value={formData.operationTypeName} disabled /></td>
+                                    <td>
+                                        <input 
+                                                type="text" 
+                                                name="operationTypeName" 
+                                                className="disabled-input"
+                                                value={formData.operationTypeName} 
+                                                disabled 
+                                        />
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Specialization:</strong></td>
-                                    <td><input type="text" name="specialization" value={formData.specialization} disabled /></td>
+                                    <td><strong>Specializations:</strong></td>
+                                    <td>
+                                        {formData.specializations && formData.specializations.length > 0 ? (
+                                            formData.specializations.map((spec: any, index: number) => (
+                                                <input
+                                                    key={index}
+                                                    type="text"
+                                                    className="disabled-input"
+                                                    value={`${spec.name} - Personnel: ${spec.neededPersonnel}`}
+                                                    disabled
+                                                />
+                                            ))
+                                        ) : (
+                                            <span>No specializations assigned.</span>
+                                        )}
+                                    </td>
                                 </tr>
+
+                                
                                 <tr>
                                     <td><strong>Preparation Time:</strong></td>
                                     <td><input type="number" name="preparationTime" value={formData.preparationTime} onChange={handleInputChange} /></td>
@@ -193,7 +172,7 @@ const UpdateOpType: React.FC = () => {
 
                         <div className="buttons">
                             <Button onClick={() => navigate(`/admin/opTypes`)} className="button button-cancel">Back to List</Button>
-                            <Button onClick={ () => handleSaveChanges({} as React.FormEvent)} className="button button-primary">Save Changes</Button>
+                            <Button onClick={handleSaveChanges} className="button button-primary">Save Changes</Button>
                         </div>
                     </div>
                 </div>
