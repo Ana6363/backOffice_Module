@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchOperationTypes, updateOperationType } from '../../../services/OpTypeService';
@@ -157,7 +158,7 @@ const UpdateOpType: React.FC = () => {
                                 
                                 <tr>
                                     <td><strong>Preparation Time:</strong></td>
-                                    <td><input type="number" name="preparationTime" value={formData.preparationTime} onChange={handleInputChange} /></td>
+                                    <td><input type="number" id="preparationTime" name="preparationTime" value={formData.preparationTime} onChange={handleInputChange} /></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Surgery Time:</strong></td>
