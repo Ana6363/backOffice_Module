@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { doctorToken } from '../../utils/tokens';
 
 describe('Admin - Create Op Request Member', () => {
