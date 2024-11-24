@@ -37,7 +37,12 @@ export default class ThumbRaiser {
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
 
-        
+        // Call fetchRoomStatus to ensure the most recent data is loaded
+        this.fetchRoomStatus()
+        .then(() => {
+            console.log("Initial room status fetched successfully.");
+            this.resetProgram();
+        })
 
         // Create a 2D scene (the viewports frames)
         this.scene2D = new THREE.Scene();
@@ -179,6 +184,12 @@ export default class ThumbRaiser {
         this.resetAll.addEventListener("click", event => this.buttonClick(event));
 
         this.activeElement = document.activeElement;
+
+        setTimeout(async () => {
+            await this.fetchRoomStatus(); // Fetch room status and update the map
+            this.reloadMaze(); // Reload the maze with the updated map
+        }, 2600);
+
         setInterval(async () => {
             await this.fetchRoomStatus(); // Fetch room status and update the map
             this.reloadMaze(); // Reload the maze with the updated map
