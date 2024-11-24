@@ -2,7 +2,6 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Wall from "./wall.js";
-import { monitorRooms } from "../services/SurgeryRoomService.js";
 
 
 /*
@@ -16,6 +15,8 @@ import { monitorRooms } from "../services/SurgeryRoomService.js";
 export default class Maze {
     constructor(parameters) {
         this.onLoad = async function (description) {
+            console.log("Loaded exitLocation:", description.exitLocation);
+
             // Store the maze's map and size
             this.map = description.map;
             this.size = description.size;
@@ -143,7 +144,6 @@ export default class Maze {
             }
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
-            monitorRooms(this.map);
             this.loaded = true;
         }
 
