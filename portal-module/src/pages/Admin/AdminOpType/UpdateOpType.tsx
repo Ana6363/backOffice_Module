@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { fetchOperationTypes } from '../../../services/OpTypeService'; 
-import Button from '../../../components/Buttons/Buttons'; 
-import Footer from '../../../components/Footer/Footer'; 
-import Navbar from '../../../components/Navbar/Navbar'; 
-import './UpdateOpType.css'; 
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchOperationTypes, updateOperationType } from '../../../services/OpTypeService'; 
+import Button from '../../../components/Buttons/Buttons';
+import Footer from '../../../components/Footer/Footer';
+import Navbar from '../../../components/Navbar/Navbar';
+import './UpdateOpType.css';
 
 const UpdateOpType: React.FC = () => {
-    const { operationTypeId } = useParams<{ operationTypeId: string }>(); 
+    const { operationTypeId } = useParams<{ operationTypeId: string }>();
     const navigate = useNavigate();
-
     const [opType, setOpType] = useState<any | null>(null); 
     const [loading, setLoading] = useState<boolean>(true); 
+    const [formData, setFormData] = useState<any>({}); 
 
     useEffect(() => {
         const fetchOpTypeById = async () => {
@@ -34,6 +34,7 @@ const UpdateOpType: React.FC = () => {
                                 : "No specialization assigned",
                         };
                         setOpType(processedOpType); 
+                        setFormData(processedOpType); 
                     } else {
                         console.error("Operation type not found");
                         alert("Operation type not found");
@@ -54,17 +55,103 @@ const UpdateOpType: React.FC = () => {
         };
 
         if (operationTypeId) {
-            fetchOpTypeById(); 
+            fetchOpTypeById();  
         }
     }, [operationTypeId, navigate]);
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const opTypes = await fetchOperationTypes();  
+                setOpType(opTypes);  
+            } catch (error) {
+                console.error("Error fetching operation types:", error);
+            }
+        };
+    
+        fetchData();  
+    }, []);  
+    
+    /*
+    const handleSaveChanges = async (e: React.FormEvent) => {
+        console.log('Entered to save changes')
+        try {
+            const dataToSend = {
+                ...formData,
+                specializations: Array.isArray(opType.specializations) 
+                    ? opType.specializations 
+                    : [], // Garante que seja um array
+            };
+            console.log(dataToSend);
+            await updateOperationType(dataToSend); 
+            //await updateOperationType(formData); 
+
+            const updatedData = await fetchOperationTypes();  
+            setOpType(updatedData);  
+            alert("Operation Type updated successfully.");
+            
+
+            navigate('/admin/opTypes'); 
+        } catch (error) {
+            console.error('Error updating operation type:', error);
+            alert('Error saving changes.');
+        }
+    };*/
+
+    const handleSaveChanges = async (e: React.FormEvent) => {
+        console.log('Entered to save changes');
+        
+        try {
+            // Check if Id is in formData
+            if (!formData.operationTypeId) {
+                throw new Error('Operation Type ID is missing');
+            }
+    
+            console.log('Data to send to backend:', formData);  
+    
+            const dataToSend = {
+                ...formData,
+                specializations: Array.isArray(formData.specializations) 
+                    ? formData.specializations 
+                    : [], 
+            };
+    
+            console.log('Sending data:', dataToSend);
+    
+            await updateOperationType(dataToSend); 
+    
+            const updatedData = await fetchOperationTypes();  
+            console.log('Updated Operation Types:', updatedData); 
+    
+            setOpType(updatedData);  
+            alert("Operation Type updated successfully.");
+    
+            
+            navigate('/admin/opTypes'); 
+        } catch (error) {
+            console.error('Error updating operation type:', error);
+            alert('Error saving changes.');
+        }
+    };
+    
+    
+
     if (loading) {
-        return <div>Loading...</div>; // Show while data is loading
+        return <div>Loading...</div>;
     }
 
     if (!opType) {
-        return <div>No operation type data available.</div>; // Show if there are no Op Types 
+        return <div>No operation type data available.</div>;
     }
+
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
         { id: 2, name: 'Manage Patients', route: '/admin/patient' },
@@ -73,74 +160,45 @@ const UpdateOpType: React.FC = () => {
     ];
 
     return (
-        <div className="update-opType-wrapper">
-            <Navbar menuItemsProp={menuItems} /> {/* Navbar with menu items */}
+        <div>
+            <Navbar menuItemsProp={menuItems} />
             <main className="main-content">
                 <div className="container">
-                    <h1 className="text-3xl font-bold text-center mb-8">Update Operation Type</h1>
+                    <h2 className="text-3xl font-bold text-center mb-8">Update Operation Type</h2>
+                    <div className="operation-type-form">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Operation Type Name:</strong></td>
+                                    <td><input type="text" name="operationTypeName" value={formData.operationTypeName} disabled /></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Specialization:</strong></td>
+                                    <td><input type="text" name="specialization" value={formData.specialization} disabled /></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Preparation Time:</strong></td>
+                                    <td><input type="number" name="preparationTime" value={formData.preparationTime} onChange={handleInputChange} /></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Surgery Time:</strong></td>
+                                    <td><input type="number" name="surgeryTime" value={formData.surgeryTime} onChange={handleInputChange} /></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cleaning Time:</strong></td>
+                                    <td><input type="number" name="cleaningTime" value={formData.cleaningTime} onChange={handleInputChange} /></td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    {opType ? (
-                        <form className="update-opType-form">
-                            <table className="operation-type-table">
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Operation Type Name:</strong></td>
-                                        <td><input
-                                            type="text"
-                                            value={opType.operationTypeName || ''}
-                                            disabled
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Specialization:</strong></td>
-                                        <td><input
-                                            type="text"
-                                            value={opType.specialization || ''}
-                                            disabled
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Preparation Time (min):</strong></td>
-                                        <td><input
-                                            type="number"
-                                            value={opType.preparationTime || ''}
-                                            onChange={(e) => setOpType({ ...opType, preparationTime: e.target.value })}
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Surgery Time (min):</strong></td>
-                                        <td><input
-                                            type="number"
-                                            value={opType.surgeryTime || ''}
-                                            onChange={(e) => setOpType({ ...opType, surgeryTime: e.target.value })}
-                                        /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Cleaning Time (min):</strong></td>
-                                        <td><input
-                                            type="number"
-                                            value={opType.cleaningTime || ''}
-                                            onChange={(e) => setOpType({ ...opType, cleaningTime: e.target.value })}
-                                        /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <div className="form-actions">
-                                <Button className="button button-secondary" onClick={() => navigate('/admin/opTypes')}>
-                                    Back to List
-                                </Button>
-                                <Button className="button button-primary" onClick={() => alert('Changes Saved!')}>
-                                    Save Changes
-                                </Button>
-                            </div>
-                        </form>
-                    ) : (
-                        <p>Loading operation type data...</p> 
-                    )}
+                        <div className="buttons">
+                            <Button onClick={() => navigate(`/admin/opTypes`)} className="button button-cancel">Back to List</Button>
+                            <Button onClick={ () => handleSaveChanges({} as React.FormEvent)} className="button button-primary">Save Changes</Button>
+                        </div>
+                    </div>
                 </div>
             </main>
-            <Footer /> {/* Footer */}
+            <Footer />
         </div>
     );
 };
