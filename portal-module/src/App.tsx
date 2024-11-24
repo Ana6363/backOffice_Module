@@ -14,7 +14,8 @@ import AdminPatient from './pages/Admin/AdminPatient/AdminPatient';
 import CreatePatient from './pages/Admin/AdminPatient/AdminPatientCreate'; 
 import UpdatePatient from './pages/Admin/AdminPatient/AdminPatientUpdate';
 
-import AdminOpType from './pages/AdminOpType';
+import AdminOpType from './pages/Admin/AdminOpType/AdminOpType';
+import CreateOpType from './pages/Admin/AdminOpType/CreateOpType';
 import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
@@ -24,6 +25,8 @@ import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
 import OperationRequestUpdate from './pages/Staff/OperationRequestUpdate';
 import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
+import DeleteOpType from './pages/Admin/AdminOpType/DeleteOpType';
+import UpdateOpType from './pages/Admin/AdminOpType/UpdateOpType';
 import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
 
 
@@ -63,7 +66,7 @@ const App: React.FC = () => {
 
 
                 {/* Admin routes protected for 'Admin' role only */}
-                <Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}>
+                /*<Route element={<ProtectedRoute allowedRoles={['Admin']} redirectPath="/login" />}> *
                 <Route path="/admin" element={<AdminPage />} />
                         <Route path="/admin/patient" element={<AdminPatient />} />
                         <Route path="/admin/schedule" element={<AdminSchedule />} />
@@ -72,7 +75,12 @@ const App: React.FC = () => {
                         <Route path="/admin/staff" element={<AdminStaff />} />
                         <Route path="/admin/staff/create" element={<CreateStaff />} />
                         <Route path="/admin/staff/update/:staffId" element={<UpdateStaff />} /> 
-                        <Route path="/admin/opType" element={<AdminOpType />} />
+                        <Route path="/admin/opTypes" element={<AdminOpType />} />
+                        <Route path="/admin/opTypes/create" element={<CreateOpType />} />
+                        <Route path="/admin/opTypes/update/:operationTypeId" element={<UpdateOpType />} />
+                        <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
+
+
                 </Route>
 
                  {/* Admin routes protected for 'Staff' role only */}
