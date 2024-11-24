@@ -1,0 +1,196 @@
+/* General Wrapper for the entire page */
+.update-staff-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures full height of the page */
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* Make sure the body and html take the full height */
+html, body {
+    height: 100%;
+    margin: 0; /* Remove default margin */
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+/* Main content container */
+.main-content {
+    flex-grow: 1; /* Ensures it grows to fill the remaining space */
+    padding: 20px;
+    background-color: white;
+    margin-top: 2rem; /* Reduce top margin */
+    margin-bottom: 0; /* Ensure no extra bottom margin */
+}
+
+/* Container for the form */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Heading for the page */
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 3rem;
+    margin-top: 0;
+}
+
+/* Form styling */
+.update-staff-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 20rem;
+    margin: 0 auto;
+}
+
+/* Form group styling */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Label styling */
+.form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Input fields styling */
+.form-group input,
+.form-group select {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Available Slots Section */
+.available-slots-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.slot-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%; /* Ensure full width for the slot row */
+    align-self: center;
+    
+}
+
+/* Input fields for startTime and endTime in slot rows */
+.slot-row input {
+    width: 45%; /* Limit input width to 45% */
+}
+
+/* Button container to keep buttons side by side */
+.slot-row .button-container {
+    display: flex;
+    gap: 1rem; /* Space between buttons */
+    justify-content: flex-start; /* Align buttons to the left */
+}
+
+/* Button styles */
+.button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+.button-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.button-danger:hover {
+    background-color: #c82333;
+}
+
+/* Center the Update Staff button */
+.update-staff-form .button-primary {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Footer styling */
+footer {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 25rem; /* Ensure footer stays at the bottom */
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .update-staff-form {
+        padding: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 0.9rem;
+    }
+
+    .button {
+        font-size: 1rem;
+    }
+
+    /* Ensure buttons in slot rows stack on small screens */
+    .slot-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .slot-row input {
+        width: 100%; /* Make inputs full width on small screens */
+    }
+
+    .slot-row .button-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}

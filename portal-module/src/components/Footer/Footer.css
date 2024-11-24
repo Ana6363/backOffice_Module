@@ -1,0 +1,44 @@
+/* Ensure the root elements take full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The wrapper for the app */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes the full viewport height */
+}
+
+/* Main content fills the available space */
+.main-content {
+  flex: 1; /* Allow this section to grow and take up available space */
+  padding: 20px; /* Optional: add padding to the content area */
+}
+
+/* Footer always at the bottom */
+.footer {
+  width: 100%;
+  background-color: #f1f1f1; /* Background color */
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  border-top: 1px solid #ddd; /* Optional: border at the top of the footer */
+}
+
+/* Footer text styling */
+.footer p {
+  margin: 0;
+  color: #333;
+}
+
+/* Responsive Design for Footer */
+@media screen and (max-width: 768px) {
+  .footer {
+      font-size: 0.8rem; /* Reduce font size on smaller screens */
+  }
+}

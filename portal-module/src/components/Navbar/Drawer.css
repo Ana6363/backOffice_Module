@@ -1,0 +1,126 @@
+/* Basic layout for Drawer */
+.drawer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
+
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333333; /* Dark gray color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for navbar */
+  width: 100%;
+  height: 60px; /* Increased navbar height */
+}
+
+
+.navbar .btn-ghost {
+  background: transparent;
+  border: none;
+  padding: 2rem;
+}
+
+.navbar .btn-ghost svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+}
+
+.navbar .mx-2 {
+  font-size: 1.5rem; /* Increase font size for navbar title */
+  font-weight: bold;
+  margin-left: 0rem; /* Move the title a little to the right */
+}
+
+/* Drawer (Sidebar) */
+.drawer-side {
+  position: fixed;
+  top: 0;
+  left: -240px; /* Initially hidden off-screen */
+  bottom: 0;
+  width: 240px; /* Width of the drawer */
+  background-color: #f5f5f5;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s; /* Smooth transition */
+  overflow-y: auto;
+  padding-top: 1rem; /* Padding for better spacing */
+}
+
+/* When the drawer is open, move it to the left */
+.drawer-side.open {
+  left: 0;
+}
+
+/* Styling for the menu items inside the sidebar */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  list-style: none; /* Remove bullets or dots */
+  padding: 0; /* Remove any default padding */
+  margin: 1rem ; /* Remove any default margin */
+}
+
+
+/* Styling for the menu items inside the sidebar */
+.menu li a {
+  color: #333;
+  background-color: transparent;
+  text-decoration: none;
+  font-size: 4rem; /* Increase font size */
+  font-weight: bold; /* Make the text bold */
+  padding: 0.5rem;
+}
+
+.menu li:hover {
+  background-color: #d1e7f0;
+}
+
+
+.edit-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Color theming for background */
+.bg-base-300 {
+  background-color: #f3f4f6;
+}
+
+.bg-base-200 {
+  background-color: #f3f4f6;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 1024px) {
+  .drawer-side {
+    width: 240px; /* Increase sidebar width on mobile */
+  }
+
+  .navbar .menu-horizontal {
+    display: none; /* Hide the horizontal menu on mobile */
+  }
+
+  .navbar .btn-ghost {
+    display: inline-block; /* Show hamburger button on mobile */
+  }
+
+  .drawer-side.open {
+    left: 0; /* Show the sidebar when hovering on mobile */
+  }
+
+  .drawer-content {
+    margin-left: 0;
+  }
+}

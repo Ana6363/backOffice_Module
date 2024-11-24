@@ -1,0 +1,182 @@
+/* General Wrapper for the entire page */
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garantir que ocupe a altura total da página */
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* Make sure the body and html take the full height */
+html, body {
+    height: 100%;
+    margin: 0; /* Remove default margin */
+}
+
+/* Navbar styling (optional for your Navbar component) */
+.navbar {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+/* Main content container for alignment */
+.main-content {
+    flex-grow: 1; /* Ensures it takes up available space */
+    padding: 20px;
+    background-color: white;
+    margin-top: 8rem;
+    margin-bottom: 8rem; /* Optional: To add space between footer and content */
+}
+
+/* Container for form */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Heading for the page */
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 3rem;
+    margin-top: 0;
+}
+
+/* Form styling */
+.patient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
+/* Form group styling */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Label styling */
+.form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Input fields styling */
+.form-group input,
+.form-group select {
+    padding: 8px; /* Ajuste para não ocupar espaço desnecessário */
+    font-size: 1rem;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Disabled text input styling */
+.specialization-input {
+    width: 100%; /* Ocupa a largura total do container */
+    background-color: #f0f0f0; /* Fundo cinza claro */
+    border: 1px solid #ccc; /* Borda cinza */
+    padding: 8px; /* Espaço interno */
+    border-radius: 4px; /* Borda arredondada */
+    color: #333; /* Cor do texto */
+    font-size: 14px; /* Tamanho da fonte */
+    cursor: not-allowed; /* Indica que está desativado */
+}
+
+/* Add margin to separate the last input field from the button */
+.patient-form .form-group:last-child {
+    margin-bottom: 10rem;
+}
+
+.specialization-container {
+    margin-bottom: 8px; /* Espaçamento entre caixas */
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .patient-form {
+        padding: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 0.9rem;
+    }
+
+    .form-group .button {
+        font-size: 1rem;
+    }
+    
+    .specialization-input {
+        font-size: 0.9rem; /* Ajuste o tamanho da fonte para dispositivos menores */
+        padding: 6px; /* Reduz o espaçamento interno */
+    }
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 12rem; /* Ensure footer stays at the bottom */
+}
+
+/* General styling for disabled inputs (unifies name and specialization inputs) */
+.disabled-input {
+    width: 300px; /* Define uma largura fixa para todos os inputs */
+    background-color: #f0f0f0; /* Fundo cinza claro */
+    border: 1px solid #ccc; /* Borda cinza */
+    padding: 8px; /* Espaço interno */
+    border-radius: 4px; /* Borda arredondada */
+    color: #333; /* Cor do texto */
+    font-size: 14px; /* Tamanho da fonte */
+    cursor: not-allowed; /* Indica que está desativado */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do tamanho */
+    display: block; /* Garante que cada input ocupe sua própria linha */
+    margin-bottom: 10px; /* Adiciona espaçamento entre os inputs */
+}
+
+
+@media screen and (max-width: 768px) {
+    .disabled-input {
+        width: 100%; /* Para telas pequenas, ocupa a largura total */
+        font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+    }
+}
+
+
+/* Ensure input height consistency */
+.specialization-container input,
+.form-group input {
+    height: auto;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .disabled-input {
+        font-size: 0.9rem; /* Reduz tamanho da fonte */
+        padding: 6px; /* Reduz espaçamento interno */
+    }
+}
+

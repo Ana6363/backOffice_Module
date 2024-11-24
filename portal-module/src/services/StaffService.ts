@@ -10,6 +10,8 @@ const getHeaders = () => ({
 export const fetchStaff = async (filter: {
     staffId?: string;
     phoneNumber?: number;
+    specialization?: string;
+    status?: string;
     firstName?: string;
     lastName?: string;
     fullName?: string;
@@ -56,14 +58,53 @@ export const createStaff = async (staffData: {
     lastName: string;
     fullName: string;
 }) => {
-    const response = await fetch(`${API_URL}/create`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(staffData),
-    });
-    if (!response.ok) throw new Error('Failed to create staff');
-    return await response.json();
+    // Format payload to match backend expectations
+    const payload = {
+        staffId: staffData.staffId,
+        licenseNumber: staffData.licenseNumber,
+        specialization: staffData.specialization,
+        phoneNumber: staffData.phoneNumber,
+        availableSlots: staffData.availableSlots.map((slot) => ({
+            startTime: new Date(slot.startTime).toISOString(), // Convert to ISO 8601 format
+            endTime: new Date(slot.endTime).toISOString(),     // Convert to ISO 8601 format
+        })),
+        status: staffData.status,
+        firstName: staffData.firstName,
+        lastName: staffData.lastName,
+        fullName: staffData.fullName,
+    };
+
+    console.log("Payload being sent to backend:", JSON.stringify(payload, null, 2));
+
+    try {
+        const response = await fetch(`${API_URL}/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error response from backend:", errorText);
+            throw new Error(`Failed to create staff. Status: ${response.status}, Error: ${errorText}`);
+        }
+
+        const responseData = await response.json();
+        console.log("Successfully created staff:", responseData);
+        return responseData;
+    } catch (error) {
+        console.error("An error occurred during staff creation:", error);
+        throw error;
+    }
 };
+
+
+
+
 
 export const updateStaff = async (staffData: {
     staffId: string;

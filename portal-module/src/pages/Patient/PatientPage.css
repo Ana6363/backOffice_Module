@@ -1,0 +1,193 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+}
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
+    background-color: #224889!important; /* Ensure a different color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for navbar */
+    width: 100%;
+    height: 60px; /* Increased navbar height */
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;  /* Increased padding for better spacing */
+}
+
+/* Header */
+.text-4xl {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #91c0fa;
+}
+
+/* Card Styling */
+.bg-white {
+    background-color: white;
+    padding: 2rem; /* Equal top and bottom padding */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    margin-bottom: 1rem; /* Consistent spacing below cards */
+}
+
+.bg-white > * {
+    margin: 0; /* Reset margins for all child elements */
+}
+
+.bg-white h1, .bg-white h2, .bg-white h3, .bg-white p {
+    margin: 0; /* Remove default margins from text elements */
+    padding-bottom: 1rem; /* Add controlled spacing if needed */
+}
+
+
+.shadow-xl {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-xl {
+    border-radius: 1rem;
+}
+
+.p-8 {
+    padding: 2rem 2rem; /* Uniform padding for equal spacing on top, bottom, and sides */
+}
+
+
+.mb-10 {
+    margin-bottom: 1rem;
+}
+
+.text-blue-600 {
+    color: #6cafee;
+}
+
+/* Grid for Patient Info */
+.grid {
+    display: grid;
+}
+
+.grid-cols-1 {
+    grid-template-columns: 1fr;
+}
+
+.sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.gap-10 {
+    gap: 2rem;
+}
+
+strong {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.text-gray-700 {
+    color: #4a5568;
+}
+
+/* Add more spacing between patient info */
+.grid > div {
+    margin-bottom: 1.5rem; /* Add more space between rows */
+}
+
+.text-lg {
+    font-size: 1rem;  /* Adjust text size for better readability */
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #224889;
+    color: white;
+    padding: 8px 16px;  /* Smaller padding */
+    font-size: 0.875rem;  /* Smaller font size */
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;  /* Smaller padding */
+    font-size: 0.875rem;  /* Smaller font size */
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.w-48 {
+    width: 12rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.hover\:scale-105:hover {
+    transform: scale(1.05);
+}
+
+.transition {
+    transition: transform 0.3s ease-in-out;
+}
+
+.ease-in-out {
+    transition-timing-function: ease-in-out;
+}
+.btn-primary, .btn-danger {
+    margin-right: 1rem; /* Add space between buttons horizontally */
+    margin-bottom: 1rem; /* Add space between buttons vertically if stacked */
+}
+
+
+/* Additional Responsive Styling */
+@media (max-width: 640px) {
+    /* Adjust grid to single column on small screens */
+    .sm\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust container padding for small screens */
+    .container {
+        padding: 1rem;
+    }
+
+    /* Adjust button width to fit smaller screens */
+    .w-48 {
+        width: 100%;
+    }
+
+    /* Adjust font size for titles */
+    .text-4xl {
+        font-size: 1.875rem;
+    }
+
+    .text-lg {
+        font-size: 1rem;
+    }
+}
