@@ -19,6 +19,12 @@ const OperationRequest: React.FC = () => {
         operationTypeName: '',
     });
 
+    const getHeaders = () => {
+        return {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Example token from local storage
+        };
+    };
 
     const [requestData, setRequestData] = useState({
         deadLine: '',
@@ -41,7 +47,30 @@ const OperationRequest: React.FC = () => {
             const data = await fetchOperationRequest(filterData);
             console.log('Fetched Operation Requests:', data);
             if (data) {
-                setOperationRequestsList(data);
+                const updatedRequests = await Promise.all(
+                    data.map(async (request: any) => {
+                        const recordNumber = request.recordNumber;
+                        if (!recordNumber) return request;
+    
+                        try {
+                            const patientResponse = await fetch(
+                                `http://localhost:5184/api/v1/patient/filter?recordNumber=${recordNumber}`,
+                                { method: 'GET', headers: getHeaders() }
+                            );
+    
+                            if (!patientResponse.ok) throw new Error(`Failed to fetch patient for recordNumber: ${recordNumber}`);
+                            const patientData = await patientResponse.json();
+                            const userId =
+                                patientData?.patients?.$values?.[0]?.patient?.userId || 'Unknown User';
+                            return { ...request, recordNumber: userId };
+                        } catch (error) {
+                            console.error(`Error fetching patient for recordNumber: ${recordNumber}`, error);
+                            return { ...request, recordNumber: 'Error Fetching User' };
+                        }
+                    })
+                );
+    
+                setOperationRequestsList(updatedRequests);
             } else {
                 console.error('No operation requests found.');
                 setRequestData({
@@ -50,7 +79,7 @@ const OperationRequest: React.FC = () => {
                     recordNumber: '',
                     status: '',
                     operationTypeName: '',
-                }); // Reset the request data
+                });
             }
         } catch (error) {
             console.error('Failed to load operation requests:', error);
@@ -60,7 +89,7 @@ const OperationRequest: React.FC = () => {
                 recordNumber: '',
                 status: '',
                 operationTypeName: '',
-            }); // Reset the request data
+            });
         }
     }, [filterData]);
 
@@ -75,28 +104,34 @@ const OperationRequest: React.FC = () => {
     };
 
     const handleNavigateToUpdate = () => {
-        if (!selectedOperationRequest) {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
             alert('No operation request selected.');
             return;
         }
-        navigate('/operationRequest/update', { state: { selectedOperationRequest } }); // Passing selected request to the update page
+    
+        // Use the actual ID in the navigation path
+        navigate(`/operationRequest/update/${selectedOperationRequest.requestId}`);
     };
+    
 
     const handleNavigateToDelete = () => {
-        if (!selectedOperationRequest) {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
             alert('No operation request selected.');
             return;
         }
+    
         openModal(
             'Confirm Deletion',
-            `Are you sure you want to delete the request for record number ${selectedOperationRequest.recordNumber}?`,
+            `Are you sure you want to delete this request}?`,
             async () => {
                 try {
-                    await deleteOperationRequest(selectedOperationRequest.recordNumber);
+                    // Pass requestId to the delete operation service
+                    await deleteOperationRequest(selectedOperationRequest.requestId);
                     setOperationRequestsList((prevRequests) =>
-                        prevRequests.filter((request) => request.recordNumber !== selectedOperationRequest.recordNumber)
+                        prevRequests.filter((request) => request.requestId !== selectedOperationRequest.requestId)
                     );
                     closeModal();
+                    alert('Operation request deleted successfully!');
                 } catch (error) {
                     console.error('Failed to delete operation request:', error);
                     closeModal();
@@ -104,6 +139,7 @@ const OperationRequest: React.FC = () => {
             }
         );
     };
+    
 
     const openModal = (title: string, message: string, action: () => void) => {
         setModalContent({ title, message, action });
@@ -114,14 +150,15 @@ const OperationRequest: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const menuItems = [
+    const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
-    ];
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+      ];
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={staffMenuItems} />
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>
@@ -131,11 +168,11 @@ const OperationRequest: React.FC = () => {
                         <SelectableTable
                             data={operationRequestsList}
                             headers={[
-                                { key: 'recordNumber', label: 'Record Number' },
+                                { key: 'recordNumber', label: 'Email patient' },
                                 { key: 'priority', label: 'Priority' },
                                 { key: 'deadLine', label: 'Deadline' },
                                 { key: 'status', label: 'Status' },
-                                { key: 'operationTypeName', label: 'Operation Type' },
+                                { key: 'operationType', label: 'Operation Type' },
                             ]}
                             onRowSelect={setSelectedOperationRequest}
                         />

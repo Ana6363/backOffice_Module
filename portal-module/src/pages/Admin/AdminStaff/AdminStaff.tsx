@@ -67,7 +67,7 @@ const AdminStaff: React.FC = () => {
                         <SelectableTable
                             data={staffList}
                             headers={[
-                                { key: 'staffId', label: 'Staff ID' },
+                                { key: 'staffId', label: 'Staff' },
                                 { key: 'firstName', label: 'First Name' },
                                 { key: 'lastName', label: 'Last Name' },
                                 { key: 'specialization', label: 'Specialization' },

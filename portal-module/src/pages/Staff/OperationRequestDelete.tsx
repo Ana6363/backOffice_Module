@@ -43,10 +43,11 @@ const DeleteOperationRequest: React.FC = () => {
         }
     };
 
-    const menuItems = [
+    const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Operations Request', route: '/staff' },
-    ];
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+      ];
 
     // Select an operation request to delete
     const handleSelectRequestForDeletion = (request: any) => {
@@ -56,7 +57,7 @@ const DeleteOperationRequest: React.FC = () => {
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={staffMenuItems} />
             <main className="main-content">
                 <div className="container mx-auto p-4">
                     <h1 className="text-2xl font-bold mb-4">Operation Requests</h1>

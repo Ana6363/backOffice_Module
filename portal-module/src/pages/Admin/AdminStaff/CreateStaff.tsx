@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { createStaff } from '../../../services/StaffService';
 import Button from '../../../components/Buttons/Buttons';
 import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
 import './CreateStaff.css';
 
 const CreateStaff: React.FC = () => {
@@ -49,9 +48,19 @@ const CreateStaff: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
         try {
-            await createStaff(staffData);
+            // Convert availableSlots to the desired format
+            const formattedSlots = staffData.availableSlots.map((slot) => ({
+                startTime: slot.startTime.replace('T', ' ') + ':00', // Convert "YYYY-MM-DDTHH:mm" to "YYYY-MM-DD HH:mm:SS"
+                endTime: slot.endTime.replace('T', ' ') + ':00',
+            }));
+    
+            const payload = {
+                ...staffData,
+                availableSlots: formattedSlots,
+            };
+    
+            await createStaff(payload);
             alert('Staff member created successfully');
             navigate('/admin/staff'); // Redirect to the admin staff page
         } catch (error) {
@@ -59,7 +68,7 @@ const CreateStaff: React.FC = () => {
             alert('Error creating staff');
         }
     };
-
+    
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
         { id: 2, name: 'Manage Patients', route: '/admin/patient' },
@@ -74,6 +83,28 @@ const CreateStaff: React.FC = () => {
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Create New Staff Member</h1>
                     <form onSubmit={handleSubmit} className="staff-form">
+                    <div className="form-group">
+                            <label htmlFor="staffId">Staff Email</label>
+                            <input
+                                type="email"
+                                id="staffId"
+                                name="staffId"
+                                value={staffData.staffId}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>    
+                    <div className="form-group">
+                            <label htmlFor="licenseNumber">License Number</label>
+                            <input
+                                type="text"
+                                id="licenseNumber"
+                                name="licenseNumber"
+                                value={staffData.licenseNumber}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
                         <div className="form-group">
                             <label htmlFor="specialization">Specialization</label>
@@ -150,55 +181,56 @@ const CreateStaff: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Available Slots</label>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Start Time</th>
-                                        <th>End Time</th>
-                                        <th>Actions</th>
+                        <label>Available Slots</label>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Start Date & Time</th>
+                                    <th>End Date & Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {staffData.availableSlots.map((slot, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            <input
+                                                type="datetime-local"
+                                                value={slot.startTime}
+                                                onChange={(e) => handleSlotChange(index, 'startTime', e.target.value)}
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="datetime-local"
+                                                value={slot.endTime}
+                                                onChange={(e) => handleSlotChange(index, 'endTime', e.target.value)}
+                                                required
+                                            />
+                                        </td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveSlot(index)}
+                                                className="button button-danger"
+                                            >
+                                                Remove
+                                            </button>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {staffData.availableSlots.map((slot, index) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <input
-                                                    type="time"
-                                                    value={slot.startTime}
-                                                    onChange={(e) => handleSlotChange(index, 'startTime', e.target.value)}
-                                                    required
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="time"
-                                                    value={slot.endTime}
-                                                    onChange={(e) => handleSlotChange(index, 'endTime', e.target.value)}
-                                                    required
-                                                />
-                                            </td>
-                                            <td>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleRemoveSlot(index)}
-                                                    className="button button-danger"
-                                                >
-                                                    Remove
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <button
-                                type="button"
-                                onClick={handleAddSlot}
-                                className="button button-primary"
-                            >
-                                Add Slot
-                            </button>
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
+                        <button
+                            type="button"
+                            onClick={handleAddSlot}
+                            className="button button-primary"
+                        >
+                            Add Slot
+                        </button>
+                    </div>
+
 
                         <div className="form-group">
                         <Button onClick={() => handleSubmit({} as React.FormEvent)} className="button button-primary">
@@ -208,7 +240,6 @@ const CreateStaff: React.FC = () => {
                     </form>
                 </div>
             </main>
-            <Footer />
         </div>
     );
 };

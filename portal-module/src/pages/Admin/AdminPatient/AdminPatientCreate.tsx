@@ -4,6 +4,7 @@ import { createPatient } from '../../../services/PatientService';
 import Button from '../../../components/Buttons/Buttons';
 import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
+import './CreateAndUpdatePatient.css';
 
 const CreatePatient: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +29,6 @@ const CreatePatient: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
         try {
             await createPatient(patientData);
             alert('Patient created successfully');
@@ -54,7 +54,7 @@ const CreatePatient: React.FC = () => {
                     <h1 className="text-3xl font-bold text-center mb-8">Create New Patient</h1>
                     <form onSubmit={handleSubmit} className="patient-form">
                         <div className="form-group">
-                            <label htmlFor="userId">User ID (Email)</label>
+                            <label htmlFor="userId">Email</label>
                             <input
                                 type="email"
                                 id="userId"

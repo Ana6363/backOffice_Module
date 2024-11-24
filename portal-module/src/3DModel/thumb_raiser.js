@@ -23,131 +23,6 @@ import Camera from "./camera.js";
 import Animations from "./animations.js";
 import UserInterface from "./user_interface.js";
 
-/*
- * generalParameters = {
- *  setDevicePixelRatio: Boolean
- * }
- *
- * mazeParameters = {
- *  url: String,
- *  credits: String,
- *  scale: Vector3
- * }
- *
- * playerParameters = {
- *  url: String,
- *  credits: String,
- *  scale: Vector3,
- *  walkingSpeed: Float,
- *  initialDirection: Float,
- *  turningSpeed: Float,
- *  runningFactor: Float,
- *  keyCodes: { fixedView: String, firstPersonView: String, thirdPersonView: String, topView: String, viewMode: String, userInterface: String, miniMap: String, help: String, statistics: String, run: String, left: String, right: String, backward: String, forward: String, jump: String, yes: String, no: String, wave: String, punch: String, thumbsUp: String }
- * }
- *
- * lightsParameters = {
- *  ambientLight: { color: Integer, intensity: Float },
- *  pointLight1: { color: Integer, intensity: Float, range: Float, position: Vector3 },
- *  pointLight2: { color: Integer, intensity: Float, range: Float, position: Vector3 },
- *  spotLight: { color: Integer, intensity: Float, range: Float, angle: Float, penumbra: Float, position: Vector3, direction: Float }
- * }
- *
- * fogParameters = {
- *  enabled: Boolean,
- *  color: Integer,
- *  near: Float,
- *  far: Float
- * }
- *
- * fixedViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * firstPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * thirdPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * topViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * miniMapCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- */
 
 export default class ThumbRaiser {
     constructor(generalParameters, mazeParameters, playerParameters, lightsParameters, fogParameters, fixedViewCameraParameters, firstPersonViewCameraParameters, thirdPersonViewCameraParameters, topViewCameraParameters, miniMapCameraParameters) {
@@ -161,6 +36,13 @@ export default class ThumbRaiser {
         this.thirdPersonViewCameraParameters = merge({}, cameraData, thirdPersonViewCameraParameters);
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
+
+        // Call fetchRoomStatus to ensure the most recent data is loaded
+        this.fetchRoomStatus()
+        .then(() => {
+            console.log("Initial room status fetched successfully.");
+            this.resetProgram();
+        })
 
         // Create a 2D scene (the viewports frames)
         this.scene2D = new THREE.Scene();
@@ -302,8 +184,121 @@ export default class ThumbRaiser {
         this.resetAll.addEventListener("click", event => this.buttonClick(event));
 
         this.activeElement = document.activeElement;
+
+        setTimeout(async () => {
+            await this.fetchRoomStatus(); // Fetch room status and update the map
+            this.reloadMaze(); // Reload the maze with the updated map
+        }, 2600);
+
+        setInterval(async () => {
+            await this.fetchRoomStatus(); // Fetch room status and update the map
+            this.reloadMaze(); // Reload the maze with the updated map
+        }, 60000);
     }
 
+    resetProgram() {
+        console.log("Resetting the program...");
+    
+        // Stop any animations, if applicable
+        this.gameRunning = false;
+    
+        // Clear the 3D scene
+        while (this.scene3D.children.length > 0) {
+            const child = this.scene3D.children[0];
+            this.scene3D.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+        }
+    
+        // Clear the 2D scene (if used)
+        while (this.scene2D.children.length > 0) {
+            const child = this.scene2D.children[0];
+            this.scene2D.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+        }
+    
+        // Clear renderer
+        this.renderer.clear();
+    
+        // Reset game state
+        this.generalParameters = merge({}, generalData);
+        this.mazeParameters = merge({}, mazeData);
+        this.playerParameters = merge({}, playerData);
+        this.lightsParameters = merge({}, lightsData);
+        this.fogParameters = merge({}, fogData);
+    
+        // Recreate and reinitialize everything
+        this.initProgram();
+        console.log("Program reset complete.");
+    }
+
+    
+    async fetchRoomStatus() {
+    try {
+        const response = await fetch('http://localhost:5184/api/v1/surgeryRoom');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch room status: ${response.statusText}`);
+        }
+        const data = await response.json();
+        this.updateMazeMap(data.$values);
+
+        // Perform a full program reset
+        this.resetProgram();
+
+        console.log("Room status fetched and program reset.");
+    } catch (error) {
+        console.error('Error fetching room status:', error);
+    }
+}
+
+    
+
+    updateMazeMap(roomStatus) {
+        const roomPositions = {
+            R001: [2, 1],
+            R002: [2, 4],
+            R003: [2, 7],
+            R004: [8, 1],
+            R005: [8, 4],
+            R006: [8, 7],
+        };
+    
+        // Update only the map
+        const maze = this.maze.map;
+        roomStatus.forEach((status, index) => {
+            const roomId = `R00${index + 1}`;
+            const position = roomPositions[roomId];
+            if (position) {
+                const [row, col] = position;
+                maze[row][col] = status === 1 ? 7 : 6;
+            }
+        });
+    
+        console.log("Updated Maze Map:", maze);
+    }
+    
+
+    reloadMaze() {
+        // Ensure updated map is retained
+        this.mazeParameters = {
+            ...this.mazeParameters,
+            map: this.maze.map, // Keep the updated map
+        };
+    
+        // Recreate the Maze instance
+        this.maze = new Maze(this.mazeParameters);
+    
+        // Hardcode the exitLocation
+        this.maze.exitLocation = new THREE.Vector3(-0.5, 0.0, 6); // Use the cartesian coordinates equivalent to [-0.5, 6]
+        console.log("New Maze exitLocation (hardcoded):", this.maze.exitLocation);
+    
+        // Ensure the maze parameters are updated for other dependencies
+        console.log("Maze reloaded with updated map and parameters:", this.mazeParameters);
+    }
+    
+    
+    
     buildHelpPanel() {
         const table = document.getElementById("help-table");
         let i = 0;

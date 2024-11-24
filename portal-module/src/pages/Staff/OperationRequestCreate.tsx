@@ -9,10 +9,9 @@ import './CreateOperationRequest.css';
 const CreateOperationRequest: React.FC = () => {
     const navigate = useNavigate();
     const [newRequestData, setNewRequestData] = useState({
-        deadLine: '',
+        deadline: '',
         priority: '',
-        recordNumber: '',
-        status: '',
+        userId: '',
         operationTypeName: '',
     });
 
@@ -29,17 +28,18 @@ const CreateOperationRequest: React.FC = () => {
     };
 
     const handleCreateOperationRequest = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent page reload on form submit
+        e.preventDefault(); // Prevent form submission
         setLoading(true);
         setErrorMessage('');
         setSuccessMessage('');
 
         try {
             await createOperationRequest(newRequestData);
-            setSuccessMessage('Operation Request created successfully!');
-            setNewRequestData({ deadLine: '', priority: '', recordNumber: '', status: '', operationTypeName: '' });
-            // Redirect to the operations list or another page if needed
-            navigate('/operationRequest');
+            const success = 'Operation Request created successfully!';
+            setSuccessMessage(success);
+            setNewRequestData({ deadline: '', priority: '', userId: '', operationTypeName: '' });
+            window.alert(success); // Show success message as an alert
+            navigate('/operationRequest'); // Redirect after success
         } catch (error) {
             setErrorMessage('Failed to create Operation Request.');
         } finally {
@@ -47,18 +47,18 @@ const CreateOperationRequest: React.FC = () => {
         }
     };
 
-    const menuItems = [
+    const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
     ];
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={staffMenuItems} />
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Create New Operation Request</h1>
-                    {/* Form for creating operation request */}
                     <form onSubmit={handleCreateOperationRequest} className="request-form">
                         <div className="form-group">
                             <label htmlFor="deadline">Deadline</label>
@@ -66,7 +66,7 @@ const CreateOperationRequest: React.FC = () => {
                                 type="datetime-local"
                                 id="deadline"
                                 name="deadline"
-                                value={newRequestData.deadLine}
+                                value={newRequestData.deadline}
                                 onChange={handleChange}
                                 required
                             />
@@ -74,26 +74,30 @@ const CreateOperationRequest: React.FC = () => {
 
                         <div className="form-group">
                             <label htmlFor="priority">Priority</label>
-                            <input
-                                type="text"
-                                id="priority"
+                            <select
                                 name="priority"
+                                id="priority"
                                 value={newRequestData.priority}
                                 onChange={handleChange}
-                                placeholder="Priority"
+                                className="input input-bordered w-full mb-2"
+                                title="Priority"
                                 required
-                            />
+                            >
+                                <option value="LOW">LOW</option>
+                                <option value="MEDIUM">MEDIUM</option>
+                                <option value="HIGH">HIGH</option>
+                            </select>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="recordNumber">Record Number</label>
+                            <label htmlFor="userId">Email</label>
                             <input
                                 type="text"
-                                id="recordNumber"
-                                name="recordNumber"
-                                value={newRequestData.recordNumber}
+                                id="userId"
+                                name="userId"
+                                value={newRequestData.userId}
                                 onChange={handleChange}
-                                placeholder="Record Number"
+                                placeholder="Email"
                                 required
                             />
                         </div>
@@ -116,7 +120,11 @@ const CreateOperationRequest: React.FC = () => {
                         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                         <div className="form-group">
-                            <Button onClick={() => handleCreateOperationRequest({} as React.FormEvent)} className="button button-primary" disabled={loading}>
+                            <Button
+                                type="submit"
+                                className="button button-primary"
+                                disabled={loading}
+                            >
                                 {loading ? 'Creating...' : 'Create Request'}
                             </Button>
                         </div>

@@ -137,7 +137,6 @@ const AdminPatient: React.FC = () => {
                 <SelectableTable
                   data={patientList}
                   headers={[
-                    { key: 'recordNumber', label: 'Record Number' },
                     { key: 'userId', label: 'Email (User ID)' },
                     { key: 'dateOfBirth', label: 'Date of Birth' },
                     { key: 'phoneNumber', label: 'Phone Number' },
