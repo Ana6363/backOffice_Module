@@ -28,6 +28,7 @@ import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
 import DeleteOpType from './pages/Admin/AdminOpType/DeleteOpType';
 import UpdateOpType from './pages/Admin/AdminOpType/UpdateOpType';
 import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
+import AppointmenCreate from './pages/Staff/AppointmentCreate';
 
 
 
@@ -90,6 +91,7 @@ const App: React.FC = () => {
                     <Route path="/operationRequest/create" element={<OperationRequestCreate />} />
                     <Route path="/operationRequest/update/:id" element={<OperationRequestUpdate />} />
                     <Route path="/operationRequest/delete/:id" element={<OperationRequestDelete />} />
+                    <Route path="/operationRequest/createAppointment/:id" element={<AppointmenCreate />} />
                     <Route path='/surgeryRoom3DModel' element={<SurgeryRoom3D/>} />
 
                 </Route>
