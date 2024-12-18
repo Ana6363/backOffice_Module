@@ -20,6 +20,10 @@ import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
 
+import AdminSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializations';
+import CreateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationCreate';
+import UpdateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationsUpdate';
+
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
@@ -79,6 +83,10 @@ const App: React.FC = () => {
                         <Route path="/admin/opTypes/create" element={<CreateOpType />} />
                         <Route path="/admin/opTypes/update/:operationTypeId" element={<UpdateOpType />} />
                         <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
+                        <Route path="/admin/specializations" element={<AdminSpecialization />} />
+                        <Route path="/admin/specializations/create" element={<CreateSpecialization />} />
+                        <Route path="/admin/specializations/update/:specializationId" element={<UpdateSpecialization />} />
+
 
 
                 </Route>
