@@ -9,8 +9,8 @@ const CreateSpecialization: React.FC = () => {
     const navigate = useNavigate();
 
     const [specializationData, setSpecializationData] = useState({
-        specializationName: '',
-        specializationDescription: '',
+        Name: '',
+        Description: '',
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -19,18 +19,19 @@ const CreateSpecialization: React.FC = () => {
         const { name, value } = e.target;
         setSpecializationData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: value, 
         }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Previne o comportamento padrão do formulário
-        setError(null); // Limpa erros anteriores
+        e.preventDefault(); 
+        setError(null); 
 
         try {
-            await addSpecialization(specializationData);
+            
+            await addSpecialization(specializationData); 
             alert('Specialization created successfully');
-            navigate('/admin/specializations'); // Redireciona para a página de specializations
+            navigate('/admin/specializations'); 
         } catch (error) {
             console.error('Error creating specialization:', error);
             setError('Error creating specialization. Please try again.');
@@ -51,15 +52,15 @@ const CreateSpecialization: React.FC = () => {
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Create New Specialization</h1>
-                    {error && <p className="error-message">{error}</p>} {/* Exibe mensagens de erro, se existirem */}
+                    {error && <p className="error-message">{error}</p>} 
                     <form onSubmit={handleSubmit} className="specialization-form">
                         <div className="form-group">
                             <label htmlFor="specializationName">Specialization Name</label>
                             <input
                                 type="text"
                                 id="specializationName"
-                                name="specializationName"
-                                value={specializationData.specializationName}
+                                name="Name"  
+                                value={specializationData.Name}
                                 onChange={handleChange}
                                 required
                             />
@@ -70,8 +71,8 @@ const CreateSpecialization: React.FC = () => {
                             <input
                                 type="text"
                                 id="specializationDescription"
-                                name="specializationDescription"
-                                value={specializationData.specializationDescription}
+                                name="Description" 
+                                value={specializationData.Description}
                                 onChange={handleChange}
                                 required
                             />

@@ -12,8 +12,8 @@ const AdminSpecialization: React.FC = () => {
 
     const [specializationList, setSpecializationList] = useState<any[]>([]);
     const [filter, setFilter] = useState({
-        specializationId: '',
-        specializationDescription: '',
+        Name: '',
+        Description: '',
     });
     const [selectedSpecialization, setSelectedSpecialization] = useState<any | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,18 +23,15 @@ const AdminSpecialization: React.FC = () => {
         action: () => {},
     });
 
+    // Function to load specializations from the service
     const loadSpecializations = useCallback(async () => {
         try {
             const data = await fetchSpecializations(filter);
-            if (Array.isArray(data)) {
-                setSpecializationList(data);
-            } else {
-                console.error('Expected specialization list to be an array, received:', data);
-                setSpecializationList([]);
-            }
+            console.log('Specialization List:', data); // Debugging log to confirm data structure
+            setSpecializationList(data);
         } catch (error) {
             console.error('Error fetching specializations:', error);
-            setSpecializationList([]);
+            setSpecializationList([]); // Clear the list in case of error
         }
     }, [filter]);
 
@@ -51,12 +48,12 @@ const AdminSpecialization: React.FC = () => {
             alert("No specialization selected.");
             return;
         }
-        navigate(`/admin/specializations/update/${selectedSpecialization.specializationId}`);
+        navigate(`/admin/specializations/update/${selectedSpecialization.Name}`);
     };
 
-    const handleDeleteSpecialization = async (specializationId: string) => {
+    const handleDeleteSpecialization = async (specialization: { Name: string; Description: string }) => {
         try {
-            await deleteSpecialization(specializationId);
+            await deleteSpecialization(specialization);
             alert('Specialization deleted successfully');
             loadSpecializations();
         } catch (error) {
@@ -77,8 +74,11 @@ const AdminSpecialization: React.FC = () => {
         if (selectedSpecialization) {
             openModal(
                 'Delete Specialization',
-                `Are you sure you want to delete the specialization "${selectedSpecialization.specializationId}"?`,
-                () => handleDeleteSpecialization(selectedSpecialization.specializationId)
+                `Are you sure you want to delete the specialization "${selectedSpecialization.Name}"?`,
+                () => handleDeleteSpecialization({
+                    Name: selectedSpecialization.Name,
+                    Description: selectedSpecialization.Description,
+                })
             );
         }
     };
@@ -102,8 +102,8 @@ const AdminSpecialization: React.FC = () => {
                         <SelectableTable
                             data={specializationList}
                             headers={[
-                                { key: 'specializationId', label: 'Specialization ID' },
-                                { key: 'specializationDescription', label: 'Description' },
+                                { key: 'Name', label: 'Specialization Name' },
+                                { key: 'Description', label: 'Description' },
                             ]}
                             onRowSelect={setSelectedSpecialization}
                         />

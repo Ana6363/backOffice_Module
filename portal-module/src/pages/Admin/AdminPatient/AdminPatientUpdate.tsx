@@ -82,6 +82,8 @@ const UpdatePatient: React.FC = () => {
         { id: 2, name: 'Manage Patients', route: '/admin/patient' },
         { id: 3, name: 'Manage Staff', route: '/admin/staff' },
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
+        { id: 5, name: 'Manage Specializations', route: '/admin/specializations' },
+
     ];
 
     return (

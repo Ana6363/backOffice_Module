@@ -12,23 +12,39 @@ const UpdateSpecialization: React.FC = () => {
 
     const [specializationData, setSpecializationData] = useState<any | null>(null);
     const [formData, setFormData] = useState({
-        specializationId: '',
-        specializationDescription: '',
+        Name: '',
+        Description: '',
     });
 
     useEffect(() => {
         const fetchSpecializationData = async () => {
             try {
-                const fetchedSpecialization = await fetchSpecializations({ specializationId: specializationId || '' });
+                console.log("Attempting to fetch specialization with ID:", specializationId);
 
-                if (fetchedSpecialization) {
-                    setSpecializationData(fetchedSpecialization);
+                if (!specializationId) {
+                    console.error("specializationId is not available.");
+                    alert("Specialization ID is missing.");
+                    return;
+                }
+
+                // Ajuste para lidar com a resposta da API que retorna uma lista
+                const fetchedSpecializations = await fetchSpecializations({}); // Aqui estamos a buscar todas as especializações
+
+                console.log("Fetched Specializations Response:", fetchedSpecializations);
+
+                // Verifique se obtemos uma lista de especializações e procure a especialização pelo nome ou ID
+                const foundSpecialization = fetchedSpecializations?.find(
+                    (spec: any) => spec.Name === specializationId || spec.id === specializationId
+                );
+
+                if (foundSpecialization) {
+                    setSpecializationData(foundSpecialization);
                     setFormData({
-                        specializationId: fetchedSpecialization.specializationId,
-                        specializationDescription: fetchedSpecialization.specializationDescription,
+                        Name: foundSpecialization.Name || '',
+                        Description: foundSpecialization.Description || '',
                     });
                 } else {
-                    console.error('Specialization not found');
+                    console.error('Specialization not found. Response:', fetchedSpecializations);
                     alert('Specialization not found');
                     navigate('/admin/specializations');
                 }
@@ -52,6 +68,7 @@ const UpdateSpecialization: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
             await updateSpecialization(formData); // Send updated specialization data
             alert('Specialization updated successfully');
@@ -65,8 +82,8 @@ const UpdateSpecialization: React.FC = () => {
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
         { id: 2, name: 'Manage Patients', route: '/admin/patient' },
-        { id: 3, name: 'Manage Specializations', route: '/admin/specializations' },
-        { id: 4, name: 'Manage Staff', route: '/admin/staff' },
+        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
+        { id: 4, name: 'Manage Specializations', route: '/admin/specializations' },
     ];
 
     return (
@@ -79,12 +96,12 @@ const UpdateSpecialization: React.FC = () => {
                     {specializationData ? (
                         <form onSubmit={handleSubmit} className="update-specialization-form">
                             <div className="form-group">
-                                <label htmlFor="specializationId">Specialization ID</label>
+                                <label htmlFor="specializationId">Specialization Name</label>
                                 <input
                                     type="text"
                                     id="specializationId"
-                                    name="specializationId"
-                                    value={formData.specializationId}
+                                    name="Name"
+                                    value={formData.Name} // Bind value to the Name field from formData
                                     onChange={handleInputChange}
                                     disabled
                                 />
@@ -95,19 +112,19 @@ const UpdateSpecialization: React.FC = () => {
                                 <input
                                     type="text"
                                     id="specializationDescription"
-                                    name="specializationDescription"
-                                    value={formData.specializationDescription}
+                                    name="Description" // Use 'Description' as the name to match formData
+                                    value={formData.Description} // Bind value to the Description field from formData
                                     onChange={handleInputChange}
                                     required
                                 />
                             </div>
 
-                            <Button onClick={() => handleSubmit({} as React.FormEvent)} className="button button-primary">
+                            <Button type="submit" className="button button-primary">
                                 Update Specialization
                             </Button>
                         </form>
                     ) : (
-                        <p>Loading specialization data...</p>
+                        <p>Loading specialization data...</p> // Show loading text until data is fetched
                     )}
                 </div>
             </main>
