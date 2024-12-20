@@ -60,6 +60,7 @@ const AdminSurgeryRoom: React.FC = () => {
         { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
         { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
         { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
+        { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
     ];
 
     return (

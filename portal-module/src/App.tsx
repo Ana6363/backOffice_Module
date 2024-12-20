@@ -24,6 +24,9 @@ import AdminSpecialization from './pages/Admin/AdminSpecializations/AdminSpecial
 import CreateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationCreate';
 import UpdateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationsUpdate';
 
+import AdminRoomType from './pages/Admin/AdminRoomType/AdminRoomType';
+import CreateRoomType from './pages/Admin/AdminRoomType/AdminRoomTypeCreate';
+
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
@@ -91,6 +94,8 @@ const App: React.FC = () => {
                         <Route path="/admin/specializations" element={<AdminSpecialization />} />
                         <Route path="/admin/specializations/create" element={<CreateSpecialization />} />
                         <Route path="/admin/specializations/update/:specializationId" element={<UpdateSpecialization />} />
+                        <Route path="/admin/roomtypes" element={<AdminRoomType />} />
+                        <Route path="/admin/roomtypes/create" element={<CreateRoomType />} />
 
 
 

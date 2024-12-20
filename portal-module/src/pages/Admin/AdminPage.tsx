@@ -11,6 +11,7 @@ const AdminPage = () => {
     { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' }, // Absolute path for operation types
     { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' }, // Absolute path for operation types
     { id: 7, name: 'Manage Specializations', route: '/admin/specializations' }, // Absolute path for specializations
+    { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' }, // Absolute path for room types
   ];
 
   return (
