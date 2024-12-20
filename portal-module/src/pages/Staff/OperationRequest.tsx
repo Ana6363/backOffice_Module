@@ -112,6 +112,17 @@ const OperationRequest: React.FC = () => {
         // Use the actual ID in the navigation path
         navigate(`/operationRequest/update/${selectedOperationRequest.requestId}`);
     };
+
+    const handleNavigateToCreateAppointment = () => {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
+            alert('No operation request selected.');
+            return;
+        }
+    
+        // TODO
+        navigate(`/operationRequest/createAppointment/${selectedOperationRequest.requestId}`);
+    };
+    
     
 
     const handleNavigateToDelete = () => {
@@ -188,6 +199,9 @@ const OperationRequest: React.FC = () => {
                         </Button>
                         <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
                             {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Delete Request'}
+                        </Button>
+                        <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
+                            Create Appointment
                         </Button>
                     </div>
 

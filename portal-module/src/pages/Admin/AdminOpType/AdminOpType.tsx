@@ -20,7 +20,7 @@ const AdminOpType: React.FC = () => {
             if (data && data.operationType && data.operationType.$values) {
                 const operationTypes = data.operationType.$values;
     
-                const processedOpTypes = operationTypes.map((operationType) => ({
+                const processedOpTypes = operationTypes.map((operationType: { specializations: { $values: any[]; }; }) => ({
                     ...operationType,
                     specializationDetails: operationType.specializations && operationType.specializations.$values && operationType.specializations.$values.length > 0
                         //? operationType.specializations.$values.map(spec => `${spec.name.padEnd(20, ' ')} : ${spec.neededPersonnel} `).join('\n') 
@@ -72,8 +72,9 @@ const AdminOpType: React.FC = () => {
         { id: 2, name: 'Manage Patients', route: '/admin/patient' },
         { id: 3, name: 'Manage Staff', route: '/admin/staff' },
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
-        { id: 5, name: 'Manage Specializations', route: '/admin/specializations' },
-
+        { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
+        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' }
+        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
     ];
 
     return (
