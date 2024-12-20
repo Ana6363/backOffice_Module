@@ -58,6 +58,7 @@ const SchedulePage: React.FC = () => {
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
         { id: 5, name: 'Schedule Algorithms', route: '/admin/schedule' },
         { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' }
+        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
     ];
 
     return (
