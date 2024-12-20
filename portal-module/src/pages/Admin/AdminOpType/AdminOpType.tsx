@@ -73,7 +73,7 @@ const AdminOpType: React.FC = () => {
         { id: 3, name: 'Manage Staff', route: '/admin/staff' },
         { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
         { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
-        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' }
+        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
         { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
     ];
 
