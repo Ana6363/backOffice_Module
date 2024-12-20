@@ -29,6 +29,8 @@ import DeleteOpType from './pages/Admin/AdminOpType/DeleteOpType';
 import UpdateOpType from './pages/Admin/AdminOpType/UpdateOpType';
 import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
 import AppointmenCreate from './pages/Staff/AppointmentCreate';
+import AdminSurgery from './pages/Admin/AdminSurgery/AdminSurgery';
+import CreateSurgeryRoom from './pages/Admin/AdminSurgery/CreateSurgeryRoom';
 
 
 
@@ -80,6 +82,8 @@ const App: React.FC = () => {
                         <Route path="/admin/opTypes/create" element={<CreateOpType />} />
                         <Route path="/admin/opTypes/update/:operationTypeId" element={<UpdateOpType />} />
                         <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
+                        <Route path="/admin/surgeries" element={<AdminSurgery />} />
+                        <Route path="/admin/createSurgeryRoom" element={<CreateSurgeryRoom />} />
 
 
                 </Route>
