@@ -115,7 +115,7 @@ const UpdateAppointmentDetails: React.FC = () => {
             const response = await updateAppointment(appointmentData);
             console.log('Appointment Updated:', response);
             alert('Appointment updated successfully!');
-            navigate('/operationRequest');
+            navigate('/appointments');
         } catch (error) {
             console.error('Error updating appointment:', error);
             alert('Failed to update appointment. Please try again.');

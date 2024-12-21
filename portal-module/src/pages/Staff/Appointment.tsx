@@ -130,7 +130,6 @@ const Appointments: React.FC = () => {
                                     .join('; '),
                             }))}
                             headers={[
-                                { key: 'appointementId', label: 'Appointment ID' }, // Include ID for clarity
                                 { key: 'schedule', label: 'Schedule' },
                                 { key: 'patient', label: 'Patient Email' }, // Updated label
                                 { key: 'allocatedStaff', label: 'Allocated Staff' }, // New column
