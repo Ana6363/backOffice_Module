@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSurgeryRooms } from '../../services/SurgeryRoomService';
 import Button from '../../components/Buttons/Buttons';
 
 const CreateAppointment: React.FC = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-
-    // Extract requestId from the query string
-    const params = new URLSearchParams(location.search);
-    const requestId = params.get('requestId') || '';
+    const { appointmentId } = useParams<{ appointmentId: string }>(); // Extract appointmentId from URL
 
     const [date, setDate] = useState('');
     const [roomNumber, setRoomNumber] = useState('');
@@ -26,12 +22,11 @@ const CreateAppointment: React.FC = () => {
     const loadAvailableRooms = async () => {
         try {
             const rooms = await fetchSurgeryRooms();
-            setAvailableRooms(rooms.map((room: { roomNumber: any; }) => room.roomNumber));
+            setAvailableRooms(rooms.map((room: { roomNumber: any }) => room.roomNumber));
         } catch (error) {
             console.error('Failed to fetch surgery rooms:', error);
         }
     };
-    
 
     const handleSubmit = () => {
         if (!date || !roomNumber) {
@@ -40,10 +35,10 @@ const CreateAppointment: React.FC = () => {
         }
 
         // Navigate to the next step with the selected date and room
-        navigate(`/operationRequest/createAppointmentDetails?requestId=${encodeURIComponent(requestId)}&date=${encodeURIComponent(date)}&roomNumber=${encodeURIComponent(roomNumber)}`);
+        navigate(`/appointments/updateDetails?requestId=${encodeURIComponent(appointmentId || '')}&date=${encodeURIComponent(date)}&roomNumber=${encodeURIComponent(roomNumber)}`);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         loadAvailableRooms();
     }, []);
 
