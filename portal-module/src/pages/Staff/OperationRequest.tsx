@@ -119,9 +119,9 @@ const OperationRequest: React.FC = () => {
             return;
         }
     
-        // TODO
-        navigate(`/operationRequest/createAppointment/${selectedOperationRequest.requestId}`);
+        navigate(`/operationRequest/createAppointment?requestId=${encodeURIComponent(selectedOperationRequest.requestId)}`);
     };
+    
     
     
 
@@ -200,7 +200,7 @@ const OperationRequest: React.FC = () => {
                         <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
                             {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Delete Request'}
                         </Button>
-                        <Button onClick={handleNavigateToUpdate} disabled={!selectedOperationRequest} className="button button-primary">
+                        <Button onClick={handleNavigateToCreateAppointment} disabled={!selectedOperationRequest} className="button button-primary">
                             Create Appointment
                         </Button>
                     </div>

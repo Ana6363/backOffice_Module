@@ -19,11 +19,14 @@ export const fetchSurgeryRooms = async () => {
 
     const data = await response.json();
 
-    console.log("Fetch Surgery Rooms Response Data:", data);
+    // Extract the `$values` array
+    if (!data.$values || !Array.isArray(data.$values)) {
+        throw new Error('Unexpected data format: $values array is missing.');
+    }
 
-
-    return data;
+    return data.$values;
 };
+
 
 export const createSurgeryRoom = async (surgeryRoomData: {
     roomNumber: string;
@@ -56,4 +59,25 @@ export const fetchRoomTypes = async () => {
 
     return data;
 };
+
+export const fetchDailyTimeSlots = async (date: string, requestId: string , roomNumber: string ) => {
+    const url = `${API_URL}/getDailyTimeSlots?date=${encodeURIComponent(date)}&requestId=${encodeURIComponent(requestId)}&roomNumber=${encodeURIComponent(roomNumber)}`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch daily time slots: ${errorText}`);
+    }
+
+    const data = await response.json();
+
+    console.log("Fetch Daily Time Slots Response Data:", data);
+
+    return data;
+};
+
 

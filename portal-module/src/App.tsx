@@ -38,6 +38,10 @@ import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
 import AppointmenCreate from './pages/Staff/AppointmentCreate';
 import AdminSurgery from './pages/Admin/AdminSurgery/AdminSurgery';
 import CreateSurgeryRoom from './pages/Admin/AdminSurgery/CreateSurgeryRoom';
+import CreateAppointmentDetails from './pages/Staff/CreateAppointmentDetails';
+import Appointment from './pages/Staff/Appointment';
+import UpdateAppointmentDetails from './pages/Staff/UpdateAppointmentDetails';
+import AppointmentUpdate from './pages/Staff/AppointmentUpdate';
 
 
 
@@ -108,8 +112,13 @@ const App: React.FC = () => {
                     <Route path="/operationRequest/create" element={<OperationRequestCreate />} />
                     <Route path="/operationRequest/update/:id" element={<OperationRequestUpdate />} />
                     <Route path="/operationRequest/delete/:id" element={<OperationRequestDelete />} />
-                    <Route path="/operationRequest/createAppointment/:id" element={<AppointmenCreate />} />
+                    <Route path="/operationRequest/createAppointment" element={<AppointmenCreate />} />
                     <Route path='/surgeryRoom3DModel' element={<SurgeryRoom3D/>} />
+                    <Route path="/operationRequest/createAppointmentDetails" element={<CreateAppointmentDetails />} />
+                    <Route path="/appointments" element={<Appointment />} />
+                    <Route path="/appointments/update/:appointmentId" element={<AppointmentUpdate />} />
+                    <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
+
 
                 </Route>
 
