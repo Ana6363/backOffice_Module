@@ -104,7 +104,8 @@ const UpdateOperationRequest: React.FC = () => {
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
         { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
-    ];
+        { id: 3, name: 'Manage Appointments', route: '/appointments' }
+      ];
 
     return (
         <div className="app-wrapper">
