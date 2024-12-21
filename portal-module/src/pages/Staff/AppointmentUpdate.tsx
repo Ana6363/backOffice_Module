@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSurgeryRooms } from '../../services/SurgeryRoomService';
 import Button from '../../components/Buttons/Buttons';
+import Footer from '../../components/Footer/Footer';
+import Navbar from '../../components/Navbar/Navbar';
 
-const CreateAppointment: React.FC = () => {
+const UpdateAppointment: React.FC = () => {
     const navigate = useNavigate();
     const { appointmentId } = useParams<{ appointmentId: string }>(); // Extract appointmentId from URL
 
@@ -35,49 +37,71 @@ const CreateAppointment: React.FC = () => {
         }
 
         // Navigate to the next step with the selected date and room
-        navigate(`/appointments/updateDetails?requestId=${encodeURIComponent(appointmentId || '')}&date=${encodeURIComponent(date)}&roomNumber=${encodeURIComponent(roomNumber)}`);
+        navigate(
+            `/appointments/updateDetails?requestId=${encodeURIComponent(
+                appointmentId || ''
+            )}&date=${encodeURIComponent(date)}&roomNumber=${encodeURIComponent(roomNumber)}`
+        );
     };
 
     useEffect(() => {
         loadAvailableRooms();
     }, []);
 
+    const staffMenuItems = [
+        { id: 1, name: 'Main Page', route: '/mainPageStaff' },
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+        { id: 3, name: 'Manage Appointments', route: '/appointments' }
+      ];
+
     return (
-        <div className="container">
-            <h1 className="text-3xl font-bold text-center mb-8">Create Appointment</h1>
-            <div className="form-group">
-                <label htmlFor="date">Select Date:</label>
-                <input
-                    type="date"
-                    id="date"
-                    value={date}
-                    onChange={handleDateChange}
-                    className="form-control"
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="room">Select Room:</label>
-                <select
-                    id="room"
-                    value={roomNumber}
-                    onChange={handleRoomChange}
-                    className="form-control"
-                >
-                    <option value="">-- Select a Room --</option>
-                    {availableRooms.map((room) => (
-                        <option key={room} value={room}>
-                            {room}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="action-buttons">
-                <Button onClick={handleSubmit} className="button button-primary">
-                    Proceed
-                </Button>
-            </div>
+        <div className="app-wrapper">
+            {/* Navbar */}
+            <Navbar menuItemsProp={staffMenuItems} />
+
+            {/* Main Content */}
+            <main className="main-content">
+                <div className="container">
+                    <h1 className="text-3xl font-bold text-center mb-8">Update Appointment</h1>
+                    <div className="form-group">
+                        <label htmlFor="date">Select Date:</label>
+                        <input
+                            type="date"
+                            id="date"
+                            value={date}
+                            onChange={handleDateChange}
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="room">Select Room:</label>
+                        <select
+                            id="room"
+                            value={roomNumber}
+                            onChange={handleRoomChange}
+                            className="form-control"
+                        >
+                            <option value="">-- Select a Room --</option>
+                            {availableRooms.map((room) => (
+                                <option key={room} value={room}>
+                                    {room}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="action-buttons">
+                        <Button onClick={handleSubmit} className="button button-primary">
+                            Proceed
+                        </Button>
+                    </div>
+                </div>
+            </main>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };
 
-export default CreateAppointment;
+export default UpdateAppointment;

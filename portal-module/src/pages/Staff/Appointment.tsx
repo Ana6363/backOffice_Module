@@ -9,6 +9,7 @@ import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
 import SelectableTable from '../../components/Table/SelectableTable';
 
+
 const Appointments: React.FC = () => {
     const navigate = useNavigate();
 
@@ -99,8 +100,10 @@ const Appointments: React.FC = () => {
 
     const staffMenuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
-        { id: 2, name: 'Appointments', route: '/appointments' },
-    ];
+        { id: 2, name: 'Operations Request', route: '/operationRequest' },
+        { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+        { id: 3, name: 'Manage Appointments', route: '/appointments' }
+      ];
 
     if (error) {
         return <div className="error-message">Error: {error}</div>;
