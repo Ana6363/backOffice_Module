@@ -19,7 +19,7 @@ export const fetchSurgeryRooms = async () => {
 
     const data = await response.json();
 
-    // Extract the `$values` array
+
     if (!data.$values || !Array.isArray(data.$values)) {
         throw new Error('Unexpected data format: $values array is missing.');
     }
