@@ -4,6 +4,7 @@ import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
+import PrivacyPolicy from './pages/Patient/PrivacyPolicy';
 
 import AdminPage from './pages/Admin/AdminPage';
 import AdminSchedule from './pages/Admin/AdminSchedule/AdminSchedule'
@@ -128,6 +129,7 @@ const App: React.FC = () => {
                     <Route path="/patient" element={<Patient />} />
                     <Route path="/patient/update" element={<PatientUpdate/>} />
                     <Route path="/patient/delete" element={<PatientDelete/>} />
+                    <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 </Route>
             </Routes>
         </Router>
