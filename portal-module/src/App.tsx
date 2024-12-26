@@ -43,6 +43,9 @@ import CreateAppointmentDetails from './pages/Staff/CreateAppointmentDetails';
 import Appointment from './pages/Staff/Appointment';
 import UpdateAppointmentDetails from './pages/Staff/UpdateAppointmentDetails';
 import AppointmentUpdate from './pages/Staff/AppointmentUpdate';
+import AdminAllergies from './pages/Admin/AdminAllergy/AdminAllergy';
+import CreateAllergy from './pages/Admin/AdminAllergy/AdminCreateAllergy';
+import StaffAllergies from './pages/Staff/StaffAllergy';
 
 
 
@@ -101,6 +104,8 @@ const App: React.FC = () => {
                         <Route path="/admin/specializations/update/:specializationId" element={<UpdateSpecialization />} />
                         <Route path="/admin/roomtypes" element={<AdminRoomType />} />
                         <Route path="/admin/roomtypes/create" element={<CreateRoomType />} />
+                        <Route path="/admin/allergies" element={<AdminAllergies />} />
+                        <Route path="/admin/createAllergy" element={<CreateAllergy />} />
 
 
 
@@ -119,6 +124,7 @@ const App: React.FC = () => {
                     <Route path="/appointments" element={<Appointment />} />
                     <Route path="/appointments/update/:appointmentId" element={<AppointmentUpdate />} />
                     <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
+                    <Route path="/allergies" element={<StaffAllergies/>} />
 
 
                 </Route>
