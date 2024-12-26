@@ -314,6 +314,8 @@
         import * as THREE from "three";
         import Orientation from "./orientation.js";
         import ThumbRaiser from "./thumb_raiser.js";
+        import * as TWEEN from "three/addons/libs/tween.module.js";
+
 
         let thumbRaiser;
 
@@ -331,12 +333,14 @@
                 { view: "top", multipleViewsViewport: new THREE.Vector4(1.0, 0.0, 0.45, 0.5), initialOrientation: new Orientation(0.0, -90.0), initialDistance: 4.0, distanceMin: 1.0, distanceMax: 16.0 }, // Top view camera parameters
                 { view: "mini-map", multipleViewsViewport: new THREE.Vector4(0.99, 0.02, 0.3, 0.3), initialOrientation: new Orientation(180.0, -90.0), initialZoom: 0.64 } // Mini-msp view camera parameters
             );
+            
         }
 
         function animate() {
             requestAnimationFrame(animate);
             // Update the game
             thumbRaiser.update();
+            TWEEN.update();
         }
 
         initialize();

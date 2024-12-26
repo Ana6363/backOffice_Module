@@ -2,20 +2,27 @@ import * as THREE from "three";
 import Ground from "./ground.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import Wall from "./wall.js";
+import Camera from "./camera.js";
+import Orientation from "./orientation.js";
+import * as TWEEN from "three/addons/libs/tween.module.js";
+
 
 
 /*
  * parameters = {
  *  url: String,
- *  credits: String,
+ *  credits: String,   
  *  scale: Vector3
  * }
  */
 
 export default class Maze {
-    constructor(parameters) {
+    constructor(parameters, camera) {
         this.onLoad = async function (description) {
-            console.log("Loaded exitLocation:", description.exitLocation);
+
+           
+            
+            this.bedArray = [];
 
             // Store the maze's map and size
             this.map = description.map;
@@ -41,6 +48,9 @@ export default class Maze {
             // Create a door
             this.door = new Wall({ textureUrl: description.doorTextureUrl});
             
+            this.setupObjectPicking(camera);
+
+           
             // Load hospital bed model
             const bedLoader = new GLTFLoader();
         
@@ -95,7 +105,11 @@ export default class Maze {
                                 j - description.size.height / 2.0
                             );
                             bedObject.scale.set(0.8, 0.8, 0.8); // Ajuste de escala, se necessário
+                            
                             this.object.add(bedObject);
+                            this.bedArray.push(bedObject);
+                            console.log("Cama adicionada ao array:", this.bedArray);
+                            
                         });
                     }
                     
@@ -109,8 +123,11 @@ export default class Maze {
                             );
                             bedObject.scale.set(0.8, 0.8, 0.8); // Ajuste de escala, se necessário
                             this.object.add(bedObject);
+                            this.bedArray.push(bedObject);
+
                         });
                     }
+                    
 
                     if (description.map[j][i] == 8) {
                         bedLoader.load('./models/gltf/table.glb', (gltf) => {
@@ -122,6 +139,8 @@ export default class Maze {
                             );
                             bedObject.scale.set(0.5, 0.5, 0.5); // Ajuste de escala, se necessário
                             bedObject.rotation.y = Math.PI / 2; // Rotaciona 90 graus em torno do eixo Y
+
+                        
                             this.object.add(bedObject);
                         });
                     }
@@ -136,6 +155,7 @@ export default class Maze {
                             );
                             bedObject.scale.set(0.3, 0.8, 0.5); // Ajuste de escala, se necessário
                             bedObject.rotation.y = - Math.PI /2; // Rotaciona 90 graus em torno do eixo Y
+                            
                             this.object.add(bedObject);
                         });
                     }
@@ -145,6 +165,7 @@ export default class Maze {
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
             this.loaded = true;
+            console.log("Estado final do array de camas:", this.bedArray);
         }
 
         this.onProgress = function (url, xhr) {
@@ -184,6 +205,8 @@ export default class Maze {
             error => this.onError(this.url, error)
         );
     }
+    
+
 
     updateRoomStatusAtPosition(row, col, status) {
         const map = this.map;
@@ -262,4 +285,119 @@ export default class Maze {
     foundExit(position) {
         return Math.abs(position.x - this.exitLocation.x) < 0.5 * this.scale.x && Math.abs(position.z - this.exitLocation.z) < 0.5 * this.scale.z
     };
+
+    setupObjectPicking(camera) {
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+    
+        window.addEventListener("click", (event) => {
+            this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+            this.raycaster.setFromCamera(this.mouse, camera.object);
+    
+            const intersects = this.raycaster.intersectObjects(this.bedArray, true);
+    
+            console.log("Intersects:", intersects);
+    
+            if (intersects.length > 0) {
+                const selectedObject = intersects[0].object;
+                console.log("Objeto selecionado:", selectedObject);
+                this.moveCameraToRoomCenter(selectedObject, camera);
+            }
+
+        });
+    }
+
+    moveCameraToRoomCenter(selectedObject, camera) {
+        if(!selectedObject) {
+            //console.error("No object selected.");
+            return;
+        }
+
+
+        // Determine the room center
+        const roomCenter = this.getRoomCenterFromTable(selectedObject);
+    
+        if (!roomCenter) {
+            console.warn("Room center could not be determined for the selected object.");
+            return;
+        }
+    
+        // Log the room center
+        console.log("Moving camera to room center at:", roomCenter);
+    
+
+        const coordinates = new THREE.Vector3(roomCenter.x, camera.position.y, roomCenter.z);
+        
+        camera.setTarget(coordinates);
+
+
+    }
+    setTarget(target) {
+        this.target.copy(target);
+        this.setViewingParameters();
+    }
+    setViewingParameters() {
+            const orientation = new Orientation(this.orientation.h + this.playerDirection, this.orientation.v);
+            const cosH = Math.cos(THREE.MathUtils.degToRad(orientation.h));
+            const sinH = Math.sin(THREE.MathUtils.degToRad(orientation.h));
+            const cosV = Math.cos(THREE.MathUtils.degToRad(orientation.v));
+            const sinV = Math.sin(THREE.MathUtils.degToRad(orientation.v));
+            // Position
+            let positionX = this.target.x;
+            let positionY = this.target.y;
+            let positionZ = this.target.z;
+            if (this.view != "first-person") {
+                positionX -= this.distance * sinH * cosV;
+                positionY -= this.distance * sinV;
+                positionZ -= this.distance * cosH * cosV;
+            }
+            this.perspective.position.set(positionX, positionY, positionZ);
+            this.orthographic.position.set(positionX, positionY, positionZ);
+            // Up vector
+            const upX = -sinH * sinV;
+            const upY = cosV;
+            const upZ = -cosH * sinV;
+            this.perspective.up.set(upX, upY, upZ);
+            this.orthographic.up.set(upX, upY, upZ);
+            // Target
+            const target = this.target.clone();
+            if (this.view == "first-person") {
+                target.x += sinH * cosV;
+                target.y += sinV;
+                target.z += cosH * cosV;
+            }
+            this.perspective.lookAt(target);
+            this.orthographic.lookAt(target);
+        }
+
+    
+    
+    getRoomCenterFromTable(tableObject) {
+        // Check if the table object has userData with room center information
+        if (tableObject.userData && tableObject.userData.roomCenter) {
+            return new THREE.Vector3(
+                tableObject.userData.roomCenter.x,
+                tableObject.userData.roomCenter.y,
+                tableObject.userData.roomCenter.z
+            );
+        }
+    
+        // Fallback: Calculate the room center using bounding box
+        const boundingBox = new THREE.Box3().setFromObject(tableObject);
+    
+        if (boundingBox.isEmpty()) {
+            console.warn("Unable to calculate bounding box for the object:", tableObject);
+            return null;
+        }
+    
+        // Get the center of the bounding box
+        const roomCenter = new THREE.Vector3();
+        boundingBox.getCenter(roomCenter);
+    
+        console.log("Calculated Room Center from Bounding Box:", roomCenter);
+    
+        return roomCenter;
+    }
 }
