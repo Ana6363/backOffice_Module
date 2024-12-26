@@ -45,6 +45,7 @@ import UpdateAppointmentDetails from './pages/Staff/UpdateAppointmentDetails';
 import AppointmentUpdate from './pages/Staff/AppointmentUpdate';
 import AdminAllergies from './pages/Admin/AdminAllergy/AdminAllergy';
 import CreateAllergy from './pages/Admin/AdminAllergy/AdminCreateAllergy';
+import StaffAllergies from './pages/Staff/StaffAllergy';
 
 
 
@@ -123,6 +124,7 @@ const App: React.FC = () => {
                     <Route path="/appointments" element={<Appointment />} />
                     <Route path="/appointments/update/:appointmentId" element={<AppointmentUpdate />} />
                     <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
+                    <Route path="/allergies" element={<StaffAllergies/>} />
 
 
                 </Route>
