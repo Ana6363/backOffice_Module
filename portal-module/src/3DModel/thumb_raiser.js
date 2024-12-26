@@ -79,7 +79,7 @@ export default class ThumbRaiser {
         this.topViewCamera = new Camera(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
 
         // Create the maze
-        this.maze = new Maze(this.mazeParameters, this.fixedViewCamera);
+        this.maze = new Maze(this.mazeParameters,this.fixedViewCamera);
 
         // Create the mini-map camera
         this.miniMapCamera = new Camera(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);

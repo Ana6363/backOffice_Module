@@ -310,12 +310,11 @@ export default class Maze {
     }
 
     moveCameraToRoomCenter(selectedObject, camera) {
-        if(!selectedObject) {
-            //console.error("No object selected.");
+        if (!selectedObject) {
+            console.warn("No object selected.");
             return;
         }
-
-
+    
         // Determine the room center
         const roomCenter = this.getRoomCenterFromTable(selectedObject);
     
@@ -327,13 +326,43 @@ export default class Maze {
         // Log the room center
         console.log("Moving camera to room center at:", roomCenter);
     
-
+        // Coordinates for the target camera position (same height as the camera, but at the center of the room)
         const coordinates = new THREE.Vector3(roomCenter.x, camera.position.y, roomCenter.z);
-        
-        camera.setTarget(coordinates);
-
-
+    
+        // Create a smooth transition to the new position
+        const fromPosition = camera.position.clone(); // Current camera position
+        const toPosition = coordinates.clone(); // Target camera position
+    
+        // Create a smooth transition for the camera's position
+        new TWEEN.Tween(fromPosition)
+            .to({
+                x: toPosition.x,
+                y: toPosition.y,
+                z: toPosition.z
+            }, 1500) // Animation duration (1.5 seconds)
+            .easing(TWEEN.Easing.Quadratic.Out) // Easing function for smooth transition
+            .onUpdate(() => {
+                camera.position.set(fromPosition.x, fromPosition.y, fromPosition.z);
+            })
+            .start();
+    
+        // Animate the camera's target to look at the new room center
+        const fromTarget = camera.target.clone(); // Current target position (camera's "lookAt" position)
+        const toTarget = roomCenter.clone(); // Target position
+    
+        new TWEEN.Tween(fromTarget)
+            .to({
+                x: toTarget.x,
+                y: toTarget.y,
+                z: toTarget.z
+            }, 1500) // Animation duration (same as position transition)
+            .easing(TWEEN.Easing.Quadratic.Out) // Smooth easing for the target transition
+            .onUpdate(() => {
+                camera.setTarget(fromTarget); // Update the camera's target during the animation
+            })
+            .start();
     }
+    
     setTarget(target) {
         this.target.copy(target);
         this.setViewingParameters();
