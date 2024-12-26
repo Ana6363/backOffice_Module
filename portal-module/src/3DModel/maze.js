@@ -18,11 +18,17 @@ import * as TWEEN from "three/addons/libs/tween.module.js";
 
 export default class Maze {
     constructor(parameters, camera) {
+
+
         this.onLoad = async function (description) {
 
            
             
             this.bedArray = [];
+            let roomArray = ["R001", "R004", "R002", "R005", "R003", "R006"];
+            this.roomArray = roomArray;
+
+
 
             // Store the maze's map and size
             this.map = description.map;
@@ -53,6 +59,8 @@ export default class Maze {
            
             // Load hospital bed model
             const bedLoader = new GLTFLoader();
+
+            
         
 
 
@@ -163,10 +171,29 @@ export default class Maze {
                 }
             }
 
+            
+
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
             this.loaded = true;
             console.log("Estado final do array de camas:", this.bedArray);
+
+
+            this.createOverlay();
+
+            // Atrasando a associação de camas após o carregamento do mapa
+            setTimeout(() => {
+                const associations = this.associateBedsWithRooms();
+            }, 1000);
+
+            // Adicionando um listener para a tecla 'i'
+            window.addEventListener("keydown", (event) => {
+                if (event.key === "i") {
+                    this.toggleOverlay();
+                }
+            });
         }
+
+        
 
         this.onProgress = function (url, xhr) {
             console.log("Resource '" + url + "' " + (100.0 * xhr.loaded / xhr.total).toFixed(0) + "% loaded.");
@@ -204,8 +231,9 @@ export default class Maze {
             // onError callback
             error => this.onError(this.url, error)
         );
+
     }
-    
+
 
 
     updateRoomStatusAtPosition(row, col, status) {
@@ -303,11 +331,37 @@ export default class Maze {
             if (intersects.length > 0) {
                 const selectedObject = intersects[0].object;
                 console.log("Objeto selecionado:", selectedObject);
+    
+                // Encontrar o índice no array bedArray
+                const index = this.bedArray.findIndex(bed => {
+                    let found = false;
+                    bed.traverse(child => {
+                        if (child === selectedObject) {
+                            found = true;
+                        }
+                    });
+                    return found;
+                });
+    
+                if (index !== -1) {
+                    console.log(`Objeto selecionado está na posição ${index} do array bedArray`);
+    
+                    // Obter o valor correspondente no roomArray
+                    const associatedRoom = this.roomArray[index];
+                    console.log(`O quarto associado é: ${associatedRoom}`);
+                    this.fetchRoomStatus(associatedRoom);
+                } else {
+                    console.warn("Objeto selecionado não foi encontrado no array bedArray");
+                }
+    
                 this.moveCameraToRoomCenter(selectedObject, camera);
             }
-
         });
     }
+    
+
+    
+    
 
     moveCameraToRoomCenter(selectedObject, camera) {
         if (!selectedObject) {
@@ -429,4 +483,110 @@ export default class Maze {
     
         return roomCenter;
     }
+
+    associateBedsWithRooms() {
+        if (this.bedArray.length !== this.roomArray.length) {
+            console.error("bedArray e roomArray têm tamanhos diferentes. Não é possível associar.");
+            return null;
+        }
+    
+        const associations = this.bedArray.map((bed, index) => {
+            return {
+                bed: bed,
+                room: this.roomArray[index]
+            };
+        });
+    
+        console.log("Associações criadas:", associations);
+        return associations;
+    }
+    
+    fetchRoomStatus = async (roomNumber) => {
+        // Ajuste a URL para corresponder ao que a API espera
+        const url = `http://localhost:5184/api/v1/surgeryRoom/getByRoomId?roomNumber=${roomNumber}`; // Passando roomNumber corretamente na query string
+        
+        try {
+            const response = await fetch(url, {
+                method: 'GET', // Requisição GET
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            
+            if (data != null) {
+                console.log("Status do quarto:", data);
+                this.updateOverlayContent(roomNumber, data);
+                return data;
+            }
+    
+            return null;  // Ou um valor adequado dependendo do retorno da API
+        } catch (error) {
+            console.error("Erro ao buscar o status do quarto:", error);
+        }
+    };
+
+    toggleOverlay() {
+        const overlay = document.getElementById("room-overlay");
+    
+        // Se o overlay estiver oculto, mostramos
+        if (overlay.style.display === "none" || overlay.style.display === "") {
+            overlay.style.display = "flex";  // Usando flex para centralizar o conteúdo
+            console.log("Toggling overlay... Exibindo");
+        } else {
+            overlay.style.display = "none";  // Torna o overlay invisível
+            console.log("Toggling overlay... Ocultando");
+        }
+    }
+    
+    
+
+    // Atualizando o conteúdo do overlay
+    updateOverlayContent(roomName, data) {
+        const overlayContent = document.getElementById("room-overlay-content");
+        overlayContent.innerHTML = `
+            <h2>Room: ${roomName}</h2>
+            <p>Type: ${data.type}</p>
+            <p>Status: ${data.currentStatus}</p>
+            <p>Capacity: ${data.capacity}</p>
+        `;
+    }
+
+    // Criando a sobreposição diretamente no HTML
+    createOverlay() {
+        const overlay = document.createElement("div");
+        overlay.id = "room-overlay";
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        overlay.style.display = "none"; // Começa oculto
+        overlay.style.zIndex = "9999";
+        overlay.style.justifyContent = "center";
+        overlay.style.alignItems = "center";
+        overlay.style.textAlign = "center";
+        overlay.style.display = "none"; // Default é invisível
+    
+        const overlayContent = document.createElement("div");
+        overlayContent.id = "room-overlay-content";
+        overlayContent.style.backgroundColor = "#fff";
+        overlayContent.style.padding = "20px";
+        overlayContent.style.borderRadius = "8px";
+        overlayContent.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        overlayContent.innerHTML = "<h2>...</h2>";  // Placeholder
+    
+        overlay.appendChild(overlayContent);
+        document.body.appendChild(overlay);
+    }
+    
+
+    
+    
 }
