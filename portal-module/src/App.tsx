@@ -43,6 +43,8 @@ import CreateAppointmentDetails from './pages/Staff/CreateAppointmentDetails';
 import Appointment from './pages/Staff/Appointment';
 import UpdateAppointmentDetails from './pages/Staff/UpdateAppointmentDetails';
 import AppointmentUpdate from './pages/Staff/AppointmentUpdate';
+import AdminAllergies from './pages/Admin/AdminAllergy/AdminAllergy';
+import CreateAllergy from './pages/Admin/AdminAllergy/AdminCreateAllergy';
 
 
 
@@ -101,6 +103,8 @@ const App: React.FC = () => {
                         <Route path="/admin/specializations/update/:specializationId" element={<UpdateSpecialization />} />
                         <Route path="/admin/roomtypes" element={<AdminRoomType />} />
                         <Route path="/admin/roomtypes/create" element={<CreateRoomType />} />
+                        <Route path="/admin/allergies" element={<AdminAllergies />} />
+                        <Route path="/admin/createAllergy" element={<CreateAllergy />} />
 
 
 
