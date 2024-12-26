@@ -60,8 +60,7 @@ export default class ThumbRaiser {
         // Create a 3D scene (the game itself)
         this.scene3D = new THREE.Scene();
 
-        // Create the maze
-        this.maze = new Maze(this.mazeParameters);
+        
 
         // Create the player
         this.player = new Player(this.playerParameters);
@@ -78,6 +77,9 @@ export default class ThumbRaiser {
         this.firstPersonViewCamera = new Camera(this.firstPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.thirdPersonViewCamera = new Camera(this.thirdPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.topViewCamera = new Camera(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
+
+        // Create the maze
+        this.maze = new Maze(this.mazeParameters,this.fixedViewCamera);
 
         // Create the mini-map camera
         this.miniMapCamera = new Camera(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
@@ -287,7 +289,7 @@ export default class ThumbRaiser {
         };
     
         // Recreate the Maze instance
-        this.maze = new Maze(this.mazeParameters);
+        this.maze = new Maze(this.mazeParameters,this.fixedViewCamera);
     
         // Hardcode the exitLocation
         this.maze.exitLocation = new THREE.Vector3(-0.5, 0.0, 6); // Use the cartesian coordinates equivalent to [-0.5, 6]
@@ -500,12 +502,11 @@ export default class ThumbRaiser {
                     const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
                     this.view.options.selectedIndex = cameraIndex;
                     this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
-                    if (event.buttons == 1) { // Primary button down
+                    if (event.buttons == 2) { // Primary button down
                         this.changeCameraDistance = true;
-                    }
-                    else { // Secondary button down
                         this.changeCameraOrientation = true;
                     }
+                    
                 }
             }
         }

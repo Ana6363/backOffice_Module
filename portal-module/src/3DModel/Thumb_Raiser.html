@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Floor</title>
     <style>
         body {
@@ -117,7 +118,7 @@
                 <tr>
                     <td>
                         <label>View:</label>
-                        <select id="view">
+                        <select id="view" title="View">
                             <option value="fixed">Fixed</option>
                             <option value="first">First-person</option>
                             <option value="third">Third-person</option>
@@ -126,11 +127,11 @@
                     </td>
                     <td>
                         <label>Orientation (h):</label>
-                        <input type="number" id="horizontal" required>
+                        <input type="number" id="horizontal" required title="Horizontal Orientation">
                     </td>
                     <td>
                         <label>Orientation (v):</label>
-                        <input type="number" id="vertical" required>
+                        <input type="number" id="vertical" required title="Vertical Orientation">
                     </td>
                     <td>
                         <input type="button" id="reset" value="Reset view">
@@ -139,18 +140,18 @@
                 <tr>
                     <td>
                         <label>Projection:</label>
-                        <select id="projection">
+                        <select id="projection" title="Projection">
                             <option value="perspective">Perspective</option>
                             <option value="orthographic">Orthographic</option>
                         </select>
                     </td>
                     <td>
                         <label>Distance:</label>
-                        <input type="number" id="distance" required>
+                        <input type="number" id="distance" required title="Distance">
                     </td>
                     <td>
                         <label>Zoom:</label>
-                        <input type="number" id="zoom" required>
+                        <input type="number" id="zoom" required title="Zoom">
                     </td>
                     <td>
                         <input type="button" id="reset-all" value="Reset all views">
@@ -270,31 +271,31 @@
                 <tr>
                     <td>
                         <label>Multiple views:</label>
-                        <input type="checkbox" id="multiple-views">
+                        <input type="checkbox" id="multiple-views" title="Multiple views">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label>User interface:</label>
-                        <input type="checkbox" id="user-interface">
+                        <input type="checkbox" id="user-interface" title="User interface">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label>Mini-map:</label>
-                        <input type="checkbox" id="mini-map">
+                        <input type="checkbox" id="mini-map" title="Mini-map">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label>Help:</label>
-                        <input type="checkbox" id="help">
+                        <input type="checkbox" id="help" title="Help">
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label>Statistics:</label>
-                        <input type="checkbox" id="statistics">
+                        <input type="checkbox" id="statistics" title="Statistics">
                     </td>
                 </tr>
             </table>
@@ -311,9 +312,11 @@
     </script>
     <script src="../lodash/lodash.js"></script>
     <script type="module">
-        import * as THREE from "three";
+         import * as THREE from "three";
         import Orientation from "./orientation.js";
         import ThumbRaiser from "./thumb_raiser.js";
+        import * as TWEEN from "three/addons/libs/tween.module.js";
+
 
         let thumbRaiser;
 
@@ -331,12 +334,14 @@
                 { view: "top", multipleViewsViewport: new THREE.Vector4(1.0, 0.0, 0.45, 0.5), initialOrientation: new Orientation(0.0, -90.0), initialDistance: 4.0, distanceMin: 1.0, distanceMax: 16.0 }, // Top view camera parameters
                 { view: "mini-map", multipleViewsViewport: new THREE.Vector4(0.99, 0.02, 0.3, 0.3), initialOrientation: new Orientation(180.0, -90.0), initialZoom: 0.64 } // Mini-msp view camera parameters
             );
+            
         }
 
         function animate() {
             requestAnimationFrame(animate);
             // Update the game
             thumbRaiser.update();
+            TWEEN.update();
         }
 
         initialize();
