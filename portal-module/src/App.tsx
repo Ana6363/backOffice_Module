@@ -28,6 +28,10 @@ import UpdateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecia
 import AdminRoomType from './pages/Admin/AdminRoomType/AdminRoomType';
 import CreateRoomType from './pages/Admin/AdminRoomType/AdminRoomTypeCreate';
 
+import AdminMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminMedicalConditions';
+import CreateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminCreateMedicalConditions';
+import StaffMedicalConditions from './pages/Staff/StaffMedicalConditions';
+
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
@@ -106,6 +110,8 @@ const App: React.FC = () => {
                         <Route path="/admin/roomtypes/create" element={<CreateRoomType />} />
                         <Route path="/admin/allergies" element={<AdminAllergies />} />
                         <Route path="/admin/createAllergy" element={<CreateAllergy />} />
+                        <Route path="/admin/medicalConditions" element={<AdminMedicalConditions />} />
+                        <Route path="/admin/createMedicalCondition" element={<CreateMedicalConditions />} />
 
 
 
@@ -125,6 +131,7 @@ const App: React.FC = () => {
                     <Route path="/appointments/update/:appointmentId" element={<AppointmentUpdate />} />
                     <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
                     <Route path="/allergies" element={<StaffAllergies/>} />
+                    <Route path="/medicalConditions" element={<StaffMedicalConditions/>} />
 
 
                 </Route>

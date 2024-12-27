@@ -63,14 +63,16 @@ const CreateOpType: React.FC = () => {
         }
     };
     const menuItems = [
-        { id: 1, name: 'Main Page', route: '/admin' },
-        { id: 2, name: 'Manage Patients', route: '/admin/patient' },
-        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
-        { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
-        { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
-        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
-        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
-        { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
+        {id: 1, name: 'Main Page', route: '/admin'},
+        {id: 2, name: 'Manage Patients', route: '/admin/patient'},
+        {id: 3, name: 'Manage Staff', route: '/admin/staff'},
+        {id: 4, name: 'Manage Operation Types', route: '/admin/opTypes'},
+        {id: 5, name: 'Schedule Surgeries', route: '/admin/schedule'},
+        {id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries'},
+        {id: 7, name: 'Manage Specializations', route: '/admin/specializations'},
+        {id: 8, name: 'Manage Room Types', route: '/admin/roomtypes'},
+        {id: 9, name: 'Manage Allergies', route: '/admin/allergies'},
+        {id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions'},
     ];
 
     const goBack = () => {

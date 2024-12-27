@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createAllergy } from '../../../services/AllergyService';
-import { AllergyCreateDto } from '../../../dtos/AllergyDto';
-import Button from '../../../components/Buttons/Buttons';
-import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {createMedicalConditions} from "../../../services/MedicalConditionsService";
+import {MedicalConditionsCreateDto} from "../../../dtos/MedicalConditionsDto";
+import Button from "../../../components/Buttons/Buttons";
+import Navbar from "../../../components/Navbar/Navbar";
+import Footer from "../../../components/Footer/Footer";
 
-const CreateAllergy: React.FC = () => {
+
+const CreateMedicalConditions: React.FC = () => {
     const navigate = useNavigate();
 
-    const [allergyData, setAllergyData] = useState<AllergyCreateDto>({
+    const [medicalConditionsData, setMedicalConditionsData] = useState<MedicalConditionsCreateDto>({
         name: '',
         description: '',
     });
@@ -17,8 +18,8 @@ const CreateAllergy: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setAllergyData((prevData) => ({
+        const {name, value} = e.target;
+        setMedicalConditionsData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -29,12 +30,12 @@ const CreateAllergy: React.FC = () => {
         setError(null);
 
         try {
-            await createAllergy(allergyData);
-            alert('Allergy created successfully');
-            navigate('/admin/allergies');
+            await createMedicalConditions(medicalConditionsData);
+            alert('Medical Condition created successfully');
+            navigate('/admin/medicalConditions');
         } catch (error) {
-            console.error('Error creating allergy:', error);
-            setError('Error creating allergy. Please try again.');
+            console.error('Error creating medical condition:', error);
+            setError('Error creating medical condition. Please try again.');
         }
     };
 
@@ -53,46 +54,39 @@ const CreateAllergy: React.FC = () => {
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={menuItems} />
+            <Navbar menuItemsProp={menuItems}/>
             <main className="main-content">
                 <div className="container">
-                    <h1 className="text-3xl font-bold text-center mb-8">Create New Allergy</h1>
+                    <h1 className="text-3xl font-bold text-center mb-8">Create New Medical Condition</h1>
                     {error && <p className="error-message">{error}</p>}
-                    <form onSubmit={handleSubmit} className="allergy-form">
+                    <form onSubmit={handleSubmit} className="medical-conditions-form">
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
                             <input
                                 type="text"
                                 id="name"
                                 name="name"
-                                value={allergyData.name}
+                                value={medicalConditionsData.name}
                                 onChange={handleChange}
-                                required
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="description">Description</label>
                             <textarea
                                 id="description"
                                 name="description"
-                                value={allergyData.description}
+                                value={medicalConditionsData.description}
                                 onChange={handleChange}
-                                required
-                            ></textarea>
+                            />
                         </div>
-
-                        <div className="form-group">
-                            <Button type="submit" className="button button-primary">
-                                Create Allergy
-                            </Button>
-                        </div>
+                        <Button type="submit" className= "button button-primary">Create Medical Condition</Button>
                     </form>
                 </div>
             </main>
-            <Footer />
+            <Footer/>
         </div>
     );
-};
 
-export default CreateAllergy;
+}
+
+export default CreateMedicalConditions;
