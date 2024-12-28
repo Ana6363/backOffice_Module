@@ -32,6 +32,10 @@ import AdminMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminMe
 import CreateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminCreateMedicalConditions';
 import StaffMedicalConditions from './pages/Staff/StaffMedicalConditions';
 
+import StaffPatientMedicalRecord from './pages/Staff/StaffPatientMedicalRecord';
+import StaffPatientMedicalRecordUpdate from './pages/Staff/StaffPatientMedicalRecordUpdate';
+import StaffPatientMedicalRecordSearch from './pages/Staff/StaffPatientMedicalRecordSearch';
+
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
@@ -132,6 +136,9 @@ const App: React.FC = () => {
                     <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
                     <Route path="/allergies" element={<StaffAllergies/>} />
                     <Route path="/medicalConditions" element={<StaffMedicalConditions/>} />
+                    <Route path="/patientMedicalRecord" element={<StaffPatientMedicalRecord/>} />
+                    <Route path="/patientMedicalRecord/update" element={<StaffPatientMedicalRecordUpdate/>} />
+                    <Route path="/patientMedicalRecord/search" element={<StaffPatientMedicalRecordSearch/>} />
 
 
                 </Route>

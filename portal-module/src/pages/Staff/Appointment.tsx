@@ -104,7 +104,8 @@ const Appointments: React.FC = () => {
         { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
         { id: 3, name: 'Manage Appointments', route: '/appointments' },
         { id: 4, name: 'Search Allergies', route: '/allergies' },
-        { id: 5, name: 'Search Medical Conditions', route: '/medicalConditions' }
+        { id: 5, name: 'Search Medical Conditions', route: '/medicalConditions' },
+        { id: 6, name: 'Manage Patient Medical Record', route: '/patientMedicalRecord' }
       ];
     if (error) {
         return <div className="error-message">Error: {error}</div>;
