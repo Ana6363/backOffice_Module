@@ -1,12 +1,12 @@
 export interface PatientMedicalRecordUpdateDto {
-    recordNumber: number;
+    recordNumber: string;
     allergies: string;
     medicalConditions: string;
     fullName: string;
 }
 
 export interface PatientMedicalRecordsDto {
-    recordNumber: number;
+    recordNumber: string;
     allergies: string;
     medicalConditions: string;
     fullName: string;

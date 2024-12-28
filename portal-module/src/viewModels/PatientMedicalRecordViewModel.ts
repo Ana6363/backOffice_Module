@@ -1,7 +1,7 @@
 import {PatientMedicalRecordsDto} from "../dtos/PatientMedicalRecordDto";
 
 export interface PatientMedicalRecordViewModel {
-    recordNumber: number;
+    recordNumber: string;
     allergies: string;
     medicalConditions: string;
     fullName: string;

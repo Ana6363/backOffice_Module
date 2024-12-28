@@ -15,7 +15,7 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
     const { id } = useParams();
 
     const [medicalRecordData, setMedicalRecordData] = useState<PatientMedicalRecordUpdateDto>({
-        recordNumber: 0,
+        recordNumber: '',
         allergies: '',
         medicalConditions: '',
         fullName: '',
