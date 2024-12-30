@@ -30,6 +30,7 @@ import CreateRoomType from './pages/Admin/AdminRoomType/AdminRoomTypeCreate';
 
 import AdminMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminMedicalConditions';
 import CreateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminCreateMedicalConditions';
+import UpdateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminUpdateMedicalConditions';
 import StaffMedicalConditions from './pages/Staff/StaffMedicalConditions';
 
 import StaffPatientMedicalRecord from './pages/Staff/StaffPatientMedicalRecord';
@@ -116,6 +117,7 @@ const App: React.FC = () => {
                         <Route path="/admin/createAllergy" element={<CreateAllergy />} />
                         <Route path="/admin/medicalConditions" element={<AdminMedicalConditions />} />
                         <Route path="/admin/createMedicalCondition" element={<CreateMedicalConditions />} />
+                        <Route path="/admin/updateMedicalCondition/:title" element={<UpdateMedicalConditions />} />
 
 
 
