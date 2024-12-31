@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAllAllergies } from '../../../services/AllergyService';
+import { fetchAllAllergies, deleteAllergy} from '../../../services/AllergyService';
 import { AllergyViewModel, mapAllergyDtoToViewModel } from '../../../viewModels/AllergyViewModel';
 import { useNavigate } from 'react-router-dom';
 import SelectableTable from '../../../components/Table/SelectableTable';
@@ -11,14 +11,12 @@ const AdminAllergy: React.FC = () => {
     const navigate = useNavigate();
     const [allergyList, setAllergyList] = useState<AllergyViewModel[]>([]);
     const [selectedAllergy, setSelectedAllergy] = useState<AllergyViewModel | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const loadAllergies = async () => {
         try {
-            console.log('Fetching allergies...'); // Debugging: Start of fetch
             const allergyDtos = await fetchAllAllergies();
-            console.log('Raw allergies from API:', allergyDtos); // Debugging: Raw API response
             const processedAllergies = allergyDtos.map(mapAllergyDtoToViewModel);
-            console.log('Processed allergies:', processedAllergies); // Debugging: Processed data
             setAllergyList(processedAllergies);
         } catch (error) {
             console.error('Error fetching allergies:', error);
@@ -30,25 +28,41 @@ const AdminAllergy: React.FC = () => {
         loadAllergies();
     }, []);
 
-    useEffect(() => {
-        console.log('Updated allergyList:', allergyList); // Debugging: Whenever allergyList changes
-    }, [allergyList]);
-
     const handleCreateAllergy = () => {
         navigate('/admin/createAllergy');
     };
 
+    const handleUpdateAllergy = () => {
+        if (selectedAllergy) {
+            navigate(`/admin/updateAllergy/${selectedAllergy.name}`, { state: selectedAllergy });
+        }
+    };
+
+    const handleDeleteAllergy = async () => {
+        if (selectedAllergy) {
+            const confirmDelete = window.confirm(
+                `Are you sure you want to delete the allergy "${selectedAllergy.name}"?`
+            );
+            if (!confirmDelete) return;
+
+            setLoading(true);
+            try {
+                await deleteAllergy(selectedAllergy.name);
+                alert(`Allergy "${selectedAllergy.name}" deleted successfully.`);
+                setSelectedAllergy(null); // Reset selection
+                await loadAllergies(); // Reload the allergy list
+            } catch (error) {
+                console.error('Failed to delete allergy:', error);
+                alert('Failed to delete allergy. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
-        { id: 2, name: 'Manage Patients', route: '/admin/patient' },
-        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
-        { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
-        { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
-        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
-        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
-        { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
         { id: 9, name: 'Manage Allergies', route: '/admin/allergies' },
-        { id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions' },
     ];
 
     return (
@@ -62,7 +76,7 @@ const AdminAllergy: React.FC = () => {
                         <SelectableTable
                             data={allergyList}
                             headers={[
-                                { key: 'name', label: 'Name' }, // Use 'name' instead of 'title'
+                                { key: 'name', label: 'Name' },
                                 { key: 'description', label: 'Description' },
                             ]}
                             onRowSelect={setSelectedAllergy}
@@ -72,6 +86,20 @@ const AdminAllergy: React.FC = () => {
                     <div className="action-buttons">
                         <Button onClick={handleCreateAllergy} className="button button-primary">
                             Create Allergy
+                        </Button>
+                        <Button
+                            onClick={handleUpdateAllergy}
+                            className="button button-secondary"
+                            disabled={!selectedAllergy || loading}
+                        >
+                            Update Allergy
+                        </Button>
+                        <Button
+                            onClick={handleDeleteAllergy}
+                            className="button button-danger"
+                            disabled={!selectedAllergy || loading}
+                        >
+                            {loading ? 'Deleting...' : 'Delete Allergy'}
                         </Button>
                     </div>
                 </div>
