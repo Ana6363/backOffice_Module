@@ -1,6 +1,6 @@
 import { AllergyCreateDto, AllergyDto } from '../dtos/AllergyDto';
 
-const API_URL = `http://localhost:5184/api/v1/allergies`;
+const API_URL = `https://api-node.hospitalz.site/api/allergies`;
 
 const getHeaders = () => ({
     'Content-Type': 'application/json',
@@ -47,10 +47,12 @@ export const fetchAllAllergies = async (): Promise<AllergyDto[]> => {
         const responseData = await response.json();
         console.debug('Parsed response data:', responseData);
 
-        return responseData.data?.$values || [];
+        // Return the correct array of allergies
+        return responseData.data || [];
     } catch (error) {
         console.error('An error occurred while fetching allergies:', error);
         throw error;
     }
 };
+
 

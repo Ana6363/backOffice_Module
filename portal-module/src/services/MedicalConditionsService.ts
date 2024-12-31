@@ -1,6 +1,6 @@
 import { MedicalConditionsDto, MedicalConditionsCreateDto } from "../dtos/MedicalConditionsDto";
 
-const API_URL = `http://localhost:5184/api/v1/medical-conditions`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/medical-conditions`;
 
 const getHeaders = () => ({
     'Content-Type': 'application/json',

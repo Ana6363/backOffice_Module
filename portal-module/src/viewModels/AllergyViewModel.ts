@@ -1,11 +1,11 @@
 import { AllergyDto } from '../dtos/AllergyDto';
 
 export interface AllergyViewModel {
-    title: string; // "title" replaces "name" for display purposes
+    name: string;
     description: string;
 }
 
 export const mapAllergyDtoToViewModel = (dto: AllergyDto): AllergyViewModel => ({
-    title: dto.name,
+    name: dto.name,
     description: dto.description,
 });

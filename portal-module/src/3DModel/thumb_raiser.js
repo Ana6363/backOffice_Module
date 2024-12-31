@@ -238,7 +238,7 @@ export default class ThumbRaiser {
     
     async fetchRoomStatus() {
     try {
-        const response = await fetch('http://localhost:5184/api/v1/surgeryRoom');
+        const response = await fetch('https://api-dotnet.hospitalz.siteapi/v1/surgeryRoom');
         if (!response.ok) {
             throw new Error(`Failed to fetch room status: ${response.statusText}`);
         }

@@ -54,7 +54,7 @@ const OperationRequest: React.FC = () => {
     
                         try {
                             const patientResponse = await fetch(
-                                `http://localhost:5184/api/v1/patient/filter?recordNumber=${recordNumber}`,
+                                `https://api-dotnet.hospitalz.site/api/v1/patient/filter?recordNumber=${recordNumber}`,
                                 { method: 'GET', headers: getHeaders() }
                             );
     

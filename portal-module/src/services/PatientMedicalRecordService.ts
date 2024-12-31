@@ -1,6 +1,6 @@
 import {PatientMedicalRecordsDto, PatientMedicalRecordUpdateDto} from "../dtos/PatientMedicalRecordDto";
 
-const API_URL = `http://localhost:5184/api/v1/patient-medical-records`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/patient-medical-records`;
 
 const getHeaders = () => ({
     'Content-Type': 'application/json',

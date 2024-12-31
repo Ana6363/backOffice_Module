@@ -18,8 +18,8 @@ const AdminSurgeryRoom: React.FC = () => {
             // Fetch room types and create a mapping from internalCode to designation
             const roomTypeData = await fetchRoomTypes();
             const roomTypeMapping: Record<string, string> = {};
-            if (roomTypeData && roomTypeData.data && roomTypeData.data.$values) {
-                roomTypeData.data.$values.forEach((type: any) => {
+            if (roomTypeData && Array.isArray(roomTypeData.data)) {
+                roomTypeData.data.forEach((type: any) => {
                     roomTypeMapping[type.internalCode] = type.designation;
                 });
             }
@@ -27,8 +27,8 @@ const AdminSurgeryRoom: React.FC = () => {
 
             // Fetch surgery rooms and map type to designation using roomTypeMap
             const surgeryRoomData = await fetchSurgeryRooms();
-            if (surgeryRoomData && surgeryRoomData.$values && Array.isArray(surgeryRoomData.$values)) {
-                const processedSurgeryRooms = surgeryRoomData.$values.map((room: any) => ({
+            if (surgeryRoomData && Array.isArray(surgeryRoomData)) {
+                const processedSurgeryRooms = surgeryRoomData.map((room: any) => ({
                     ...room,
                     displayStatus: room.currentStatus || "Unknown", // Handle missing statuses
                     type: roomTypeMapping[room.type] || room.type, // Map type to designation or fallback to original type
@@ -53,17 +53,18 @@ const AdminSurgeryRoom: React.FC = () => {
     };
 
     const menuItems = [
-        {id: 1, name: 'Main Page', route: '/admin'},
-        {id: 2, name: 'Manage Patients', route: '/admin/patient'},
-        {id: 3, name: 'Manage Staff', route: '/admin/staff'},
-        {id: 4, name: 'Manage Operation Types', route: '/admin/opTypes'},
-        {id: 5, name: 'Schedule Surgeries', route: '/admin/schedule'},
-        {id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries'},
-        {id: 7, name: 'Manage Specializations', route: '/admin/specializations'},
-        {id: 8, name: 'Manage Room Types', route: '/admin/roomtypes'},
-        {id: 9, name: 'Manage Allergies', route: '/admin/allergies'},
-        {id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions'},
+        { id: 1, name: 'Main Page', route: '/admin' },
+        { id: 2, name: 'Manage Patients', route: '/admin/patient' },
+        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
+        { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
+        { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
+        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
+        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
+        { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
+        { id: 9, name: 'Manage Allergies', route: '/admin/allergies' },
+        { id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions' },
     ];
+
     return (
         <div className="app-wrapper">
             <Navbar menuItemsProp={menuItems} />

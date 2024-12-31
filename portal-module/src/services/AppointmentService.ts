@@ -1,4 +1,4 @@
-const API_URL = `http://localhost:5184/api/v1/appointement`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/appointement`;
 console.log(API_URL);
 
 const getHeaders = () => ({

@@ -14,8 +14,11 @@ const AdminAllergy: React.FC = () => {
 
     const loadAllergies = async () => {
         try {
+            console.log('Fetching allergies...'); // Debugging: Start of fetch
             const allergyDtos = await fetchAllAllergies();
+            console.log('Raw allergies from API:', allergyDtos); // Debugging: Raw API response
             const processedAllergies = allergyDtos.map(mapAllergyDtoToViewModel);
+            console.log('Processed allergies:', processedAllergies); // Debugging: Processed data
             setAllergyList(processedAllergies);
         } catch (error) {
             console.error('Error fetching allergies:', error);
@@ -27,21 +30,25 @@ const AdminAllergy: React.FC = () => {
         loadAllergies();
     }, []);
 
+    useEffect(() => {
+        console.log('Updated allergyList:', allergyList); // Debugging: Whenever allergyList changes
+    }, [allergyList]);
+
     const handleCreateAllergy = () => {
         navigate('/admin/createAllergy');
     };
 
     const menuItems = [
-        {id: 1, name: 'Main Page', route: '/admin'},
-        {id: 2, name: 'Manage Patients', route: '/admin/patient'},
-        {id: 3, name: 'Manage Staff', route: '/admin/staff'},
-        {id: 4, name: 'Manage Operation Types', route: '/admin/opTypes'},
-        {id: 5, name: 'Schedule Surgeries', route: '/admin/schedule'},
-        {id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries'},
-        {id: 7, name: 'Manage Specializations', route: '/admin/specializations'},
-        {id: 8, name: 'Manage Room Types', route: '/admin/roomtypes'},
-        {id: 9, name: 'Manage Allergies', route: '/admin/allergies'},
-        {id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions'},
+        { id: 1, name: 'Main Page', route: '/admin' },
+        { id: 2, name: 'Manage Patients', route: '/admin/patient' },
+        { id: 3, name: 'Manage Staff', route: '/admin/staff' },
+        { id: 4, name: 'Manage Operation Types', route: '/admin/opTypes' },
+        { id: 5, name: 'Schedule Surgeries', route: '/admin/schedule' },
+        { id: 6, name: 'Manage Surgery Rooms', route: '/admin/surgeries' },
+        { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
+        { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
+        { id: 9, name: 'Manage Allergies', route: '/admin/allergies' },
+        { id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions' },
     ];
 
     return (
@@ -55,7 +62,7 @@ const AdminAllergy: React.FC = () => {
                         <SelectableTable
                             data={allergyList}
                             headers={[
-                                { key: 'title', label: 'Name' },
+                                { key: 'name', label: 'Name' }, // Use 'name' instead of 'title'
                                 { key: 'description', label: 'Description' },
                             ]}
                             onRowSelect={setSelectedAllergy}
