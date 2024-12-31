@@ -1,11 +1,11 @@
 import { MedicalConditionsDto } from "../dtos/MedicalConditionsDto";
 
 export interface MedicalConditionsViewModel {
-    title: string;
+    name: string;
     description: string;
 }
 
 export const mapMedicalConditionsDtoToViewModel = (dto: MedicalConditionsDto): MedicalConditionsViewModel => ({
-    title: dto.name,
+    name: dto.name,
     description: dto.description,
 });

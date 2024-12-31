@@ -11,6 +11,7 @@ const AdminMedicalConditions: React.FC = () => {
     const navigate = useNavigate();
     const [medicalConditionsList, setMedicalConditionsList] = useState<MedicalConditionsViewModel[]>([]);
     const [selectedMedicalCondition, setSelectedMedicalCondition] = useState<MedicalConditionsViewModel | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const loadMedicalConditions = async () => {
         try {
@@ -36,7 +37,7 @@ const AdminMedicalConditions: React.FC = () => {
             alert("No medical condition selected.");
             return;
         }
-        navigate(`/admin/updateMedicalCondition/${selectedMedicalCondition.title}`);
+        navigate(`/admin/updateMedicalCondition/${selectedMedicalCondition.name}`);
     };
 
     const menuItems = [
@@ -63,7 +64,7 @@ const AdminMedicalConditions: React.FC = () => {
                         <SelectableTable
                             data={medicalConditionsList}
                             headers={[
-                                { key: 'title', label: 'Name' },
+                                { key: 'name', label: 'Name' },
                                 { key: 'description', label: 'Description' },
                             ]}
                             onRowSelect={setSelectedMedicalCondition}
@@ -76,8 +77,8 @@ const AdminMedicalConditions: React.FC = () => {
                         </Button>
                         <Button
                             onClick={handleUpdateMedicalCondition}
-                            disabled={!selectedMedicalCondition}
                             className="button button-primary"
+                            disabled={!selectedMedicalCondition}
                         >
                             Update Medical Condition
                         </Button>

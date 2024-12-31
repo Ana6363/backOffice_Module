@@ -118,7 +118,7 @@ const App: React.FC = () => {
                         <Route path="/admin/createAllergy" element={<CreateAllergy />} />
                         <Route path="/admin/medicalConditions" element={<AdminMedicalConditions />} />
                         <Route path="/admin/createMedicalCondition" element={<CreateMedicalConditions />} />
-                        <Route path="/admin/updateMedicalCondition/:title" element={<UpdateMedicalConditions />} />
+                        <Route path="/admin/updateMedicalCondition/:name" element={<UpdateMedicalConditions />} />
                         <Route path="/admin/updateAllergy/:name" element={<UpdateAllergy />} />
 
 
