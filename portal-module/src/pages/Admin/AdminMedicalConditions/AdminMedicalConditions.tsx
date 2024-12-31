@@ -37,8 +37,9 @@ const AdminMedicalConditions: React.FC = () => {
             alert("No medical condition selected.");
             return;
         }
-        navigate(`/admin/updateMedicalCondition/${selectedMedicalCondition.name}`);
+        navigate(`/admin/updateMedicalCondition/${selectedMedicalCondition.name}`, { state: selectedMedicalCondition });
     };
+    
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
