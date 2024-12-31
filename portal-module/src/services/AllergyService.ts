@@ -24,6 +24,38 @@ export const createAllergy = async (allergyData: AllergyCreateDto): Promise<Alle
     return await response.json();
 };
 
+export const UpdateAllergy = async (allergyData: AllergyCreateDto): Promise<AllergyDto> => {
+    const url = `${API_URL}`;
+
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(allergyData),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to update allergy: ${errorText}`);
+    }
+
+    return await response.json();
+};
+
+export const deleteAllergy = async (name: string): Promise<void> => {
+    const url = `${API_URL}`;
+
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete allergy: ${errorText}`);
+    }
+};
+
 export const fetchAllAllergies = async (): Promise<AllergyDto[]> => {
     const url = `${API_URL}`;
 
@@ -53,6 +85,7 @@ export const fetchAllAllergies = async (): Promise<AllergyDto[]> => {
         console.error('An error occurred while fetching allergies:', error);
         throw error;
     }
+
 };
 
 
