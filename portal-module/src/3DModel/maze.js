@@ -503,7 +503,7 @@ export default class Maze {
     
     fetchRoomStatus = async (roomNumber) => {
         // Ajuste a URL para corresponder ao que a API espera
-        const url = `http://localhost:5184/api/v1/surgeryRoom/getByRoomId?roomNumber=${roomNumber}`; // Passando roomNumber corretamente na query string
+        const url = `https://api-dotnet.hospitalz.site/api/v1/surgeryRoom/getByRoomId?roomNumber=${roomNumber}`; // Passando roomNumber corretamente na query string
         
         try {
             const response = await fetch(url, {
