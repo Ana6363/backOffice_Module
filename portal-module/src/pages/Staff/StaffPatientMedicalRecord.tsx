@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {fetchPatientMedicalRecord} from "../../services/PatientMedicalRecordService";
+import {fetchAllPatientMedicalRecord} from "../../services/PatientMedicalRecordService";
 import {PatientMedicalRecordViewModel, mapPatientMedicalRecordDtoToViewModel} from "../../viewModels/PatientMedicalRecordViewModel";
 import {useNavigate} from "react-router-dom";
 import SelectableTable from "../../components/Table/SelectableTable";
@@ -12,13 +12,12 @@ const StaffPatientMedicalRecords: React.FC = () => {
     const navigate = useNavigate();
     const [patientMedicalRecordList, setPatientMedicalRecordList] = useState<PatientMedicalRecordViewModel[]>([]);
     const [selectedPatientMedicalRecord, setSelectedPatientMedicalRecord] = useState<PatientMedicalRecordViewModel | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const loadPatientMedicalRecords = async () => {
         try {
-            const patientMedicalRecordDtos = await fetchPatientMedicalRecord();
-            const processedPatientMedicalRecords = Array.isArray(patientMedicalRecordDtos) 
-                ? patientMedicalRecordDtos.map(mapPatientMedicalRecordDtoToViewModel) 
-                : [];
+            const patientMedicalRecordDtos = await fetchAllPatientMedicalRecord();
+            const processedPatientMedicalRecords = patientMedicalRecordDtos.map(mapPatientMedicalRecordDtoToViewModel);
             setPatientMedicalRecordList(processedPatientMedicalRecords);
         } catch (error) {
             console.error('Error fetching patient medical records:', error);
@@ -30,11 +29,13 @@ const StaffPatientMedicalRecords: React.FC = () => {
         loadPatientMedicalRecords();
     }, []);
 
-    const handleNavigateToUpdate = () => {
-        if (selectedPatientMedicalRecord) {
-            navigate(`/patientMedicalRecord/${selectedPatientMedicalRecord.recordNumber}`);
+    const handleUpdateMedicalCondition = () => {
+        if (!selectedPatientMedicalRecord) {
+            alert("No patient medical record selected.");
+            return;
         }
-    };
+        navigate(`/patientMedicalRecord/update/${selectedPatientMedicalRecord.recordNumber}`, {state: selectedPatientMedicalRecord});
+    }
 
 
 
@@ -67,12 +68,16 @@ const StaffPatientMedicalRecords: React.FC = () => {
                             ]}
 
                             onRowSelect={setSelectedPatientMedicalRecord}
-                            disableRowSelection={true}
+                            
                         />
                     </div>
 
                     <div className="action-buttons">
-                        <Button onClick={handleNavigateToUpdate}>Update Patient Medical Record</Button>
+                        <Button onClick={handleUpdateMedicalCondition}
+                                className="button button-primary"
+                                disabled={!selectedPatientMedicalRecord}
+                        >Update Patient Medical Record
+                        </Button>
                     </div>
                 </div>
             </main>

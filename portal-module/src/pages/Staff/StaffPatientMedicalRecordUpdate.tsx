@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { updatePatientMedicalRecord } from "../../services/PatientMedicalRecordService";
+import { PatientMedicalRecordViewModel } from "../../viewModels/PatientMedicalRecordViewModel";
 import { fetchAllAllergies } from "../../services/AllergyService";
 import { fetchAllMedicalConditions } from "../../services/MedicalConditionsService";
 import { PatientMedicalRecordUpdateDto } from "../../dtos/PatientMedicalRecordDto";
 import { AllergyDto } from "../../dtos/AllergyDto";
 import { MedicalConditionsDto } from "../../dtos/MedicalConditionsDto";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Button from "../../components/Buttons/Buttons";
 import Footer from "../../components/Footer/Footer";
 
 const StaffPatientMedicalRecordUpdate: React.FC = () => {
+    const location = useLocation();
     const navigate = useNavigate();
-    const { id } = useParams();
+    const selectedPatientMedicalRecord = location.state as PatientMedicalRecordViewModel;
+
+    
 
     const [medicalRecordData, setMedicalRecordData] = useState<PatientMedicalRecordUpdateDto>({
         recordNumber: '',
@@ -23,33 +27,28 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
 
     const [allergiesList, setAllergiesList] = useState<AllergyDto[]>([]);
     const [medicalConditionsList, setMedicalConditionsList] = useState<MedicalConditionsDto[]>([]);
+    const [loading, setLoading] = useState(false);
+    
+    
 
-    const [error, setError] = useState<string | null>(null);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setMedicalRecordData({
-            ...medicalRecordData,
-            [name]: value,
-        });
-    };
-
-    const handleUpdate = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
+    const handleUpdate = async () => {
+        setLoading(true);
 
         try {
-            if (!medicalRecordData.recordNumber || !medicalRecordData.allergies || !medicalRecordData.medicalConditions || !medicalRecordData.fullName) {
-                setError('Please fill in all fields.');
-                return;
-            }
+            const updatedMedicalRecord = await updatePatientMedicalRecord({
+                recordNumber: selectedPatientMedicalRecord.recordNumber,
+                allergies: medicalRecordData.allergies,
+                medicalConditions: medicalRecordData.medicalConditions,
+                fullName: medicalRecordData.fullName,
+            });
 
-            await updatePatientMedicalRecord(medicalRecordData);
-            alert('Patient Medical Record updated successfully!');
+            alert(`Medical record updated successfully: ${updatedMedicalRecord.recordNumber}`);
             navigate('/patientMedicalRecord');
         } catch (error) {
-            console.error('Error updating patient medical record:', error);
-            setError('Error updating patient medical record. Please try again.');
+            console.error('Failed to update patient medical record:', error);
+            alert('Failed to update patient medical record. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -66,7 +65,6 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
                 setMedicalRecordData(medicalRecord);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setError('Failed to fetch initial data.');
             }
         };
 
@@ -84,31 +82,29 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
     ];
 
     return (
-        <div className="app-wrapper">
+        <div className="update-patient-medical-record-wrapper">
             <Navbar menuItemsProp={menuItems} />
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Update Patient Medical Record</h1>
+                    <div className="form-group">
+                        <label> Full Name </label>
+                        <input
+                            type="text"
+                            value={selectedPatientMedicalRecord.fullName}
+                            readOnly
+                            className="input-field"
+                            title="Full Name"
+                            placeholder="Full Name" />
 
                     <form onSubmit={handleUpdate}>
-                        <div className="mb-4">
-                            <label htmlFor="recordNumber" className="block text-sm font-medium text-gray-700">Record Number</label>
-                            <input
-                                type="number"
-                                id="recordNumber"
-                                name="recordNumber"
-                                value={medicalRecordData.recordNumber}
-                                onChange={handleChange}
-                                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                        </div>
+                        
                         <div className="mb-4">
                             <label htmlFor="allergies" className="block text-sm font-medium text-gray-700">Allergies</label>
                             <select
                                 id="allergies"
                                 name="allergies"
                                 value={medicalRecordData.allergies}
-                                onChange={handleChange}
                                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             >
                                 <option value="">Select an Allergy</option>
@@ -123,7 +119,6 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
                                 id="medicalConditions"
                                 name="medicalConditions"
                                 value={medicalRecordData.medicalConditions}
-                                onChange={handleChange}
                                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             >
                                 <option value="">Select a Medical Condition</option>
@@ -132,20 +127,11 @@ const StaffPatientMedicalRecordUpdate: React.FC = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
-                            <input
-                                type="text"
-                                id="fullName"
-                                name="fullName"
-                                value={medicalRecordData.fullName}
-                                onChange={handleChange}
-                                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                        </div>
-                        <Button type="submit" className="button button-primary">Update Medical Record</Button>
+                        <Button onClick={handleUpdate} className="button button-primary" disabled={loading}>
+                            {loading ? 'Updating...' : 'Update Patient Medical Record'}
+                        </Button>
                     </form>
-                    {error && <p className="error-message">{error}</p>}
+                    </div>
                 </div>
             </main>
             <Footer />

@@ -35,7 +35,6 @@ import StaffMedicalConditions from './pages/Staff/StaffMedicalConditions';
 
 import StaffPatientMedicalRecord from './pages/Staff/StaffPatientMedicalRecord';
 import StaffPatientMedicalRecordUpdate from './pages/Staff/StaffPatientMedicalRecordUpdate';
-import StaffPatientMedicalRecordSearch from './pages/Staff/StaffPatientMedicalRecordSearch';
 
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
@@ -142,7 +141,6 @@ const App: React.FC = () => {
                     <Route path="/medicalConditions" element={<StaffMedicalConditions/>} />
                     <Route path="/patientMedicalRecord" element={<StaffPatientMedicalRecord/>} />
                     <Route path="/patientMedicalRecord/update" element={<StaffPatientMedicalRecordUpdate/>} />
-                    <Route path="/patientMedicalRecord/search" element={<StaffPatientMedicalRecordSearch/>} />
 
 
                 </Route>

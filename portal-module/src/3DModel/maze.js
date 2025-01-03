@@ -54,7 +54,7 @@ export default class Maze {
             // Create a door
             this.door = new Wall({ textureUrl: description.doorTextureUrl});
             
-            this.setupObjectPicking(camera);
+            this.setObjectPicking(camera);
 
            
             // Load hospital bed model
@@ -314,7 +314,7 @@ export default class Maze {
         return Math.abs(position.x - this.exitLocation.x) < 0.5 * this.scale.x && Math.abs(position.z - this.exitLocation.z) < 0.5 * this.scale.z
     };
 
-    setupObjectPicking(camera) {
+    setObjectPicking(camera) {
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
     
@@ -354,7 +354,7 @@ export default class Maze {
                     console.warn("Objeto selecionado não foi encontrado no array bedArray");
                 }
     
-                this.moveCameraToRoomCenter(selectedObject, camera);
+                this.moveToRoomCenter(selectedObject, camera);
             }
         });
     }
@@ -363,14 +363,14 @@ export default class Maze {
     
     
 
-    moveCameraToRoomCenter(selectedObject, camera) {
+    moveToRoomCenter(selectedObject, camera) {
         if (!selectedObject) {
             console.warn("No object selected.");
             return;
         }
     
         // Determine the room center
-        const roomCenter = this.getRoomCenterFromTable(selectedObject);
+        const roomCenter = this.getRoomCenter(selectedObject);
     
         if (!roomCenter) {
             console.warn("Room center could not be determined for the selected object.");
@@ -457,7 +457,7 @@ export default class Maze {
 
     
     
-    getRoomCenterFromTable(tableObject) {
+    getRoomCenter(tableObject) {
         // Check if the table object has userData with room center information
         if (tableObject.userData && tableObject.userData.roomCenter) {
             return new THREE.Vector3(

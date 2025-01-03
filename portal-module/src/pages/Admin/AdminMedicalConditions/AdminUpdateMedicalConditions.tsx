@@ -55,14 +55,18 @@ const UpdateMedicalConditions: React.FC = () => {
                                 <input
                                     type="text"
                                     value={selectedMedicalCondition.name}
-                                    readOnly
-                                    className="input-field" />
+                                    readOnly                
+                                    className="input-field"
+                                    title="Medical Condition Name"
+                                    placeholder="Medical Condition Name" />
                             </div><div className="form-group">
                                     <label>Description</label>
                                     <textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
-                                        className="input-field" />
+                                        className="input-field"
+                                        title="Medical Condition Description"
+                                        placeholder="Enter Medical Condition Description" />
                                 </div><div className="form-actions">
                                     <Button onClick={handleUpdate} className="button button-primary" disabled={loading}>
                                         {loading ? 'Updating...' : 'Update Allergy'}
