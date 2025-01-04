@@ -23,131 +23,6 @@ import Camera from "./camera.js";
 import Animations from "./animations.js";
 import UserInterface from "./user_interface.js";
 
-/*
- * generalParameters = {
- *  setDevicePixelRatio: Boolean
- * }
- *
- * mazeParameters = {
- *  url: String,
- *  credits: String,
- *  scale: Vector3
- * }
- *
- * playerParameters = {
- *  url: String,
- *  credits: String,
- *  scale: Vector3,
- *  walkingSpeed: Float,
- *  initialDirection: Float,
- *  turningSpeed: Float,
- *  runningFactor: Float,
- *  keyCodes: { fixedView: String, firstPersonView: String, thirdPersonView: String, topView: String, viewMode: String, userInterface: String, miniMap: String, help: String, statistics: String, run: String, left: String, right: String, backward: String, forward: String, jump: String, yes: String, no: String, wave: String, punch: String, thumbsUp: String }
- * }
- *
- * lightsParameters = {
- *  ambientLight: { color: Integer, intensity: Float },
- *  pointLight1: { color: Integer, intensity: Float, range: Float, position: Vector3 },
- *  pointLight2: { color: Integer, intensity: Float, range: Float, position: Vector3 },
- *  spotLight: { color: Integer, intensity: Float, range: Float, angle: Float, penumbra: Float, position: Vector3, direction: Float }
- * }
- *
- * fogParameters = {
- *  enabled: Boolean,
- *  color: Integer,
- *  near: Float,
- *  far: Float
- * }
- *
- * fixedViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * firstPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * thirdPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * topViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- *
- * miniMapCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
- */
 
 export default class ThumbRaiser {
     constructor(generalParameters, mazeParameters, playerParameters, lightsParameters, fogParameters, fixedViewCameraParameters, firstPersonViewCameraParameters, thirdPersonViewCameraParameters, topViewCameraParameters, miniMapCameraParameters) {
@@ -161,6 +36,21 @@ export default class ThumbRaiser {
         this.thirdPersonViewCameraParameters = merge({}, cameraData, thirdPersonViewCameraParameters);
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
+
+        this.fixedViewCamera = new Camera(this.fixedViewCameraParameters, window.innerWidth, window.innerHeight);
+        this.initialCameraState = {
+            position: this.fixedViewCamera.object.position.clone(),
+            target: new THREE.Vector3(0, 0, 0), // Default lookAt
+            zoom: 0.8,
+            fov: this.fixedViewCamera.object.fov
+        };
+        
+        // Call fetchRoomStatus to ensure the most recent data is loaded
+        this.fetchRoomStatus()
+        .then(() => {
+            console.log("Initial room status fetched successfully.");
+            this.resetProgram();
+        })
 
         // Create a 2D scene (the viewports frames)
         this.scene2D = new THREE.Scene();
@@ -178,8 +68,7 @@ export default class ThumbRaiser {
         // Create a 3D scene (the game itself)
         this.scene3D = new THREE.Scene();
 
-        // Create the maze
-        this.maze = new Maze(this.mazeParameters);
+        
 
         // Create the player
         this.player = new Player(this.playerParameters);
@@ -196,6 +85,9 @@ export default class ThumbRaiser {
         this.firstPersonViewCamera = new Camera(this.firstPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.thirdPersonViewCamera = new Camera(this.thirdPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.topViewCamera = new Camera(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
+
+        // Create the maze
+        this.maze = new Maze(this.mazeParameters,this.fixedViewCamera);
 
         // Create the mini-map camera
         this.miniMapCamera = new Camera(this.miniMapCameraParameters, window.innerWidth, window.innerHeight);
@@ -304,6 +196,144 @@ export default class ThumbRaiser {
         this.activeElement = document.activeElement;
     }
 
+    resetProgram() {
+        console.log("Resetting the program...");
+
+        // Stop the game loop
+        this.gameRunning = false;
+
+        // Clear the 3D scene
+        while (this.scene3D.children.length > 0) {
+            const child = this.scene3D.children[0];
+            this.scene3D.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+        }
+
+        // Clear the 2D scene
+        while (this.scene2D.children.length > 0) {
+            const child = this.scene2D.children[0];
+            this.scene2D.remove(child);
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) child.material.dispose();
+        }
+
+        // Reset parameters
+        this.generalParameters = merge({}, generalData);
+        this.mazeParameters = merge({}, mazeData);
+        this.player = new Player(this.playerParameters);
+        this.lights = new Lights(this.lightsParameters);
+        this.fogParameters = merge({}, fogData);
+
+        // Reinitialize the player
+        this.player = new Player(this.playerParameters);
+
+        // Reinitialize the lights
+        this.lights = new Lights(this.lightsParameters);
+
+        // Reinitialize the fog
+        this.fog = new Fog(this.fogParameters);
+        
+
+        // Reinitialize the maze
+        this.maze = new Maze(this.mazeParameters, this.fixedViewCamera);
+
+        // Add objects back to the 3D scene
+        this.scene3D.add(this.maze.object);
+        this.scene3D.add(this.player.object);
+        this.scene3D.add(this.lights.object);
+
+        // Reset renderer
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Reset the camera to its initial state
+        this.fixedViewCamera.object.position.copy(this.initialCameraState.position);
+        this.fixedViewCamera.object.lookAt(this.initialCameraState.target);
+        this.fixedViewCamera.object.zoom = this.initialCameraState.zoom;
+        this.fixedViewCamera.object.fov = this.initialCameraState.fov;
+        this.fixedViewCamera.object.updateProjectionMatrix();
+
+        // Reset other cameras if necessary
+        this.firstPersonViewCamera.object.updateProjectionMatrix();
+        this.thirdPersonViewCamera.object.updateProjectionMatrix();
+        this.topViewCamera.object.updateProjectionMatrix();
+
+        // Reset the user interface and animations
+        this.userInterface = new UserInterface(this.scene3D, this.renderer, this.lights, this.fog, this.player.object, this.animations);
+        this.animations = new Animations(this.player.object, this.player.animations);
+
+        // Reset the active view camera
+        this.setActiveViewCamera(this.fixedViewCamera);
+
+        console.log("Program reset complete.");
+    }
+    
+    async fetchRoomStatus() {
+    try {
+        const response = await fetch('https://api-dotnet.hospitalz.site/api/v1/surgeryRoom');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch room status: ${response.statusText}`);
+        }
+        const data = await response.json();
+        this.updateMazeMap(data.$values);
+
+        // Perform a full program reset
+        this.resetProgram();
+
+        console.log("Room status fetched and program reset.");
+    } catch (error) {
+        console.error('Error fetching room status:', error);
+    }
+}
+
+    
+
+    updateMazeMap(roomStatus) {
+        const roomPositions = {
+            R001: [2, 1],
+            R002: [2, 4],
+            R003: [2, 7],
+            R004: [8, 1],
+            R005: [8, 4],
+            R006: [8, 7],
+        };
+    
+        // Update only the map
+        const maze = this.maze.map;
+        roomStatus.forEach((status, index) => {
+            const roomId = `R00${index + 1}`;
+            const position = roomPositions[roomId];
+            if (position) {
+                const [row, col] = position;
+                maze[row][col] = status === 1 ? 7 : 6;
+            }
+        });
+    
+        console.log("Updated Maze Map:", maze);
+    }
+    
+
+    reloadMaze() {
+        // Ensure updated map is retained
+        this.mazeParameters = {
+            ...this.mazeParameters,
+            map: this.maze.map, // Keep the updated map
+        };
+    
+        // Recreate the Maze instance
+        this.maze = new Maze(this.mazeParameters,this.fixedViewCamera);
+    
+        // Hardcode the exitLocation
+        this.maze.exitLocation = new THREE.Vector3(-0.5, 0.0, 6); // Use the cartesian coordinates equivalent to [-0.5, 6]
+        console.log("New Maze exitLocation (hardcoded):", this.maze.exitLocation);
+    
+        // Ensure the maze parameters are updated for other dependencies
+        console.log("Maze reloaded with updated map and parameters:", this.mazeParameters);
+    }
+    
+    
+    
     buildHelpPanel() {
         const table = document.getElementById("help-table");
         let i = 0;
@@ -337,6 +367,7 @@ export default class ThumbRaiser {
         this.zoom.min = this.activeViewCamera.zoomMin.toFixed(1);
         this.zoom.max = this.activeViewCamera.zoomMax.toFixed(1);
         this.displayPanel();
+        
     }
 
     arrangeViewports(multipleViews) {
@@ -505,12 +536,11 @@ export default class ThumbRaiser {
                     const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
                     this.view.options.selectedIndex = cameraIndex;
                     this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
-                    if (event.buttons == 1) { // Primary button down
+                    if (event.buttons == 2) { // Primary button down
                         this.changeCameraDistance = true;
-                    }
-                    else { // Secondary button down
                         this.changeCameraOrientation = true;
                     }
+                    
                 }
             }
         }
@@ -672,6 +702,22 @@ export default class ThumbRaiser {
                 // Create the user interface
                 this.userInterface = new UserInterface(this.scene3D, this.renderer, this.lights, this.fog, this.player.object, this.animations);
 
+                this.userInterface.setUpdateMazeCallback((roomStatuses) => {
+                    console.log("RoomStatuses received in ThumbRaiser:", roomStatuses); // Debugging log
+                    try {
+                        if (Array.isArray(roomStatuses)) {
+                            this.updateMazeMap(roomStatuses);
+                            this.resetProgram(); // Refresh the program to reflect the changes
+                            console.log("Maze updated with new room statuses.");
+                        } else {
+                            console.error("Invalid roomStatuses format:", roomStatuses);
+                        }
+                    } catch (error) {
+                        console.error("Error updating maze in ThumbRaiser:", error);
+                    }
+                });
+
+
                 // Start the game
                 this.gameRunning = true;
             }
@@ -795,4 +841,6 @@ export default class ThumbRaiser {
             }
         }
     }
+
+    
 }

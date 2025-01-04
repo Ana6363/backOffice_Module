@@ -1,4 +1,4 @@
-const API_URL = `http://localhost:5184/api/operationType`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/operationType`;
 console.log(API_URL);
 
 const getHeaders = () => ({
@@ -7,7 +7,7 @@ const getHeaders = () => ({
 });
 
 export const fetchOperationTypes = async () => {
-    const url = `${API_URL}/GetAllOperationTypes`;
+    const url = `${API_URL}/getAllOperationTypes`;
 
     const response = await fetch(url, {
         method: 'GET',
@@ -20,25 +20,32 @@ export const fetchOperationTypes = async () => {
 
     console.log("Fetch Operation Types Response Data:", data);
 
-    // Explicitly returning the full response data to be handled by the component
+
     return data;
 };
 
 
 export const createOperationType = async (opTypeData: {
     operationTypeName: string;
-    operationTime: number;
-    specializations: string[];
+    preparationTime: number;
+    surgeryTime: number;
+    cleaningTime: number;
+    specializations: { name: string; neededPersonnel: number }[];
 }) => {
     try {
-        // Wrap opTypeData within `operationTypeDTO` and convert specializations to the correct format
         const formattedData = {
+            operationTypeId: "", 
             operationTypeName: opTypeData.operationTypeName,
-            operationTime: opTypeData.operationTime,
-            specializations: opTypeData.specializations.map((name) => ({ name: name })), // Convert each specialization to { name: "Specialization" }
+            preparationTime: opTypeData.preparationTime,
+            surgeryTime: opTypeData.surgeryTime,
+            cleaningTime: opTypeData.cleaningTime,
+            specializations: opTypeData.specializations.map((specialization) => ({
+                name: specialization.name,
+                neededPersonnel: specialization.neededPersonnel,
+            })),
         };
 
-        const response = await fetch(`${API_URL}/Create`, {
+        const response = await fetch(`${API_URL}/create`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(formattedData),
@@ -66,22 +73,30 @@ export const createOperationType = async (opTypeData: {
 };
 
 
+
 export const updateOperationType = async (opTypeData: {
     operationTypeId: string;
     operationTypeName: string;
-    operationTime: number;
-    specializations: string[];
+    preparationTime: number;
+    surgeryTime: number;
+    cleaningTime: number;
+    specializations: { name: string; neededPersonnel: number }[];
 }) => {
     try {
-        // Convert specializations to the correct format
+        // Wrap opTypeData within the required format
         const formattedData = {
             operationTypeId: opTypeData.operationTypeId,
             operationTypeName: opTypeData.operationTypeName,
-            operationTime: opTypeData.operationTime,
-            specializations: opTypeData.specializations.map((name) => ({ name: name })), // Convert each specialization to { name: "Specialization" }
+            preparationTime: opTypeData.preparationTime,
+            surgeryTime: opTypeData.surgeryTime,
+            cleaningTime: opTypeData.cleaningTime,
+            specializations: opTypeData.specializations.map((specialization) => ({
+                name: specialization.name,
+                neededPersonnel: specialization.neededPersonnel,
+            })),
         };
 
-        const response = await fetch(`${API_URL}/Update`, {
+        const response = await fetch(`${API_URL}/update`, {
             method: 'PUT',
             headers: getHeaders(),
             body: JSON.stringify(formattedData),
@@ -107,6 +122,7 @@ export const updateOperationType = async (opTypeData: {
         throw error;
     }
 };
+
 
 
 export const deleteOperationType = async (operationTypeName: string) => {
