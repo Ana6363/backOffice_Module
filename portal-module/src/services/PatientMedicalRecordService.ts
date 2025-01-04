@@ -81,3 +81,45 @@ export const fetchPatientMedicalRecords = async (patientMedicalRecord: string): 
 
     return await response.json();
 };
+
+export const downloadPatientMedicalRecord = async (recordNumber: string): Promise<void> => {
+    const url = `${API_URL}/${recordNumber}/download`;  // A URL do novo endpoint no backend
+
+    try {
+        console.debug('Requesting patient medical record download from URL:', url);
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: getHeaders(),
+        });
+
+        console.debug('Response received with status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            throw new Error(`Failed to download patient medical record: ${errorText}`);
+        }
+
+        // Criando o arquivo de download a partir da resposta
+        const blob = await response.blob();
+        const fileURL = window.URL.createObjectURL(blob);  // Cria um URL temporário para o Blob
+
+        // Criando um link para download
+        const link = document.createElement('a');
+        link.href = fileURL;
+        link.download = `${recordNumber}_patient_medical_record.json`;  // Nome do arquivo
+
+        // Adicionando o link ao DOM e clicando para iniciar o download
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpeza
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(fileURL);  // Revoga o URL temporário
+    } catch (error) {
+        console.error('An error occurred while downloading the patient medical record:', error);
+        throw error;
+    }
+};
+

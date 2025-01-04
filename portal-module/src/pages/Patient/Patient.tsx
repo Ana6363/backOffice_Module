@@ -4,7 +4,7 @@ import { fetchLoggedInPatient } from '../../services/PatientService';
 import Button from '../../components/Buttons/Buttons'; 
 import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
-
+import { downloadPatientMedicalRecord } from '../../services/PatientMedicalRecordService';
 
 const Patient: React.FC = () => {
     const navigate = useNavigate();
@@ -64,6 +64,15 @@ const Patient: React.FC = () => {
 
     const handleNavigateToDelete = () => {
         navigate('/patient/delete'); // Navigate to the delete page
+    };
+
+    const handleDownload = async () => {
+        try {
+            await downloadPatientMedicalRecord(recordNumber); 
+            console.log('Download iniciado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao iniciar o download:', error);
+        }
     };
 
     const menuItems = [
@@ -147,6 +156,12 @@ const Patient: React.FC = () => {
                             className="btn-danger w-42 text-sm py-2 hover:bg-red-700 hover:scale-105 transition-all duration-300 ease-in-out rounded-xl"
                         >
                             Delete Account
+                        </Button>
+                        <Button
+                            onClick={handleDownload} 
+                            className="btn-success w-42 text-sm py-2 hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out rounded-xl"
+                        >
+                            Download Medical Record
                         </Button>
                     </div>
                 </div>
