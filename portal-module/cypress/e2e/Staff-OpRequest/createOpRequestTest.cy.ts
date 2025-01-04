@@ -2,7 +2,7 @@
 
 import { doctorToken } from '../../utils/tokens';
 
-describe('Admin - Create Op Request Member', () => {
+describe('Staff - Create Op Request Member', () => {
 
   beforeEach(() => {
     // Set up token in the app
@@ -12,7 +12,7 @@ describe('Admin - Create Op Request Member', () => {
     cy.intercept('POST', '/api/opRequest/create', {
       statusCode: 200,
       body: { message: 'OP Request created successfully' },
-    }).as('createStaff');
+    }).as('createOpRequest');
   });
 
   it('should create a Op Request', () => {

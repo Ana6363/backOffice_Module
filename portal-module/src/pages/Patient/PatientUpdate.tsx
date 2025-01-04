@@ -54,6 +54,7 @@ const UpdatePatient: React.FC = () => {
     { id: 2, name: 'My Account', route: '/patient' },
     { id: 3, name: 'Update Account', route: '/patient/update' },
     { id: 4, name: 'Delete Account', route: '/patient/delete' },
+    { id: 5, name: 'Privacy Policy', route: '/privacyPolicy' },
   ];
 
   return (

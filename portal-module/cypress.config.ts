@@ -15,7 +15,7 @@ export default defineConfig({
       openMode: 0, // No retries in cypress open mode
     },
     env: {
-      API_URL: "http://localhost:5184/api/v1", // Example environment variable
+      API_URL: "https://api-dotnet.hospitalz.site/api/v1", // Example environment variable
     },
     setupNodeEvents(on, config) {
       // Example: Handle custom environment setup

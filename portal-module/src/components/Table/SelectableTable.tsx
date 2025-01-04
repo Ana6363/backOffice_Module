@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import './SelectableTable.css';
 
-// Generic Row Data type
 interface SelectableTableProps<T> {
     data: T[];
     headers: { key: keyof T; label: string }[];
-    onRowSelect: (selectedRow: T | null) => void;
+    onRowSelect?: (selectedRow: T | null) => void; // Optional callback
+    disableRowSelection?: boolean; // New prop to control row selection
 }
 
-const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: SelectableTableProps<T>) => {
+const SelectableTable = <T extends {}>({
+    data,
+    headers,
+    onRowSelect,
+    disableRowSelection = false, // Default to false (row selection enabled)
+}: SelectableTableProps<T>) => {
     const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
     const [filters, setFilters] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
-        // Get first selected row and send it back to the parent component
-        if (selectedRows.size > 0) {
-            const selectedRow = data.find((row, index) => selectedRows.has(index)) || null;
-            onRowSelect(selectedRow);
-        } else {
-            onRowSelect(null); // no row selected
+        if (!disableRowSelection) {
+            // Get the first selected row and send it back to the parent component
+            if (selectedRows.size > 0) {
+                const selectedRow = data.find((row, index) => selectedRows.has(index)) || null;
+                onRowSelect?.(selectedRow);
+            } else {
+                onRowSelect?.(null); // No row selected
+            }
         }
-    }, [selectedRows, data, onRowSelect]);
+    }, [selectedRows, data, onRowSelect, disableRowSelection]);
 
-    // Handle checkbox selection
     const handleCheckboxChange = (index: number, isChecked: boolean) => {
+        if (disableRowSelection) return; // Do nothing if row selection is disabled
+
         const updatedSelectedRows = new Set(selectedRows);
         if (isChecked) {
             updatedSelectedRows.add(index);
@@ -33,7 +41,6 @@ const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: Selectabl
         setSelectedRows(updatedSelectedRows);
     };
 
-    // Handle filter change
     const handleFilterChange = (key: string, value: string) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -41,7 +48,6 @@ const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: Selectabl
         }));
     };
 
-    // Filter data based on the filters applied
     const filteredData = data.filter((row) => {
         return headers.every((header) => {
             const filterValue = filters[String(header.key)]?.toLowerCase() || '';
@@ -55,7 +61,7 @@ const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: Selectabl
             <table className="table table-compact w-full">
                 <thead>
                     <tr>
-                        <th className="px-2 py-1">Select</th>
+                        {!disableRowSelection && <th className="px-2 py-1">Select</th>}
                         {headers.map((header) => (
                             <th key={String(header.key)} className="px-2 py-1">
                                 {header.label}
@@ -73,17 +79,18 @@ const SelectableTable = <T extends {}>({ data, headers, onRowSelect }: Selectabl
                 <tbody>
                     {filteredData.map((row, index) => (
                         <tr key={index} className="hover cursor-pointer">
-                            <td className="px-2 py-1">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedRows.has(index)}
-                                    onChange={(e) => handleCheckboxChange(index, e.target.checked)}
-                                    title="Select row"
-                                />
-                            </td>
+                            {!disableRowSelection && (
+                                <td className="px-2 py-1">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedRows.has(index)}
+                                        onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                                        title="Select row"
+                                    />
+                                </td>
+                            )}
                             {headers.map((header) => (
                                 <td key={String(header.key)} className="px-2 py-1">
-                                    {/* Dynamically access the key */}
                                     {String(row[header.key] ?? '--')}
                                 </td>
                             ))}

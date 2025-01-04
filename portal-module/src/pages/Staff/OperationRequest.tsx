@@ -54,7 +54,7 @@ const OperationRequest: React.FC = () => {
     
                         try {
                             const patientResponse = await fetch(
-                                `http://localhost:5184/api/v1/patient/filter?recordNumber=${recordNumber}`,
+                                `https://api-dotnet.hospitalz.site/api/v1/patient/filter?recordNumber=${recordNumber}`,
                                 { method: 'GET', headers: getHeaders() }
                             );
     
@@ -112,6 +112,17 @@ const OperationRequest: React.FC = () => {
         // Use the actual ID in the navigation path
         navigate(`/operationRequest/update/${selectedOperationRequest.requestId}`);
     };
+
+    const handleNavigateToCreateAppointment = () => {
+        if (!selectedOperationRequest || !selectedOperationRequest.requestId) {
+            alert('No operation request selected.');
+            return;
+        }
+    
+        navigate(`/operationRequest/createAppointment?requestId=${encodeURIComponent(selectedOperationRequest.requestId)}`);
+    };
+    
+    
     
 
     const handleNavigateToDelete = () => {
@@ -150,15 +161,19 @@ const OperationRequest: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const staffMenuItems = [
+    const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPageStaff' },
         { id: 2, name: 'Operations Request', route: '/operationRequest' },
         { id: 3, name: 'Surgery Room 3DModel', route: '/surgeryRoom3DModel' },
+        { id: 3, name: 'Manage Appointments', route: '/appointments' },
+        { id: 4, name: 'Search Allergies', route: '/allergies' },
+        { id: 5, name: 'Search Medical Conditions', route: '/medicalConditions' },
+        { id: 6, name: 'Manage Patient Medical Record', route: '/patientMedicalRecord' }
       ];
 
     return (
         <div className="app-wrapper">
-            <Navbar menuItemsProp={staffMenuItems} />
+            <Navbar menuItemsProp={menuItems} />
             <main className="main-content">
                 <div className="container">
                     <h1 className="text-3xl font-bold text-center mb-8">Operation Request Page</h1>
@@ -188,6 +203,9 @@ const OperationRequest: React.FC = () => {
                         </Button>
                         <Button onClick={handleNavigateToDelete} disabled={!selectedOperationRequest} className="button button-danger">
                             {selectedOperationRequest?.isToBeDeleted ? 'Delete Request' : 'Delete Request'}
+                        </Button>
+                        <Button onClick={handleNavigateToCreateAppointment} disabled={!selectedOperationRequest} className="button button-primary">
+                            Create Appointment
                         </Button>
                     </div>
 

@@ -1,4 +1,4 @@
-const API_URL = `http://localhost:5184/api/v1/operationRequest`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/operationRequest`;
 console.log(API_URL);
 
 const getHeaders = () => ({
@@ -60,7 +60,7 @@ export const fetchOperationRequest = async (filter: {
 
             try {
                 const patientResponse = await fetch(
-                    `http://localhost:5184/api/v1/patient/filter?recordNumber=${recordNumber}`,
+                    `https://api-dotnet.hospitalz.site/api/v1/patient/filter?recordNumber=${recordNumber}`,
                     { method: 'GET', headers: getHeaders() }
                 );
 
@@ -92,7 +92,7 @@ export const createOperationRequest = async (operationRequestData: {
     const staffId = getStaffIdFromEmail();
 
     const patientResponse = await fetch(
-        `http://localhost:5184/api/v1/patient/filter?userId=${operationRequestData.userId}`,
+        `https://api-dotnet.hospitalz.site/api/v1/patient/filter?userId=${operationRequestData.userId}`,
         {
             method: 'GET',
             headers: getHeaders(),
