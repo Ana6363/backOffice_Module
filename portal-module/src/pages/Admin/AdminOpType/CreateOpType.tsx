@@ -19,6 +19,7 @@ const CreateOpType: React.FC = () => {
     });
 
     const [specializations, setSpecializations] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
         const loadSpecializations = async () => {
             try {
@@ -26,6 +27,9 @@ const CreateOpType: React.FC = () => {
                 setSpecializations(data); 
             } catch (error) {
                 console.error('Failed to fetch specializations:', error);
+            }
+            finally {
+                setLoading(false); 
             }
         };
 
