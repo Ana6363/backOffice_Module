@@ -3,47 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Button from '../../components/Buttons/Buttons';
 import Footer from '../../components/Footer/Footer';
-import fs from 'fs'; // Import Node.js file system module
-import path from 'path';
 
 const AdminSurgeryRoom: React.FC = () => {
     const navigate = useNavigate();
     const [date, setDate] = useState('');
-    const [output, setOutput] = useState<string | null>(null);
+    const [formattedOutput, setFormattedOutput] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-
-    // Paths for input and output files
-    const planningModulePath = path.join(__dirname, '../../planningModule');
-    const inputFilePath = path.join(planningModulePath, 'input.txt');
-    const outputFilePath = path.join(planningModulePath, 'output.txt');
-
-    const writeDateToInput = (date: string) => {
-        try {
-            fs.writeFileSync(inputFilePath, date, 'utf8');
-            console.log(`Date written to ${inputFilePath}: ${date}`);
-        } catch (err) {
-            console.error('Error writing date:');
-        }
-    };
-
-    const readOutputFile = (): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const interval = setInterval(() => {
-                try {
-                    if (fs.existsSync(outputFilePath)) {
-                        const result = fs.readFileSync(outputFilePath, 'utf8');
-                        if (result) {
-                            clearInterval(interval); // Stop checking once we have a result
-                            resolve(result);
-                        }
-                    }
-                } catch (err) {
-                    clearInterval(interval);
-                    reject(err);
-                }
-            }, 1000); // Check every 1 second
-        });
-    };
 
     const handleSubmit = async () => {
         if (!date) {
@@ -52,22 +17,63 @@ const AdminSurgeryRoom: React.FC = () => {
         }
 
         setIsLoading(true);
-        setOutput(null);
+        setFormattedOutput(null);
 
         try {
-            // Write date to input.txt
-            writeDateToInput(date);
+            // Send date to the backend
+            const response = await fetch('http://localhost:3001/process-date', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date }),
+            });
 
-            // Wait for output.txt to be updated and fetch its content
-            const result = await readOutputFile();
-            setOutput(result);
-        } catch (error) {
-            console.error('Error processing date:', error);
-            alert('An error occurred while processing the date.');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to process date');
+            }
+
+            const data = await response.json();
+
+            // Parse and format the result
+            const prettyOutput = formatOutput(data.result);
+            setFormattedOutput(prettyOutput);
+        } catch (error: any) {
+            console.error('Error processing date:', error.message);
+            alert(error.message || 'An error occurred while processing the date.');
         } finally {
             setIsLoading(false);
         }
     };
+
+    const formatOutput = (response: string): string => {
+        // Split the response into the rooms and weight parts
+        const [roomsAndOps, weight] = response.split('*'); 
+    
+        // Define the type for the rooms array
+        const rooms: { room: string; operations: string[] }[] = [];
+    
+        // Regular expression to match the Prolog-like room and operations structure
+        const roomRegex = /R\d{3}-\[(.*?)\]/g; // Matches `Rxxx-[op...]`
+        let match;
+    
+        while ((match = roomRegex.exec(roomsAndOps)) !== null) {
+            const roomName = match[0].split('-[')[0];
+            const operations = match[1].split(',').map((op) => op.trim());
+            rooms.push({ room: roomName, operations });
+        }
+    
+        // Build a pretty string
+        let prettyOutput = 'Schedule Details:\n\n';
+        rooms.forEach(({ room, operations }) => {
+            prettyOutput += `Room: ${room}\n`;
+            prettyOutput += `Operations: ${operations.join(', ')}\n\n`;
+        });
+    
+        prettyOutput += `Final Schedule Weight: ${weight}`;
+        return prettyOutput;
+    };
+    
+    
 
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/admin' },
@@ -112,10 +118,10 @@ const AdminSurgeryRoom: React.FC = () => {
                         </Button>
                     </div>
 
-                    {output && (
+                    {formattedOutput && (
                         <div className="result-container mt-8">
                             <h2 className="text-2xl font-bold text-center">Results</h2>
-                            <pre className="output-box">{output}</pre>
+                            <pre className="output-box">{formattedOutput}</pre>
                         </div>
                     )}
                 </div>
