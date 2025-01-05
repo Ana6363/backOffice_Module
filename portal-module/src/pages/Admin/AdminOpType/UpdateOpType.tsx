@@ -155,22 +155,37 @@ const UpdateOpType: React.FC = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Specializations:</strong></td>
-                                    <td>
-                                        {formData.specializations && formData.specializations.length > 0 ? (
-                                            formData.specializations.map((spec: any, index: number) => (
+                                <td><strong>Specializations:</strong></td>
+                                <td>
+                                    {formData.specializations && formData.specializations.length > 0 ? (
+                                        formData.specializations.map((spec: any, index: number) => (
+                                            <div key={index}>
+                                                <select
+                                                    value={spec.name}  // Current Specialization
+                                                    onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}  
+                                                >
+                                                    <option value="">Select Specialization</option>
+                                                    {availableSpecializations.map((availableSpec: any, i: number) => (
+                                                        <option key={i} value={availableSpec.name}>
+                                                            {availableSpec.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+
                                                 <input
-                                                    key={index}
-                                                    type="text"
-                                                    className="disabled-input"
-                                                    value={`${spec.name} - Personnel: ${spec.neededPersonnel}`}
-                                                    disabled
+                                                    type="number"
+                                                    value={spec.neededPersonnel}
+                                                    onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
+                                                    min="1"
+                                                    required
                                                 />
-                                            ))
-                                        ) : (
-                                            <span>No specializations assigned.</span>
-                                        )}
-                                    </td>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <span>No specializations assigned.</span>
+                                    )}
+                                </td>
+
                                 </tr>
 
                                 
