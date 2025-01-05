@@ -163,38 +163,43 @@ const CreateOpType: React.FC = () => {
 
                         <div className="form-group">
                             <h3 className="text-xl font-semibold">Specializations</h3>
-                            {operationTypeData.specializations.map((spec, index) => (
-                                <div key={index} className="specialization-group">
-                                    <select
-                                        value={spec.name}
-                                        onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}
-                                        required
-                                    >
-                                        <option value="">Select Specialization</option>
-                                        {specializations.map((specialization, i) => (
-                                            <option key={i} value={specialization.name}>
-                                                {specialization.name}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    <input
-                                        type="number"
-                                        placeholder="Needed Personnel"
-                                        value={spec.neededPersonnel}
-                                        onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
-                                        min='1'
-                                        required
-                                    />
-
-                                    <Button 
-                                        onClick={() => removeSpecialization(index)} 
-                                        className="button-danger"
-                                    >
-                                        Remove Specialization
-                                    </Button>
-                                </div>
-                            ))}
+                            {
+                            loading ? (  
+                                <div>Loading specializations...</div>
+                            ) : (
+                                operationTypeData.specializations.map((spec, index) => (
+                                    <div key={index} className="specialization-group">
+                                        <select
+                                            value={spec.name}
+                                            onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Specialization</option>
+                                            {specializations.map((specialization, i) => (
+                                                <option key={i} value={specialization.name}>
+                                                    {specialization.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                        
+                                        <input
+                                            type="number"
+                                            placeholder="Needed Personnel"
+                                            value={spec.neededPersonnel}
+                                            onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
+                                            min='1'
+                                            required
+                                        />
+                        
+                                        <Button 
+                                            onClick={() => removeSpecialization(index)} 
+                                            className="button-danger"
+                                        >
+                                            Remove Specialization
+                                        </Button>
+                                    </div>
+                                ))
+                            )}
 
                             <Button 
                                 onClick={addSpecialization} 
