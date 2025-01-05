@@ -6,6 +6,8 @@ import Button from '../../../components/Buttons/Buttons';
 import Footer from '../../../components/Footer/Footer';
 import Navbar from '../../../components/Navbar/Navbar';
 import './UpdateOpType.css';
+import { fetchSpecializations } from '../../../services/SpecializationsService';
+
 
 const UpdateOpType: React.FC = () => {
     const { operationTypeId } = useParams<{ operationTypeId: string }>();
@@ -26,7 +28,7 @@ const UpdateOpType: React.FC = () => {
                     fetchSpecializations() 
                 ]);
 
-                if (data && data.operationType && data.operationType.$values) {
+                if (opTypeResponse && data.operationType && data.operationType.$values) {
                     const operationTypes = data.operationType.$values;
 
                     const operationType = operationTypes.find(
@@ -74,6 +76,10 @@ const UpdateOpType: React.FC = () => {
     }, [operationTypeId, navigate]);
 
     const handleSpecializationChange = (index: number, field: string, value: any) => {
+        if (field === 'neededPersonnel' && isNaN(value)) {
+            console.error('Invalid value for neededPersonnel');
+            return;
+        }
         const updatedSpecializations = [...formData.specializations];
         updatedSpecializations[index] = {
             ...updatedSpecializations[index],
