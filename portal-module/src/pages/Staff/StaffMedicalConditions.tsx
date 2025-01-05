@@ -48,7 +48,7 @@ const StaffMedicalConditions: React.FC = () => {
                         <SelectableTable
                             data={medicalConditionsList}
                             headers={[
-                                {key: 'title', label: 'Name'},
+                                { key: 'name', label: 'Name' },
                                 {key: 'description', label: 'Description'},
                             ]}
                             onRowSelect={setSelectedMedicalCondition}
