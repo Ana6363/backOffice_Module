@@ -73,6 +73,20 @@ const UpdateOpType: React.FC = () => {
         }
     }, [operationTypeId, navigate]);
 
+    const handleSpecializationChange = (index: number, field: string, value: any) => {
+        const updatedSpecializations = [...formData.specializations];
+        updatedSpecializations[index] = {
+            ...updatedSpecializations[index],
+            [field]: value,  // Update specific field (name or needed personnel)
+        };
+    
+        setFormData({
+            ...formData,
+            specializations: updatedSpecializations,  
+        });
+    };
+    
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
