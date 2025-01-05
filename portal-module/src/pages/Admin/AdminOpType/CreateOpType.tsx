@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createOperationType } from '../../../services/OpTypeService';
 import Button from '../../../components/Buttons/Buttons';
@@ -6,6 +6,7 @@ import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
 import { specializations } from './Specializations'; 
 import './CreateOpType.css'; 
+import { fetchSpecializations } from '../../../services/SpecializationsService';
 
 const CreateOpType: React.FC = () => {
     const navigate = useNavigate();  
@@ -16,6 +17,27 @@ const CreateOpType: React.FC = () => {
         cleaningTime: 0,
         specializations: [{ name: '', neededPersonnel: 1 }] 
     });
+
+    const [specializations, setSpecializations] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const loadSpecializations = async () => {
+            try {
+                const data = await fetchSpecializations(); 
+                setSpecializations(data); 
+            } catch (error) {
+                console.error('Failed to fetch specializations:', error);
+                setError('Failed to load specializations.');
+            }
+            finally {
+                setLoading(false); 
+            }
+        };
+
+        loadSpecializations(); 
+    }, []);
+
 
     const handleSpecializationChange = (index: number, key: string, value: string | number) => {
         const updatedSpecializations = [...operationTypeData.specializations];
@@ -47,11 +69,22 @@ const CreateOpType: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        // Ensure Op. Type has at least one Specialization
-        if (operationTypeData.specializations.every(spec => spec.name.trim() === '')) {
-            alert('Please select at least one specialization.');
+    
+        // Check if Op. Type has name
+        if (operationTypeData.operationTypeName.trim() === '') {
+            alert('Operation Type Name is required.');
             return;
         }
+        // Check if times have valid values
+        if (operationTypeData.preparationTime <= 0 || operationTypeData.surgeryTime <= 0 || operationTypeData.cleaningTime <= 0) {
+            alert('Preparation time, surgery time, and cleaning time must be greater than zero.');
+            return;
+        }
+         // Ensure Op. Type has at least one Specialization
+         if (operationTypeData.specializations.every(spec => spec.name.trim() === '' || spec.neededPersonnel <= 0)) {
+            alert('Please select at least one specialization.');
+            return;
+        } 
 
         try {
             await createOperationType(operationTypeData);
@@ -143,38 +176,43 @@ const CreateOpType: React.FC = () => {
 
                         <div className="form-group">
                             <h3 className="text-xl font-semibold">Specializations</h3>
-                            {operationTypeData.specializations.map((spec, index) => (
-                                <div key={index} className="specialization-group">
-                                    <select
-                                        value={spec.name}
-                                        onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}
-                                        required
-                                    >
-                                        <option value="">Select Specialization</option>
-                                        {specializations.map((specialization, i) => (
-                                            <option key={i} value={specialization.name}>
-                                                {specialization.name}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    <input
-                                        type="number"
-                                        placeholder="Needed Personnel"
-                                        value={spec.neededPersonnel}
-                                        onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
-                                        min='1'
-                                        required
-                                    />
-
-                                    <Button 
-                                        onClick={() => removeSpecialization(index)} 
-                                        className="button-danger"
-                                    >
-                                        Remove Specialization
-                                    </Button>
-                                </div>
-                            ))}
+                            {
+                            loading ? (  
+                                <div>Loading specializations...</div>
+                            ) : (
+                                operationTypeData.specializations.map((spec, index) => (
+                                    <div key={index} className="specialization-group">
+                                        <select
+                                            value={spec.name}
+                                            onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Specialization</option>
+                                            {specializations.map((specialization, i) => (
+                                                <option key={i} value={specialization.name}>
+                                                    {specialization.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                        
+                                        <input
+                                            type="number"
+                                            placeholder="Needed Personnel"
+                                            value={spec.neededPersonnel}
+                                            onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
+                                            min='1'
+                                            required
+                                        />
+                        
+                                        <Button 
+                                            onClick={() => removeSpecialization(index)} 
+                                            className="button-danger"
+                                        >
+                                            Remove Specialization
+                                        </Button>
+                                    </div>
+                                ))
+                            )}
 
                             <Button 
                                 onClick={addSpecialization} 
