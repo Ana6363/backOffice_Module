@@ -13,11 +13,18 @@ const UpdateOpType: React.FC = () => {
     const [opType, setOpType] = useState<any | null>(null); 
     const [loading, setLoading] = useState<boolean>(true); 
     const [formData, setFormData] = useState<any>({}); 
+    const [availableSpecializations, setAvailableSpecializations] = useState<any[]>([]);
+
 
     useEffect(() => {
         const fetchOpTypeById = async () => {
             try {
-                const data = await fetchOperationTypes();
+                //const data = await fetchOperationTypes();
+                // Get Op. Types and Specializations (same time)
+                const [opTypeResponse, specializationsResponse] = await Promise.all([
+                    fetchOperationTypes(), 
+                    fetchSpecializations() 
+                ]);
 
                 if (data && data.operationType && data.operationType.$values) {
                     const operationTypes = data.operationType.$values;
@@ -46,6 +53,11 @@ const UpdateOpType: React.FC = () => {
                     console.error('Unexpected data format:', data);
                     alert('Error loading operation types.');
                     navigate('/admin/opTypes');
+                }
+                if (specializationsResponse && Array.isArray(specializationsResponse)) {
+                    setAvailableSpecializations(specializationsResponse);
+                } else {
+                    console.error('Failed to load specializations');
                 }
             } catch (error) {
                 console.error('Error fetching operation type:', error);
