@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createOperationType } from '../../../services/OpTypeService';
 import Button from '../../../components/Buttons/Buttons';
@@ -6,6 +6,7 @@ import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
 import { specializations } from './Specializations'; 
 import './CreateOpType.css'; 
+import { fetchSpecializations } from '../../../services/SpecializationsService';
 
 const CreateOpType: React.FC = () => {
     const navigate = useNavigate();  
@@ -16,6 +17,21 @@ const CreateOpType: React.FC = () => {
         cleaningTime: 0,
         specializations: [{ name: '', neededPersonnel: 1 }] 
     });
+
+    const [specializations, setSpecializations] = useState<any[]>([]);
+    useEffect(() => {
+        const loadSpecializations = async () => {
+            try {
+                const data = await fetchSpecializations(); 
+                setSpecializations(data); 
+            } catch (error) {
+                console.error('Failed to fetch specializations:', error);
+            }
+        };
+
+        loadSpecializations(); 
+    }, []);
+
 
     const handleSpecializationChange = (index: number, key: string, value: string | number) => {
         const updatedSpecializations = [...operationTypeData.specializations];
