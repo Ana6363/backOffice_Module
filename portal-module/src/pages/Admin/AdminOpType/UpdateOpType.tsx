@@ -6,8 +6,6 @@ import Button from '../../../components/Buttons/Buttons';
 import Footer from '../../../components/Footer/Footer';
 import Navbar from '../../../components/Navbar/Navbar';
 import './UpdateOpType.css';
-import { fetchSpecializations } from '../../../services/SpecializationsService';
-
 
 const UpdateOpType: React.FC = () => {
     const { operationTypeId } = useParams<{ operationTypeId: string }>();
@@ -15,20 +13,13 @@ const UpdateOpType: React.FC = () => {
     const [opType, setOpType] = useState<any | null>(null); 
     const [loading, setLoading] = useState<boolean>(true); 
     const [formData, setFormData] = useState<any>({}); 
-    const [availableSpecializations, setAvailableSpecializations] = useState<any[]>([]);
-
 
     useEffect(() => {
         const fetchOpTypeById = async () => {
             try {
-                //const data = await fetchOperationTypes();
-                // Get Op. Types and Specializations (same time)
-                const [opTypeResponse, specializationsResponse] = await Promise.all([
-                    fetchOperationTypes(), 
-                    fetchSpecializations() 
-                ]);
+                const data = await fetchOperationTypes();
 
-                if (opTypeResponse && data.operationType && data.operationType.$values) {
+                if (data && data.operationType && data.operationType.$values) {
                     const operationTypes = data.operationType.$values;
 
                     const operationType = operationTypes.find(
@@ -56,11 +47,6 @@ const UpdateOpType: React.FC = () => {
                     alert('Error loading operation types.');
                     navigate('/admin/opTypes');
                 }
-                if (specializationsResponse && Array.isArray(specializationsResponse)) {
-                    setAvailableSpecializations(specializationsResponse);
-                } else {
-                    console.error('Failed to load specializations');
-                }
             } catch (error) {
                 console.error('Error fetching operation type:', error);
                 alert('Error loading operation type.');
@@ -74,24 +60,6 @@ const UpdateOpType: React.FC = () => {
             fetchOpTypeById();
         }
     }, [operationTypeId, navigate]);
-
-    const handleSpecializationChange = (index: number, field: string, value: any) => {
-        if (field === 'neededPersonnel' && isNaN(value)) {
-            console.error('Invalid value for neededPersonnel');
-            return;
-        }
-        const updatedSpecializations = [...formData.specializations];
-        updatedSpecializations[index] = {
-            ...updatedSpecializations[index],
-            [field]: value,  // Update specific field (name or needed personnel)
-        };
-    
-        setFormData({
-            ...formData,
-            specializations: updatedSpecializations,  
-        });
-    };
-    
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -175,37 +143,22 @@ const UpdateOpType: React.FC = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                <td><strong>Specializations:</strong></td>
-                                <td>
-                                    {formData.specializations && formData.specializations.length > 0 ? (
-                                        formData.specializations.map((spec: any, index: number) => (
-                                            <div key={index}>
-                                                <select
-                                                    value={spec.name}  // Current Specialization
-                                                    onChange={(e) => handleSpecializationChange(index, 'name', e.target.value)}  
-                                                >
-                                                    <option value="">Select Specialization</option>
-                                                    {availableSpecializations.map((availableSpec: any, i: number) => (
-                                                        <option key={i} value={availableSpec.name}>
-                                                            {availableSpec.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-
+                                    <td><strong>Specializations:</strong></td>
+                                    <td>
+                                        {formData.specializations && formData.specializations.length > 0 ? (
+                                            formData.specializations.map((spec: any, index: number) => (
                                                 <input
-                                                    type="number"
-                                                    value={spec.neededPersonnel}
-                                                    onChange={(e) => handleSpecializationChange(index, 'neededPersonnel', +e.target.value)}
-                                                    min="1"
-                                                    required
+                                                    key={index}
+                                                    type="text"
+                                                    className="disabled-input"
+                                                    value={`${spec.name} - Personnel: ${spec.neededPersonnel}`}
+                                                    disabled
                                                 />
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <span>No specializations assigned.</span>
-                                    )}
-                                </td>
-
+                                            ))
+                                        ) : (
+                                            <span>No specializations assigned.</span>
+                                        )}
+                                    </td>
                                 </tr>
 
                                 
