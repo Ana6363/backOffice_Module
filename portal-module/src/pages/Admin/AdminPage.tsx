@@ -13,7 +13,8 @@ const AdminPage = () => {
     { id: 7, name: 'Manage Specializations', route: '/admin/specializations' },
     { id: 8, name: 'Manage Room Types', route: '/admin/roomtypes' },
     { id: 9, name: 'Manage Allergies', route: '/admin/allergies' },
-    { id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions' }
+    { id: 10, name: 'Manage Medical Conditions', route: '/admin/medicalConditions' },
+    { id: 11, name: 'Schedule All Rooms', route: '/admin/scheduleAllRooms' }
 ];
 
   return (
