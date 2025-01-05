@@ -69,7 +69,7 @@ const UpdateMedicalConditions: React.FC = () => {
                                         placeholder="Enter Medical Condition Description" />
                                 </div><div className="form-actions">
                                     <Button onClick={handleUpdate} className="button button-primary" disabled={loading}>
-                                        {loading ? 'Updating...' : 'Update Allergy'}
+                                        {loading ? 'Updating...' : 'Update Medical Condition'}
                                     </Button>
                                 </div></>
                     

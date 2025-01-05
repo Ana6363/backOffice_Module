@@ -107,7 +107,7 @@ export const fetchPatientMedicalRecords = async (patientMedicalRecord: string): 
 };
 
 export const downloadPatientMedicalRecord = async (recordNumber: string): Promise<void> => {
-    const url = `${API_URL}/${recordNumber}/download`;  // A URL do novo endpoint no backend
+    const url = `${API_URL}/dowload/${recordNumber}`; // Backend endpoint for fetching the record
 
     try {
         console.debug('Requesting patient medical record download from URL:', url);
@@ -125,22 +125,37 @@ export const downloadPatientMedicalRecord = async (recordNumber: string): Promis
             throw new Error(`Failed to download patient medical record: ${errorText}`);
         }
 
-        // Criando o arquivo de download a partir da resposta
-        const blob = await response.blob();
-        const fileURL = window.URL.createObjectURL(blob);  // Cria um URL temporário para o Blob
+        // Parse JSON response to handle $values
+        const responseData = await response.json();
 
-        // Criando um link para download
+        // Transform the response to remove `$id` and `$values`
+        const transformedData = {
+            ...responseData.data,
+            allergies: responseData.data.allergies?.$values || [],
+            medicalConditions: responseData.data.medicalConditions?.$values || [],
+        };
+
+        console.debug('Transformed data for download:', transformedData);
+
+        // Create a Blob from the transformed JSON object
+        const blob = new Blob([JSON.stringify(transformedData, null, 2)], {
+            type: 'application/json',
+        });
+
+        const fileURL = window.URL.createObjectURL(blob); // Create a temporary URL for the Blob
+
+        // Create a link for the file download
         const link = document.createElement('a');
         link.href = fileURL;
-        link.download = `${recordNumber}_patient_medical_record.json`;  // Nome do arquivo
+        link.download = `${recordNumber}_patient_medical_record.json`; // Name of the file
 
-        // Adicionando o link ao DOM e clicando para iniciar o download
+        // Append the link to the DOM and trigger the download
         document.body.appendChild(link);
         link.click();
 
-        // Limpeza
+        // Cleanup
         document.body.removeChild(link);
-        window.URL.revokeObjectURL(fileURL);  // Revoga o URL temporário
+        window.URL.revokeObjectURL(fileURL); // Revoke the temporary URL
     } catch (error) {
         console.error('An error occurred while downloading the patient medical record:', error);
         throw error;
