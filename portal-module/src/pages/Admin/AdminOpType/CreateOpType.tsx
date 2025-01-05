@@ -20,6 +20,7 @@ const CreateOpType: React.FC = () => {
 
     const [specializations, setSpecializations] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     useEffect(() => {
         const loadSpecializations = async () => {
             try {
@@ -27,6 +28,7 @@ const CreateOpType: React.FC = () => {
                 setSpecializations(data); 
             } catch (error) {
                 console.error('Failed to fetch specializations:', error);
+                setError('Failed to load specializations.');
             }
             finally {
                 setLoading(false); 
@@ -67,11 +69,22 @@ const CreateOpType: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        // Ensure Op. Type has at least one Specialization
-        if (operationTypeData.specializations.every(spec => spec.name.trim() === '')) {
-            alert('Please select at least one specialization.');
+    
+        // Check if Op. Type has name
+        if (operationTypeData.operationTypeName.trim() === '') {
+            alert('Operation Type Name is required.');
             return;
         }
+        // Check if times have valid values
+        if (operationTypeData.preparationTime <= 0 || operationTypeData.surgeryTime <= 0 || operationTypeData.cleaningTime <= 0) {
+            alert('Preparation time, surgery time, and cleaning time must be greater than zero.');
+            return;
+        }
+         // Ensure Op. Type has at least one Specialization
+         if (operationTypeData.specializations.every(spec => spec.name.trim() === '' || spec.neededPersonnel <= 0)) {
+            alert('Please select at least one specialization.');
+            return;
+        } 
 
         try {
             await createOperationType(operationTypeData);
