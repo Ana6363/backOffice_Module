@@ -4,6 +4,7 @@ import Login from './services/Login';
 import AuthCallback from './services/AuthCallback';
 import Dashboard from './services/Dashboard';
 import MainPagePatient from './pages/Patient/MainPagePatient';
+import PrivacyPolicy from './pages/Patient/PrivacyPolicy';
 
 import AdminPage from './pages/Admin/AdminPage';
 import AdminSchedule from './pages/Admin/AdminSchedule/AdminSchedule'
@@ -20,6 +21,21 @@ import Patient from './pages/Patient/Patient';
 import PatientUpdate from './pages/Patient/PatientUpdate';
 import PatientDelete from './pages/Patient/PatientDelete';
 
+import AdminSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializations';
+import CreateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationCreate';
+import UpdateSpecialization from './pages/Admin/AdminSpecializations/AdminSpecializationsUpdate';
+
+import AdminRoomType from './pages/Admin/AdminRoomType/AdminRoomType';
+import CreateRoomType from './pages/Admin/AdminRoomType/AdminRoomTypeCreate';
+
+import AdminMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminMedicalConditions';
+import CreateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminCreateMedicalConditions';
+import UpdateMedicalConditions from './pages/Admin/AdminMedicalConditions/AdminUpdateMedicalConditions';
+import StaffMedicalConditions from './pages/Staff/StaffMedicalConditions';
+
+import StaffPatientMedicalRecord from './pages/Staff/StaffPatientMedicalRecord';
+import StaffPatientMedicalRecordUpdate from './pages/Staff/StaffPatientMedicalRecordUpdate';
+
 import MainPageStaff from './pages/Staff/MainPageStaff';
 import OperationRequest from './pages/Staff/OperationRequest';
 import OperationRequestCreate from './pages/Staff/OperationRequestCreate';
@@ -28,6 +44,18 @@ import OperationRequestDelete from './pages/Staff/OperationRequestDelete';
 import DeleteOpType from './pages/Admin/AdminOpType/DeleteOpType';
 import UpdateOpType from './pages/Admin/AdminOpType/UpdateOpType';
 import SurgeryRoom3D from './pages/Staff/SurgeryRoom3D';
+import AppointmenCreate from './pages/Staff/AppointmentCreate';
+import AdminSurgery from './pages/Admin/AdminSurgery/AdminSurgery';
+import CreateSurgeryRoom from './pages/Admin/AdminSurgery/CreateSurgeryRoom';
+import CreateAppointmentDetails from './pages/Staff/CreateAppointmentDetails';
+import Appointment from './pages/Staff/Appointment';
+import UpdateAppointmentDetails from './pages/Staff/UpdateAppointmentDetails';
+import AppointmentUpdate from './pages/Staff/AppointmentUpdate';
+import AdminAllergies from './pages/Admin/AdminAllergy/AdminAllergy';
+import CreateAllergy from './pages/Admin/AdminAllergy/AdminCreateAllergy';
+import StaffAllergies from './pages/Staff/StaffAllergy';
+import UpdateAllergy from './pages/Admin/AdminAllergy/AdminUpdateAllergy';
+import ScheduleAllRooms from './pages/Admin/ScheduleAllRooms';
 
 
 
@@ -79,6 +107,21 @@ const App: React.FC = () => {
                         <Route path="/admin/opTypes/create" element={<CreateOpType />} />
                         <Route path="/admin/opTypes/update/:operationTypeId" element={<UpdateOpType />} />
                         <Route path="/admin/opTypes/delete/:operationTypeName" element={<DeleteOpType />} />
+                        <Route path="/admin/surgeries" element={<AdminSurgery />} />
+                        <Route path="/admin/createSurgeryRoom" element={<CreateSurgeryRoom />} />
+                        <Route path="/admin/specializations" element={<AdminSpecialization />} />
+                        <Route path="/admin/specializations/create" element={<CreateSpecialization />} />
+                        <Route path="/admin/specializations/update/:specializationId" element={<UpdateSpecialization />} />
+                        <Route path="/admin/roomtypes" element={<AdminRoomType />} />
+                        <Route path="/admin/roomtypes/create" element={<CreateRoomType />} />
+                        <Route path="/admin/allergies" element={<AdminAllergies />} />
+                        <Route path="/admin/createAllergy" element={<CreateAllergy />} />
+                        <Route path="/admin/medicalConditions" element={<AdminMedicalConditions />} />
+                        <Route path="/admin/createMedicalCondition" element={<CreateMedicalConditions />} />
+                        <Route path="/admin/updateMedicalCondition/:name" element={<UpdateMedicalConditions />} />
+                        <Route path="/admin/updateAllergy/:name" element={<UpdateAllergy />} />
+                        <Route path="/admin/scheduleAllRooms" element={<ScheduleAllRooms />} />
+
 
 
                 </Route>
@@ -90,7 +133,18 @@ const App: React.FC = () => {
                     <Route path="/operationRequest/create" element={<OperationRequestCreate />} />
                     <Route path="/operationRequest/update/:id" element={<OperationRequestUpdate />} />
                     <Route path="/operationRequest/delete/:id" element={<OperationRequestDelete />} />
+                    <Route path="/operationRequest/createAppointment" element={<AppointmenCreate />} />
                     <Route path='/surgeryRoom3DModel' element={<SurgeryRoom3D/>} />
+                    <Route path="/operationRequest/createAppointmentDetails" element={<CreateAppointmentDetails />} />
+                    <Route path="/appointments" element={<Appointment />} />
+                    <Route path="/appointments/update/:appointmentId" element={<AppointmentUpdate />} />
+                    <Route path="/appointments/updateDetails" element={<UpdateAppointmentDetails />} />
+                    <Route path="/allergies" element={<StaffAllergies/>} />
+                    <Route path="/medicalConditions" element={<StaffMedicalConditions/>} />
+                    <Route path="/patientMedicalRecord" element={<StaffPatientMedicalRecord/>} />
+                    <Route path="/patientMedicalRecord/update/:id" element={<StaffPatientMedicalRecordUpdate />} />
+
+
 
                 </Route>
 
@@ -100,6 +154,7 @@ const App: React.FC = () => {
                     <Route path="/patient" element={<Patient />} />
                     <Route path="/patient/update" element={<PatientUpdate/>} />
                     <Route path="/patient/delete" element={<PatientDelete/>} />
+                    <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 </Route>
             </Routes>
         </Router>

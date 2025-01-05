@@ -1,0 +1,145 @@
+/* Ensure the page takes full height and centers content */
+.container {
+    display: center;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: flex-start; /* Align items to the top */
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    margin: 0px; /* Space around the container */
+    padding: 20px;
+  
+  }
+  
+  .table-container {
+    width: 80rem; /* Largura inicial do contêiner */
+    max-width: 1800px; /* Largura máxima opcional */
+    height: 70vh; /* Limita a altura da tabela a 70% da altura da janela */
+    overflow-y: auto; /* Permite rolagem vertical */
+    overflow-x: auto; /* Desativa a rolagem horizontal */
+    margin-bottom: 20px; /* Espaço entre a tabela e os botões */
+    border-radius: 2px;
+    padding: 8px;
+    margin-right: 60rem; /* Garante que a tabela inicie na borda esquerda */
+    margin-left: 60rem;
+  }
+  
+  
+  /* Table styling */
+  .table {
+    width: 100%; /* Full width of container */
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* Header row styling */
+  .table th {
+    background-color: #224889; /* Dark blue background for the top row */
+    color: white;
+    text-align: center;  /* Center text in header */
+    font-weight: bold;
+    padding: 14px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Table cells styling */
+  .table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center; /* Center text in cells */
+  }
+  
+  /* Hover effect on rows */
+  .table .hover {
+    cursor: pointer;
+  }
+  
+  .table .hover:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Selected row styling */
+  .table .selected {
+    background-color: #bde0fe;
+  }
+  
+  /* Action buttons styling */
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px; /* Space between table and buttons */
+    margin-left: 0rem; /* Align buttons to the right */
+  }
+  
+  /* Button styling (Primary and Danger) */
+  .button {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+  
+  .button-primary {
+    background-color: #224889;
+    color: white;
+    border: none;
+  }
+  
+  .button-primary:hover {
+    background-color: #1a3d6d;
+  }
+  
+  .button-danger {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+  }
+  
+  .button-danger:hover {
+    background-color: #c9302c;
+  }
+  
+  /* Input field styling for filters */
+  .input.input-bordered {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+  
+  /* Input field for filtering - position the filter below the header */
+  .table th input {
+    margin-top: 6px;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 100%;
+  }
+  
+  /* Input fields and headers have a focused state border color */
+  .table th input:focus,
+  .input.input-bordered:focus {
+    border-color: #224889;
+    outline: none;
+  }
+  
+  /* Optional: Add spacing between the rows */
+  .table td,
+  .table th {
+  padding: 20px; /* Increase padding for more space */
+  border: 1px solid #ddd;
+  text-align: center; /* Center text in cells */
+  }
+  
+  /* Optional: Add a minimum width to the columns to ensure they are not too narrow */
+  .table th, 
+  .table td {
+  min-width: 180px; /* Adjust this value to make the columns slightly wider */
+  
+  }
+  

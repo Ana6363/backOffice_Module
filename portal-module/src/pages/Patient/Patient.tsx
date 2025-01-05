@@ -4,7 +4,7 @@ import { fetchLoggedInPatient } from '../../services/PatientService';
 import Button from '../../components/Buttons/Buttons'; 
 import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
-
+import { downloadPatientMedicalRecord } from '../../services/PatientMedicalRecordService';
 
 const Patient: React.FC = () => {
     const navigate = useNavigate();
@@ -66,12 +66,22 @@ const Patient: React.FC = () => {
         navigate('/patient/delete'); // Navigate to the delete page
     };
 
+    const handleDownload = async () => {
+        try {
+            await downloadPatientMedicalRecord(recordNumber); 
+            console.log('Download iniciado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao iniciar o download:', error);
+        }
+    };
+
     const menuItems = [
         { id: 1, name: 'Main Page', route: '/mainPagePatient' },
         { id: 2, name: 'My Account', route: '/patient' },
         { id: 3, name: 'Update Account', route: '/patient/update' },
         { id: 4, name: 'Delete Account', route: '/patient/delete' },
-    ];
+        { id: 5, name: 'Privacy Policy', route: '/privacyPolicy' },
+      ];
 
     return (
         <div className="app-wrapper"> {/* Ensure full-page layout */}
@@ -146,6 +156,12 @@ const Patient: React.FC = () => {
                             className="btn-danger w-42 text-sm py-2 hover:bg-red-700 hover:scale-105 transition-all duration-300 ease-in-out rounded-xl"
                         >
                             Delete Account
+                        </Button>
+                        <Button
+                            onClick={handleDownload} 
+                            className="btn-success w-42 text-sm py-2 hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out rounded-xl"
+                        >
+                            Download Medical Record
                         </Button>
                     </div>
                 </div>

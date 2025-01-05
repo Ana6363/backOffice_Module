@@ -1,4 +1,4 @@
-const API_URL = `http://localhost:5184/api/v1/staff`;
+const API_URL = `https://api-dotnet.hospitalz.site/api/v1/staff`;
 console.log(API_URL);
 
 // Helper function to add Authorization header with the token

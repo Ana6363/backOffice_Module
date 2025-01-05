@@ -4,7 +4,7 @@ import './LoginPage.css';
 const Login: React.FC = () => {
   const handleLogin = () => {
     // Redireciona para o backend para autenticação com Google
-    window.location.href = 'http://localhost:5184/api/v1/auth/login';
+    window.location.href = 'https://api-dotnet.hospitalz.site/api/v1/auth/login';
   };
 
   return (
